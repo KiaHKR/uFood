@@ -10,13 +10,18 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
-import rb_panel as rbp
-
+from GUI import rb_panel as rbp
+from src import search
 
 class MainWindow(qtw.QWidget):
     """Builds the root stage."""
+    
+    search_result = search.Search()
+    left_panel = None
+    rt_panel = None
+    rb_panel = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, hsize, wsize, *args, **kwargs):
         """
         Build the constructor of this class.
 
@@ -27,9 +32,9 @@ class MainWindow(qtw.QWidget):
         self.resize(int(wsize * 0.5), int(hsize * 0.5))
         self.setStyleSheet("background-color: #1c1c1c;")
 
-        lpanel = self.set_left_panel()
-        rt_panel = self.set_right_tpanel()
-        rb_panel = self.set_right_bpanel()
+        self.left_panel = self.set_left_panel()
+        self.rt_panel = self.set_right_tpanel()
+        self.rb_panel = self.set_right_bpanel()
 
         # for _ in range(0, 100):  # for testing purposes only
         #     button = qtw.QPushButton("""
@@ -38,7 +43,7 @@ class MainWindow(qtw.QWidget):
         #     rb_panel.layout().addWidget(button)
 
         scroll_area = qtw.QScrollArea()
-        scroll_area.setWidget(rb_panel)
+        scroll_area.setWidget(self.rb_panel)
         scroll_area.setWidgetResizable(True)
         scroll_area.verticalScrollBar().setStyleSheet(
             """
@@ -56,16 +61,16 @@ class MainWindow(qtw.QWidget):
         rpanel = qtw.QWidget()
         rpanel.setStyleSheet("border: 2px solid green;")
         rpanel.setLayout(qtw.QVBoxLayout())
-        rpanel.layout().addWidget(rt_panel, 0)
+        rpanel.layout().addWidget(self.rt_panel, 0)
         rpanel.layout().addWidget(scroll_area, 7)
 
         # -- root layout --
         layout = qtw.QHBoxLayout()
-        layout.addWidget(lpanel, 3)
+        layout.addWidget(self.left_panel, 3)
         layout.addWidget(rpanel, 7)
 
         self.setLayout(layout)
-        self.show()
+        
 
     def set_left_panel(self):
         """Build the left vbox panel."""
@@ -118,6 +123,21 @@ class MainWindow(qtw.QWidget):
         search_bar.setStyleSheet("background-color: white; font-size: 14px;")
         search_bar.setFixedSize(240, 40)
         search_bar.setContentsMargins(20, 0, 20, 0)
+        
+        list_box = qtw.QListWidget()
+        list_box.addItems(self.search_result.search_result_list)
+        list_box.setStyleSheet("background-color: white; font-size: 14px; position: absolute; margin-left: 20px;")
+        list_box.setFixedWidth(240)
+        list_box.setFixedHeight(len(self.search_result.search_result_list)*25)
+        list_box.setSpacing(0)
+        
+        if search_bar.text():
+            list_box.setVisible(True)
+            self.show()
+        else:
+            list_box.setVisible(False)
+            self.show()
+            
         search_button = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap("GUI/assets/search.png"))
         )
@@ -139,9 +159,12 @@ class MainWindow(qtw.QWidget):
         search.layout().addWidget(search_bar, 0, 0)
         search.layout().addWidget(pre, 0, 2)
         search.layout().addWidget(search_button, 0, 2)
+        search.layout().addWidget(list_box, 1, 0)
         search.layout().addWidget(dietary_filter, 0, 3)
         search.layout().setAlignment(qtc.Qt.AlignTop)
         search.layout().setSpacing(0)
+        
+        
 
         donate_text = qtw.QLabel(text="DONATE")
         donate_text.setStyleSheet("color: white; font-weight: bold;")
@@ -164,6 +187,7 @@ class MainWindow(qtw.QWidget):
         left_panel.layout().addWidget(logo)
         left_panel.layout().addWidget(search)
         left_panel.layout().addWidget(donate)
+        left_panel.layout().addWidget(list_box)
         left_panel.layout().setSpacing(0)
 
         return left_panel
@@ -220,12 +244,4 @@ class MainWindow(qtw.QWidget):
         return rp_bottom
 
 
-if __name__ == "__main__":
-    product_name = "uFood"
-    app = qtw.QApplication(sys.argv)
-    win_icon = qtg.QIcon(qtg.QPixmap("GUI/assets/carrot_icon.png"))
-    screen = app.primaryScreen().size()
-    hsize = screen.height()  # kept seperate rather than list
-    wsize = screen.width()  # ... so that it is more pythonic
-    mw = MainWindow(windowTitle=product_name, windowIcon=win_icon)
-    sys.exit(app.exec_())
+
