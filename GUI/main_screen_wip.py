@@ -70,7 +70,9 @@ class MainWindow(qtw.QWidget):
     def set_left_panel(self):
         """Build the left vbox panel."""
         logo = qtw.QLabel(
-            pixmap=qtg.QPixmap("assets/logo_placeholder.png").scaled(200, 200)
+            pixmap=qtg.QPixmap("GUI/assets/logo_placeholder.png").scaled(
+                200, 200
+            )
         )
         # logo.setStyleSheet('border: 2px solid red;')
         logo.setAlignment(qtc.Qt.AlignCenter)
@@ -117,7 +119,7 @@ class MainWindow(qtw.QWidget):
         search_bar.setFixedSize(240, 40)
         search_bar.setContentsMargins(20, 0, 20, 0)
         search_button = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap("assets/search.png"))
+            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/search.png"))
         )
         search_button.setIconSize(qtc.QSize(25, 25))
         search_button.setStyleSheet(
@@ -144,7 +146,7 @@ class MainWindow(qtw.QWidget):
         donate_text = qtw.QLabel(text="DONATE")
         donate_text.setStyleSheet("color: white; font-weight: bold;")
         fb_icon = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap("assets/fb_icon.png"))
+            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/fb_icon.png"))
         )
         fb_icon.setIconSize(qtc.QSize(30, 30))
         fb_icon.setStyleSheet("background: transparent;")
@@ -175,7 +177,7 @@ class MainWindow(qtw.QWidget):
         text = qtw.QLabel()
         text.setStyleSheet("border: none; color: white; font-size: 20px")
         favorites_icon = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap("assets/fav_icon.png"))
+            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/fav_icon.png"))
         )
         favorites_icon.setStyleSheet("border: None; margin: auto;")
         # favorites_icon.setStyleSheet('background-color: white;')
@@ -183,7 +185,7 @@ class MainWindow(qtw.QWidget):
         favorites_icon.setIconSize(qtc.QSize(30, 30))
 
         recipes_icon = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap("assets/recipes_icon.png"))
+            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/recipes_icon.png"))
         )
         recipes_icon.setStyleSheet("border: None; margin-top: 4px;")
         # favorites_icon.setStyleSheet('background-color: white;')
@@ -191,7 +193,7 @@ class MainWindow(qtw.QWidget):
         recipes_icon.setIconSize(qtc.QSize(30, 30))
 
         back_icon = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap("assets/back_icon.png"))
+            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/back_icon.png"))
         )
         back_icon.setStyleSheet("border: None;")
         # favorites_icon.setStyleSheet('background-color: white;')
@@ -221,7 +223,7 @@ class MainWindow(qtw.QWidget):
 if __name__ == "__main__":
     product_name = "uFood"
     app = qtw.QApplication(sys.argv)
-    win_icon = qtg.QIcon(qtg.QPixmap("assets/carrot_icon.png"))
+    win_icon = qtg.QIcon(qtg.QPixmap("GUI/assets/carrot_icon.png"))
     screen = app.primaryScreen().size()
     hsize = screen.height()  # kept seperate rather than list
     wsize = screen.width()  # ... so that it is more pythonic
