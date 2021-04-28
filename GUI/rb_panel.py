@@ -34,11 +34,20 @@ class RightBottomPanel():
         option = qtw.QWidget()
 
         # creating left and right Widgets
+        pic_widget = qtw.QWidget()
+        pic_widget.setLayout(qtw.QVBoxLayout())
+
         picture = qtw.QLabel(
             pixmap=qtg.QPixmap("assets/test_asser.png").scaled(120, 120)
             )
         picture.setFixedWidth(120)
-        picture.setFixedHeight(120)
+        picture.setFixedHeight(120)  
+
+        pic_widget.layout().addWidget(picture) 
+        pic_widget.setFixedWidth(125)
+
+        pic_widget.layout().setAlignment(qtc.Qt.AlignTop)  
+        pic_widget.layout().setSpacing(0)  
 
         # unecessary bit added for showcase
 
@@ -84,7 +93,9 @@ class RightBottomPanel():
 
         cooking_timer.layout().addWidget(cooking_time_pic)
         cooking_timer.layout().addWidget(cooking_time)
-
+        cooking_timer.layout().setSpacing(0)
+        cooking_timer.layout().setAlignment(qtc.Qt.AlignLeft)
+        cooking_timer.layout().setContentsMargins(0, 0, 0, 0)
 
         ingredients_label.layout().addWidget(cooking_timer)
         ingredients_label.layout().addWidget(ingredients_list)
@@ -96,7 +107,7 @@ class RightBottomPanel():
 
         # this is where the two main Widgets get added
         option.setLayout(qtw.QHBoxLayout())
-        option.layout().addWidget(picture)
+        option.layout().addWidget(pic_widget)
         option.layout().addWidget(label_widget)
 
         return option
