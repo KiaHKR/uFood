@@ -31,15 +31,9 @@ class MainWindow(qtw.QWidget):
         rt_panel = self.set_right_tpanel()
         rb_panel = self.set_right_bpanel()
 
-        # for _ in range(0, 100):  # for testing purposes only
-        #     button = qtw.QPushButton("""
-        #     Helllllooooo000000000000000000000000000000000000000000000000000000000000000000000000000000
-        #     """)
-        #     rb_panel.layout().addWidget(button)
-
         rb_panel = qtw.QWidget()
         rb_panel.setLayout(qtw.QVBoxLayout())
-        for _ in range(0, 20):
+        for _ in range(0, 40):
             rb_panel.layout().addWidget(
                 self.set_right_bpanel('search_results')
                 )
@@ -84,7 +78,7 @@ class MainWindow(qtw.QWidget):
         left_panel.setFixedWidth(300)
 
         menu = qtw.QMenu()
-        menu.setContentsMargins(5, 0, 0, 0)
+        menu.setContentsMargins(0, 0, 0, 0)
         act1 = qtw.QAction('Vegan', menu)
         act1.setCheckable(True)
         act2 = qtw.QAction('Vegetarian', menu)
@@ -102,20 +96,31 @@ class MainWindow(qtw.QWidget):
         menu.addAction(act4)
         menu.addAction(act5)
 
-        dietary_filter = qtw.QPushButton()
+        filter = qtw.QWidget()
+        filter.setLayout(qtw.QHBoxLayout())
+        filter.layout().setSpacing(0)
+        # filter.setStyleSheet('border: 2px solid green;')
+        filter.layout().setContentsMargins(5, 1, 0, 0)
+        filter.setFixedWidth(50)
+
+        dietary_filter = qtw.QPushButton(
+            icon=qtg.QIcon(qtg.QPixmap('assets/filter_icon.png'))
+            )
         dietary_filter.setMenu(menu)
         dietary_filter.setStyleSheet("""
-            margin-left: 5px;
             background-color: white;
             """)
-        dietary_filter.setFixedWidth(25)
+        dietary_filter.setFixedHeight(35)
+        # dietary_filter.setFixedSize(60, 30)
 
-        pre = qtw.QLabel()
-        pre.setLayout(qtw.QStackedLayout())
+        filter.layout().addWidget(dietary_filter)
+
+        bg_search_icon = qtw.QLabel()
+        bg_search_icon.setLayout(qtw.QStackedLayout())
 
         search_bar = qtw.QLineEdit()
         search_bar.setStyleSheet('background-color: white; font-size: 14px;')
-        search_bar.setFixedSize(240, 40)
+        search_bar.setFixedSize(207, 40)
         search_bar.setContentsMargins(20, 0, 20, 0)
         search_button = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap('assets/search.png'))
@@ -125,18 +130,21 @@ class MainWindow(qtw.QWidget):
             background-color: transparent;
             margin-top: 1px;
             position: absolute;
-        """)
-        pre.setStyleSheet('background-color: white; margin-top: 1.1px;')
-        pre.setFixedSize(qtc.QSize(30, search_bar.height()-1))
+            """)
+        bg_search_icon.setStyleSheet("""
+            background-color: white;
+            margin-top: 1.1px;
+            """)
+        bg_search_icon.setFixedSize(qtc.QSize(30, search_bar.height()-1))
         search_button.setFixedSize(qtc.QSize(30, search_bar.height()))
 
         search = qtw.QWidget()
         search.setLayout(qtw.QGridLayout())
         # search.setStyleSheet('border: 2px solid red;')
         search.layout().addWidget(search_bar, 0, 0)
-        search.layout().addWidget(pre, 0, 2)
+        search.layout().addWidget(bg_search_icon, 0, 2)
         search.layout().addWidget(search_button, 0, 2)
-        search.layout().addWidget(dietary_filter, 0, 3)
+        search.layout().addWidget(filter, 0, 3)
         search.layout().setAlignment(qtc.Qt.AlignTop)
         search.layout().setSpacing(0)
 
@@ -147,6 +155,8 @@ class MainWindow(qtw.QWidget):
             )
         fb_icon.setIconSize(qtc.QSize(30, 30))
         fb_icon.setStyleSheet('background: transparent;')
+        
+        
         donate = qtw.QWidget()
         # donate.setStyleSheet('border: 2px solid red')
         donate.setLayout(qtw.QHBoxLayout())
@@ -155,7 +165,7 @@ class MainWindow(qtw.QWidget):
         donate.setFixedHeight(60)
         donate.layout().setAlignment(qtc.Qt.AlignBottom)
 
-        # !--- run with vs. without margins and pick preference
+        # !--- run with vs. without margins and pick bg_search_iconference
         logo.setContentsMargins(0, 150, 0, 0)
 
         left_panel.layout().addWidget(logo)
@@ -168,13 +178,13 @@ class MainWindow(qtw.QWidget):
     def set_right_tpanel(self):
         """Set top rightmost hbox panel [icon bar]."""
         r_top = qtw.QWidget()
-        r_top.setStyleSheet('border:2px solid powderblue;')
+        # r_top.setStyleSheet('border:2px solid powderblue;')
         r_top.setLayout(qtw.QHBoxLayout())
-
-        text = qtw.QLabel()
-        text.setStyleSheet('border: 2px solid green; color: white; font-size: 20px')
-
-
+        self.rtop_text = qtw.QLabel('')
+        self.rtop_text.setStyleSheet("""
+            color: white;
+            font-size: 20px;
+            """)
 
         favorites_icon = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap('assets/fav_icon.png'))
@@ -199,14 +209,14 @@ class MainWindow(qtw.QWidget):
         back_icon.setIconSize(qtc.QSize(30, 30))
 
         r_top.layout().addWidget(back_icon)
-        r_top.layout().addWidget(text)
+        r_top.layout().addWidget(self.rtop_text)
         r_top.layout().addWidget(favorites_icon)
         r_top.layout().addWidget(recipes_icon)
         return r_top
 
     # responsive slot method that governs what pages load from the
     # ... rbp.RightBottomPanel() class?
-    def set_right_bpanel(self, page='search_results'):
+    def set_right_bpanel(self, page='trending'):
         """Set right bottom panel/widget w.r.t. emitted signals/events."""
         rp_bottom = None
         if page.lower() == 'trending':

@@ -114,5 +114,14 @@ class RightBottomPanel():
         return option
 
     def favorite_page(self):
-        """Build favorite page."""
-        pass
+        page = qtw.QWidget()
+        page.setStyleSheet('border: 2px solid yellow')
+        page.setLayout(qtw.QHBoxLayout())
+        img = qtw.QLabel(
+            pixmap=qtg.QPixmap("assets/dog.png")
+            )
+        page.layout().addWidget(img)
+
+
+
+        return page
