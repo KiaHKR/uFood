@@ -1,9 +1,19 @@
 import mysql.connector
 
+
 class Search:
 
     mydb = None
-    search_result_list = ["ass", "tits", "fucking end me"]
+    db_ingredients = [
+        "ass",
+        "tits",
+        "fucking end me",
+        "eewtrwea",
+        "wadfwafwa",
+        "fsafsdavaf",
+        "feafcvaws",
+        "hnvuies",
+    ]
 
     def __init__(self):
         # self.mydb = mysql.connector.connect(

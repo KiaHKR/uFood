@@ -10,16 +10,15 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
-from GUI import rb_panel as rbp
-from src import search
+from GUI import ingredient_widget, rb_panel as rbp
+from src import search, gui_slots as slots
+
 
 class MainWindow(qtw.QWidget):
     """Builds the root stage."""
-    
-    search_result = search.Search()
-    left_panel = None
-    rt_panel = None
-    rb_panel = None
+
+    gui_slots = slots.GuiSlots()
+    search_obj = search.Search()
 
     def __init__(self, hsize, wsize, *args, **kwargs):
         """
@@ -32,15 +31,18 @@ class MainWindow(qtw.QWidget):
         self.resize(int(wsize * 0.5), int(hsize * 0.5))
         self.setStyleSheet("background-color: #1c1c1c;")
 
+        self.ingredients = ingredient_widget.IngredientWidget()
         self.left_panel = self.set_left_panel()
         self.rt_panel = self.set_right_tpanel()
         self.rb_panel = self.set_right_bpanel()
 
         # for _ in range(0, 100):  # for testing purposes only
-        #     button = qtw.QPushButton("""
+        #     button = qtw.QPushButton(
+        #         """
         #     Helllllooooo000000000000000000000000000000000000000000000000000000000000000000000000000000
-        #     """)
-        #     rb_panel.layout().addWidget(button)
+        #     """
+        #     )
+        #     self.rb_panel.layout().addWidget(button)
 
         scroll_area = qtw.QScrollArea()
         scroll_area.setWidget(self.rb_panel)
@@ -70,7 +72,6 @@ class MainWindow(qtw.QWidget):
         layout.addWidget(rpanel, 7)
 
         self.setLayout(layout)
-        
 
     def set_left_panel(self):
         """Build the left vbox panel."""
@@ -123,21 +124,69 @@ class MainWindow(qtw.QWidget):
         search_bar.setStyleSheet("background-color: white; font-size: 14px;")
         search_bar.setFixedSize(240, 40)
         search_bar.setContentsMargins(20, 0, 20, 0)
-        
-        list_box = qtw.QListWidget()
-        list_box.addItems(self.search_result.search_result_list)
-        list_box.setStyleSheet("background-color: white; font-size: 14px; position: absolute; margin-left: 20px;")
-        list_box.setFixedWidth(240)
-        list_box.setFixedHeight(len(self.search_result.search_result_list)*25)
-        list_box.setSpacing(0)
-        
-        if search_bar.text():
-            list_box.setVisible(True)
-            self.show()
-        else:
-            list_box.setVisible(False)
-            self.show()
-            
+
+        # Create drop down search results
+        list_box = qtw.QListWidget()  # list_box to store result list
+        list_box.setStyleSheet(  # Styling for box and scrollbar
+            """
+        QScrollBar:vertical {              
+            border: none;
+            background:white;
+            width:4px;
+            margin: 0px 0px 0px 0px;
+        }
+        QScrollBar::handle:vertical {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop: 0 rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),
+            stop: 1 rgb(32, 47, 130));
+            min-height: 0px;
+        }
+        QScrollBar::add-line:vertical {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop: 0 rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),
+            stop:1 rgb(32, 47, 130));
+            height: 0px;
+            subcontrol-position: bottom;
+            subcontrol-origin: margin;
+        }
+        QScrollBar::sub-line:vertical {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),
+            stop:1 rgb(32, 47, 130));
+            height: 0 px;
+            subcontrol-position: top;
+            subcontrol-origin: margin;
+        }
+        QListWidget{
+            background-color: white;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+        """
+        )
+        list_box.setFixedWidth(
+            search_bar.width()
+        )  # Fixed width, same as search_bar
+        list_box.setSpacing(0)  # No spacing between items
+        list_box.setVisible(False)  # Invisible on start
+
+        list_box.itemClicked.connect(  # executes when item in list is clicked
+            lambda: self.gui_slots.select_ingredient(  # calls function
+                self.ingredients,  # parametres
+                list_box.selectedItems()[0].text(),
+                search_bar,
+            )
+        )
+
+        search_bar.textChanged.connect(  # executes when text changed
+            lambda: self.gui_slots.on_search_changed(  # calls function
+                self.left_panel,
+                self.search_obj.db_ingredients,  # parametres
+                search_bar.text(),
+                list_box,
+            )
+        )
+
         search_button = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap("GUI/assets/search.png"))
         )
@@ -163,8 +212,6 @@ class MainWindow(qtw.QWidget):
         search.layout().addWidget(dietary_filter, 0, 3)
         search.layout().setAlignment(qtc.Qt.AlignTop)
         search.layout().setSpacing(0)
-        
-        
 
         donate_text = qtw.QLabel(text="DONATE")
         donate_text.setStyleSheet("color: white; font-weight: bold;")
@@ -186,8 +233,8 @@ class MainWindow(qtw.QWidget):
 
         left_panel.layout().addWidget(logo)
         left_panel.layout().addWidget(search)
+        left_panel.layout().addWidget(self.ingredients.ingredient_widget)
         left_panel.layout().addWidget(donate)
-        left_panel.layout().addWidget(list_box)
         left_panel.layout().setSpacing(0)
 
         return left_panel
@@ -242,6 +289,3 @@ class MainWindow(qtw.QWidget):
         elif page.lower() == "favorites":
             rp_bottom = rbp.RightBottomPanel().favorite_page()
         return rp_bottom
-
-
-
