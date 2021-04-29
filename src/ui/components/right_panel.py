@@ -12,6 +12,7 @@ class RightTopPanel:
         """Build constructor."""
         self.r_top = qtw.QWidget()
         self.r_top.setLayout(qtw.QHBoxLayout())
+        self.r_top.setFixedHeight(40)
 
     def build_panel(self, input_text=None):
         """Build top panel."""
@@ -44,11 +45,36 @@ class RightTopPanel:
         toolbar_icon.setIconSize(qtc.QSize(30, 30))
         return toolbar_icon
 
+class RightMiddlePanel:
+    """Handles the buttons in the right middle panel (rmp)."""
+
+    def build_panel():
+        """create Hbox panel to hold the buttons."""
+
+        export_button = RightMiddlePanel.export_button()
+        save_button = RightMiddlePanel.save_button()
+
+        return [export_button, save_button]
+        pass
+
+    def export_button():
+        """Create export button."""
+        export_button = MediaWidgets().create_pushIcon("heart_icon.png")
+        export_button.setFixedHeight(40)
+        export_button.setFixedWidth(50)
+        return export_button
+
+    def save_button():
+        """Create save button."""
+        save_button = MediaWidgets().create_pushIcon("save_icon.png")
+        save_button.setFixedHeight(40)
+        save_button.setFixedWidth(50)
+        return save_button
 
 class RightBottomPanel:
     """Handles all views on the right bottom panel (rbp)."""
 
-    def trending_page():
+    def trending_page(recipe_name, diet_type, prep_time, ingredients_list):
         """Build the trending page onto the right bottom panel."""
         # creating left Widget with picture
         pic_widget = RightBottomPanel().left_parent("no_pic.png")
@@ -56,20 +82,17 @@ class RightBottomPanel:
         # Creating right Widget label (Vbox layout)
         right_widget = RightBottomPanel().create_right_widget()
 
-        recipe_label = RightBottomPanel().recipe_name_label("ENTER TEXT")
-        diet_type_label = RightBottomPanel().diet_type_label("ENTER TEXT")
-        ingredients_label = RightBottomPanel().ingredients_label("ENTER TEXT")
+        recipe_label = RightBottomPanel().recipe_name_label(f"{recipe_name}")
+        diet_type_label = RightBottomPanel().diet_type_label(f"{diet_type}")
+        ingredients_label = RightBottomPanel().ingredients_label(f"{ingredients_list}")
 
-        
         # Creating cooking icon and time widget
         cooking_time_pic = RightBottomPanel().cooking_time_pic("timer2.png")
-        cooking_time_label = RightBottomPanel().cooking_time_label("ENTER TEXT")
+        cooking_time_label = RightBottomPanel().cooking_time_label(f"{prep_time}")
         
         cooking_time = RightBottomPanel().cooking_time_widget()
         cooking_time.layout().addWidget(cooking_time_pic)
         cooking_time.layout().addWidget(cooking_time_label)
-
-        
 
         # Adding widgets to the right Widget
         right_widget.layout().addWidget(recipe_label)
@@ -85,7 +108,7 @@ class RightBottomPanel:
 
         return results
 
-    def search_results_page():
+    def search_results_page(recipe_name, diet_type, prep_time, ingredients_list):
         """Build the search results page on the right bottom panel (rbp)."""
 
         # creating left Widget with picture
@@ -94,20 +117,17 @@ class RightBottomPanel:
         # Creating right Widget label (Vbox layout)
         right_widget = RightBottomPanel().create_right_widget()
 
-        recipe_label = RightBottomPanel().recipe_name_label("ENTER TEXT")
-        diet_type_label = RightBottomPanel().diet_type_label("ENTER TEXT")
-        ingredients_label = RightBottomPanel().ingredients_label("ENTER TEXT")
+        recipe_label = RightBottomPanel().recipe_name_label(f"{recipe_name}")
+        diet_type_label = RightBottomPanel().diet_type_label(f"{diet_type}")
+        ingredients_label = RightBottomPanel().ingredients_label(f"{ingredients_list}")
 
-        
         # Creating cooking icon and time widget
         cooking_time_pic = RightBottomPanel().cooking_time_pic("timer2.png")
-        cooking_time_label = RightBottomPanel().cooking_time_label("ENTER TEXT")
+        cooking_time_label = RightBottomPanel().cooking_time_label(f"{prep_time}")
         
         cooking_time = RightBottomPanel().cooking_time_widget()
         cooking_time.layout().addWidget(cooking_time_pic)
         cooking_time.layout().addWidget(cooking_time_label)
-
-        
 
         # Adding widgets to the right Widget
         right_widget.layout().addWidget(recipe_label)
@@ -123,7 +143,7 @@ class RightBottomPanel:
 
         return results
 
-    def favorites_page():
+    def favorites_page(recipe_name, diet_type, prep_time, ingredients_list):
         """Build the favorites page on the right bottom panel (rbp)."""
         # creating left Widget with picture
         pic_widget = RightBottomPanel().left_parent("no_pic.png")
@@ -131,20 +151,17 @@ class RightBottomPanel:
         # Creating right Widget label (Vbox layout)
         right_widget = RightBottomPanel().create_right_widget()
 
-        recipe_label = RightBottomPanel().recipe_name_label("ENTER TEXT")
-        diet_type_label = RightBottomPanel().diet_type_label("ENTER TEXT")
-        ingredients_label = RightBottomPanel().ingredients_label("ENTER TEXT")
+        recipe_label = RightBottomPanel().recipe_name_label(f"{recipe_name}")
+        diet_type_label = RightBottomPanel().diet_type_label(f"{diet_type}")
+        ingredients_label = RightBottomPanel().ingredients_label(f"{ingredients_list}")
 
-        
         # Creating cooking icon and time widget
         cooking_time_pic = RightBottomPanel().cooking_time_pic("timer2.png")
-        cooking_time_label = RightBottomPanel().cooking_time_label("ENTER TEXT")
+        cooking_time_label = RightBottomPanel().cooking_time_label(f"{prep_time}")
         
         cooking_time = RightBottomPanel().cooking_time_widget()
         cooking_time.layout().addWidget(cooking_time_pic)
         cooking_time.layout().addWidget(cooking_time_label)
-
-        
 
         # Adding widgets to the right Widget
         right_widget.layout().addWidget(recipe_label)
