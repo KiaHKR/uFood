@@ -8,8 +8,8 @@ class GuiSlots:
         """Constructor of GuiSlots"""
         self.selected_ingredients = []
 
-    def on_search_changed(self, mw, db_ingredients, text, list_box):
-        self.drop_down_list(mw)
+    def on_search_changed(self, left_panel, db_ingredients, text, list_box):
+        self.drop_down_list(left_panel)
         self.filter_list(db_ingredients, text, list_box)
 
     def drop_down_list(self, left_panel):
@@ -42,6 +42,6 @@ class GuiSlots:
     def select_ingredient(self, ingredient_obj, selected_item, search_bar):
         """Selects ingredient from list."""
         self.selected_ingredients.append(selected_item)
-        ingredient_obj.add_ingredient(selected_item)
+        ingredient_obj.update_ingredients(self.selected_ingredients)
 
         search_bar.clear()
