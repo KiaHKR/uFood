@@ -50,21 +50,202 @@ class RightBottomPanel:
 
     def trending_page():
         """Build the trending page onto the right bottom panel."""
-        fill = qtw.QLabel(text='This panel will change...')
-        fill.setStyleSheet("""
-                color: white;
-                font-size: 28px;
-                border: 2px solid powderblue;
-            """)
-        return fill
+        # creating left Widget with picture
+        pic_widget = RightBottomPanel().left_parent("no_pic.png")
+
+        # Creating right Widget label (Vbox layout)
+        right_widget = RightBottomPanel().create_right_widget()
+
+        recipe_label = RightBottomPanel().recipe_name_label("ENTER TEXT")
+        diet_type_label = RightBottomPanel().diet_type_label("ENTER TEXT")
+        ingredients_label = RightBottomPanel().ingredients_label("ENTER TEXT")
+
+        
+        # Creating cooking icon and time widget
+        cooking_time_pic = RightBottomPanel().cooking_time_pic("timer2.png")
+        cooking_time_label = RightBottomPanel().cooking_time_label("ENTER TEXT")
+        
+        cooking_time = RightBottomPanel().cooking_time_widget()
+        cooking_time.layout().addWidget(cooking_time_pic)
+        cooking_time.layout().addWidget(cooking_time_label)
+
+        
+
+        # Adding widgets to the right Widget
+        right_widget.layout().addWidget(recipe_label)
+        right_widget.layout().addWidget(diet_type_label)
+        right_widget.layout().addWidget(cooking_time)
+        right_widget.layout().addWidget(ingredients_label)
+
+        # Main parent Widget
+        results = qtw.QWidget()
+        results.setLayout(qtw.QHBoxLayout())
+        results.layout().addWidget(pic_widget)
+        results.layout().addWidget(right_widget)
+
+        return results
 
     def search_results_page():
         """Build the search results page on the right bottom panel (rbp)."""
-        pic1 = MediaWidgets().create_img('no_pic.png')
-        pic1.setFixedSize(120, 120)
-        pic1.setAlignment(qtc.Qt.AlignCenter)
-        return pic1
+
+        # creating left Widget with picture
+        pic_widget = RightBottomPanel().left_parent("no_pic.png")
+
+        # Creating right Widget label (Vbox layout)
+        right_widget = RightBottomPanel().create_right_widget()
+
+        recipe_label = RightBottomPanel().recipe_name_label("ENTER TEXT")
+        diet_type_label = RightBottomPanel().diet_type_label("ENTER TEXT")
+        ingredients_label = RightBottomPanel().ingredients_label("ENTER TEXT")
+
+        
+        # Creating cooking icon and time widget
+        cooking_time_pic = RightBottomPanel().cooking_time_pic("timer2.png")
+        cooking_time_label = RightBottomPanel().cooking_time_label("ENTER TEXT")
+        
+        cooking_time = RightBottomPanel().cooking_time_widget()
+        cooking_time.layout().addWidget(cooking_time_pic)
+        cooking_time.layout().addWidget(cooking_time_label)
+
+        
+
+        # Adding widgets to the right Widget
+        right_widget.layout().addWidget(recipe_label)
+        right_widget.layout().addWidget(diet_type_label)
+        right_widget.layout().addWidget(cooking_time)
+        right_widget.layout().addWidget(ingredients_label)
+
+        # Main parent Widget
+        results = qtw.QWidget()
+        results.setLayout(qtw.QHBoxLayout())
+        results.layout().addWidget(pic_widget)
+        results.layout().addWidget(right_widget)
+
+        return results
 
     def favorites_page():
         """Build the favorites page on the right bottom panel (rbp)."""
-        pass
+        # creating left Widget with picture
+        pic_widget = RightBottomPanel().left_parent("no_pic.png")
+
+        # Creating right Widget label (Vbox layout)
+        right_widget = RightBottomPanel().create_right_widget()
+
+        recipe_label = RightBottomPanel().recipe_name_label("ENTER TEXT")
+        diet_type_label = RightBottomPanel().diet_type_label("ENTER TEXT")
+        ingredients_label = RightBottomPanel().ingredients_label("ENTER TEXT")
+
+        
+        # Creating cooking icon and time widget
+        cooking_time_pic = RightBottomPanel().cooking_time_pic("timer2.png")
+        cooking_time_label = RightBottomPanel().cooking_time_label("ENTER TEXT")
+        
+        cooking_time = RightBottomPanel().cooking_time_widget()
+        cooking_time.layout().addWidget(cooking_time_pic)
+        cooking_time.layout().addWidget(cooking_time_label)
+
+        
+
+        # Adding widgets to the right Widget
+        right_widget.layout().addWidget(recipe_label)
+        right_widget.layout().addWidget(diet_type_label)
+        right_widget.layout().addWidget(cooking_time)
+        right_widget.layout().addWidget(ingredients_label)
+
+        # Main parent Widget
+        results = qtw.QWidget()
+        results.setLayout(qtw.QHBoxLayout())
+        results.layout().addWidget(pic_widget)
+        results.layout().addWidget(right_widget)
+
+        return results
+
+    def left_parent(self, picture):
+        """Create Left most Widget to hold food picture."""
+        pic_widget = qtw.QWidget()
+        pic_widget.setLayout(qtw.QVBoxLayout())
+        pic_widget.layout().setContentsMargins(0, 0, 0, 0)
+        pic_widget.setFixedWidth(120)
+
+        pic = MediaWidgets().create_img(picture)
+
+        pic.setFixedWidth(120)
+        pic.setFixedHeight(120)
+
+        pic_widget.layout().addWidget(pic)
+        pic_widget.setFixedHeight(120)
+
+        pic_widget.layout().setAlignment(qtc.Qt.AlignTop)
+
+        return pic_widget
+
+    def create_right_widget(self):
+        """Create right most Widget to hold multiple labels."""
+        label_widget = qtw.QWidget()
+        label_widget.setLayout(qtw.QVBoxLayout())
+        label_widget.layout().setContentsMargins(0, 0, 0, 0)
+        label_widget.layout().setSpacing(0)
+
+        return label_widget
+
+    def recipe_name_label(self, food_name):
+        """Create recipe name label."""
+        recipe_name = qtw.QLabel(f"{food_name}")
+        recipe_name.setFixedHeight(40)
+        recipe_name.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
+        
+        return recipe_name
+
+    def diet_type_label(self, diet_type):
+        """Create diet type label."""
+
+        if diet_type == "Vegan":
+            diet_colour = "#32a852"
+        elif diet_type == "Vegetarian":
+            diet_colour = "#137d2c"
+        elif diet_type == "Pescatarian":
+            diet_colour = "#2a75a3"
+        elif diet_type == "keto":
+            diet_colour = "#d18436"
+        else:
+            diet_colour = "#8c0000" # remove later
+
+        diet_type = qtw.QLabel(f"{diet_type}")
+        diet_type.setFixedHeight(20)
+        diet_type.setStyleSheet(f"color: {diet_colour}; font-size: 14px; font-weight: bold;")
+
+        return diet_type
+
+    def cooking_time_widget(self):
+        """Create diet type label."""
+        cooking_time = qtw.QWidget()
+        cooking_time.setLayout(qtw.QHBoxLayout())
+        cooking_time.layout().setSpacing(0)
+        cooking_time.setFixedHeight(27)
+        cooking_time.layout().setAlignment(qtc.Qt.AlignLeft)
+        cooking_time.layout().setContentsMargins(0, 0, 0, 0)
+
+        return cooking_time 
+
+    def cooking_time_pic(self, picture):
+        """Create timer icon."""
+        timer_icon = MediaWidgets().create_imgWithScale(picture, 20, 20)
+        timer_icon.setFixedWidth(25)
+
+        return timer_icon
+
+    def cooking_time_label(self, time):
+        """Create label to hold cooking time."""
+        cooking_time = qtw.QLabel(f"{time}")
+        cooking_time.setFixedHeight(20)
+        cooking_time.setStyleSheet("color: white; font-size: 8px; font-weight: bold;")
+
+        return cooking_time
+
+    def ingredients_label(self, ingredients):
+        """Create label for ingredients list."""
+        ingredients_list = qtw.QLabel(f"{ingredients}")
+        ingredients_list.setStyleSheet("color: white; font-size: 12px; font-weight: bold;")
+        ingredients_list.setAlignment(qtc.Qt.AlignTop)
+        
+        return ingredients_list
