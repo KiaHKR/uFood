@@ -47,6 +47,9 @@ class Views(qtw.QWidget):
         search.layout().addWidget(comp.search_bar())
         search.layout().addWidget(comp.dietary_filter(supported_diets))
         search.setFixedHeight(80)
+        # TODO --- Add in the search drop-down filter list
+
+
         return search
 
     def build_donate(self):
@@ -84,7 +87,13 @@ class Views(qtw.QWidget):
 
         rbp = qtw.QWidget()  # -- Right bottom panel
         rbp.setLayout(qtw.QVBoxLayout())
-        rbp.layout().addWidget(RightBottomPanel.trending_page())
+
+        # TODO --- Replace `for` with hasNext from query results
+        for _ in range(0, 20):
+            rbp.layout().addWidget(RightBottomPanel.search_results_page())
+        
+        scroll_area = comp.scroll_area(rbp)
+        rbp = scroll_area # prev. rbp contents now contained in scroll are
         return [rtp, rbp]
 
     def layer_view(self, *panels):

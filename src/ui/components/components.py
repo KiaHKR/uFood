@@ -19,6 +19,9 @@ class Components:
         )
         return search_bar
 
+    def drop_down_filter():
+        return
+
     def donation_box():
         """Build the donations box."""
         donate = qtw.QWidget()
@@ -56,3 +59,55 @@ class Components:
 
         filter.layout().addWidget(dietary_filter)
         return filter
+
+    def scroll_area(child):
+        sa = qtw.QScrollArea()
+        sa.setWidgetResizable(True)
+        sa.setWidget(child)
+
+        sb_styling = """
+            QScrollBar:vertical {              
+                border: none;
+                background:white;
+                width:15px;
+                margin: 0px 0px 0px 0px;
+            }
+            QScrollBar::handle:vertical {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop: 0 #202f82, 
+                    stop: 0.5 #202f82,
+                    stop: 1 #202f82
+                );
+                min-height: 0px;
+            }
+            QScrollBar::add-line:vertical {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop: 0 #202f82,
+                    stop: 0.5 #202f82,
+                    stop:1 #202f82
+                );
+                height: 0px;
+                subcontrol-position: bottom;
+                subcontrol-origin: margin;
+            }
+            QScrollBar::sub-line:vertical {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop: 0  #202f82,
+                stop: 0.5 #202f82,
+                stop: 1  #202f82);
+                height: 0 px;
+                subcontrol-position: top;
+                subcontrol-origin: margin;
+            }
+            QListWidget{
+                background-color: white;
+                margin-left: 20px;
+                font-size: 14px;
+        }
+        """
+        sa.verticalScrollBar().setStyleSheet(sb_styling)
+        sa.horizontalScrollBar().setStyleSheet(sb_styling)
+
+
+
+        return sa

@@ -60,7 +60,10 @@ class RightBottomPanel:
 
     def search_results_page():
         """Build the search results page on the right bottom panel (rbp)."""
-        pass
+        pic1 = MediaWidgets().create_img('no_pic.png')
+        pic1.setFixedSize(120, 120)
+        pic1.setAlignment(qtc.Qt.AlignCenter)
+        return pic1
 
     def favorites_page():
         """Build the favorites page on the right bottom panel (rbp)."""

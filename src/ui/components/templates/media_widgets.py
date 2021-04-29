@@ -42,3 +42,6 @@ class MediaWidgets:
     def create_icon(self, icon_name):
         """Set and return an icon at default size."""
         return qtg.QIcon(qtg.QPixmap(path + icon_name))
+
+    def create_scrollArea(self):
+        pass
