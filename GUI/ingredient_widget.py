@@ -1,4 +1,3 @@
-from GUI import flow_layout as flow
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
@@ -11,20 +10,29 @@ class IngredientWidget:
         """Creates basic layout as instance var."""
         self.ingredient_widget = qtw.QWidget()
         self.ingredient_widget.setStyleSheet("border: 2px solid red")
-        self.ingredient_widget.setLayout(flow.FlowLayout())
+        self.ingredient_widget.setLayout(qtw.QVBoxLayout())
+        self.hbox = qtw.QHBoxLayout()
 
-    def update_ingredients(self, selected_ingredients):
+    def add_ingredient(self, ingredient):
         """Adds the UI element of specified ingredient."""
-        for i in selected_ingredients:
-            widget = qtw.QWidget()
-            widget.setLayout(qtw.QHBoxLayout())
-            widget.setStyleSheet("border: 1px solid white")
+        ingredient_label = self.create_ingredient(ingredient)
 
-            label = qtw.QLabel()
-            label.setStyleSheet("color: white; font-size: 14px")
-            print(i)
-            label.setText(i)
-            label.setFixedSize(len(i) * 7, 15)
+    def remove_ingredient(self, ingredient):
+        """Removes the UI element of specified ingredient."""
+        pass
 
-            widget.layout().addWidget(label)
-            self.ingredient_widget.layout().addWidget(widget)
+    def create_ingredient(self, name):
+        """Generates UI element for specified ingredient."""
+        widget = qtw.QWidget()
+        widget.setLayout(qtw.QHBoxLayout())
+        label = qtw.QLabel()
+        label.setText(name)
+        label.setStyleSheet(
+            "border: 1px white; font-size: 14px; color: white;"
+        )
+        label.setFixedSize(len(name) * 7, 14)
+        widget.setFixedSize(label.width() + 40, 35)
+        widget.layout().addWidget(label)
+        widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignVCenter)
+        widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        return widget
