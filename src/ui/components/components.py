@@ -12,24 +12,25 @@ class Components:
 
     def search_bar():
         """Build the search bar."""
-        sb_icon = mw().create_pushIcon('search.png')
+        sb_icon = mw().create_pushIcon("search.png")
         sb_icon.setIconSize(qtc.QSize(25, 25))
         search_bar = sw.create_search_bar(
-            h=40, icon=sb_icon, icon_bg_color='white'
+            h=40, icon=sb_icon, icon_bg_color="white"
         )
         return search_bar
 
     def drop_down_filter():
+
         return
 
     def donation_box():
         """Build the donations box."""
         donate = qtw.QWidget()
         donate.setLayout(qtw.QHBoxLayout())
-        fb_icon = mw().create_pushIcon('fb_icon.png')
+        fb_icon = mw().create_pushIcon("fb_icon.png")
         fb_icon.setIconSize(qtc.QSize(30, 30))
-        text = qtw.QLabel(text='DONATE')
-        text.setStyleSheet('font-weight: bold; font-size: 18px; color: white;')
+        text = qtw.QLabel(text="DONATE")
+        text.setStyleSheet("font-weight: bold; font-size: 18px; color: white;")
         donate.layout().addWidget(fb_icon, 0)
         donate.layout().addWidget(text, 10)
         return donate
@@ -44,11 +45,13 @@ class Components:
             act.setCheckable(True)
             menu.addAction(act)
 
-        dietary_filter = mw().create_pushIcon('filter_icon.png')
+        dietary_filter = mw().create_pushIcon("filter_icon.png")
         dietary_filter.setMenu(menu)
-        dietary_filter.setStyleSheet("""
+        dietary_filter.setStyleSheet(
+            """
             background-color: white;
-            """)
+            """
+        )
         dietary_filter.setFixedHeight(35)
 
         filter = qtw.QWidget()
@@ -107,7 +110,5 @@ class Components:
         """
         sa.verticalScrollBar().setStyleSheet(sb_styling)
         sa.horizontalScrollBar().setStyleSheet(sb_styling)
-
-
 
         return sa

@@ -4,14 +4,15 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 
+
 from ui.components.templates.media_widgets import MediaWidgets as mw
 from ui.components.components import Components as comp
 from ui.components.right_panel import RightTopPanel, RightBottomPanel
 
 app = qtw.QApplication(sys.argv)
-product_name = 'uFood'
-logo = 'logo_placeholder.png'
-supported_diets = ['Vegan', 'Vegatarian', 'Pescatarian', 'Paleo', 'Keto']
+product_name = "uFood"
+logo = "logo_placeholder.png"
+supported_diets = ["Vegan", "Vegatarian", "Pescatarian", "Paleo", "Keto"]
 
 
 class Views(qtw.QWidget):
@@ -31,7 +32,7 @@ class Views(qtw.QWidget):
 
     def set_product_icon():
         """Retrieve and build product icon from 'ui/assets'."""
-        return mw().create_icon('carrot_icon.png')
+        return mw().create_icon("carrot_icon.png")
 
     def build_root_view(self):
         """Build root window."""
@@ -46,16 +47,16 @@ class Views(qtw.QWidget):
         search.layout().setSpacing(0)
         search.layout().addWidget(comp.search_bar())
         search.layout().addWidget(comp.dietary_filter(supported_diets))
+        search.layout().addWidget(comp.drop_down_filter())
         search.setFixedHeight(80)
         # TODO --- Add in the search drop-down filter list
-
 
         return search
 
     def build_donate(self):
         """Build the donate button + text."""
         donate = comp.donation_box()
-        donate.setStyleSheet('border: none;')
+        donate.setStyleSheet("border: none;")
         donate.layout().setAlignment(qtc.Qt.AlignBottom)
         return donate
 
@@ -67,10 +68,8 @@ class Views(qtw.QWidget):
         search = self.build_search()
         donate = self.build_donate()
         logo_pic = mw().create_imgWithScale(
-                logo,
-                lpanel.width()//2.5,
-                lpanel.height()//1.8
-            )
+            logo, lpanel.width() // 2.5, lpanel.height() // 1.8
+        )
         logo_pic.setAlignment(qtc.Qt.AlignCenter)
         logo_pic.setContentsMargins(0, 50, 0, 0)
         lpanel_layout.addWidget(logo_pic)
@@ -83,7 +82,7 @@ class Views(qtw.QWidget):
         """Build the right panel."""
         rtp = qtw.QWidget()  # -- Right top panel
         rtp.setLayout(qtw.QHBoxLayout())
-        rtp.layout().addWidget(RightTopPanel().build_panel('[ KEBAB ]'))
+        rtp.layout().addWidget(RightTopPanel().build_panel("[ KEBAB ]"))
 
         rbp = qtw.QWidget()  # -- Right bottom panel
         rbp.setLayout(qtw.QVBoxLayout())
@@ -91,17 +90,19 @@ class Views(qtw.QWidget):
         # TODO --- Replace `for` with hasNext from query results
         for _ in range(0, 20):
             rbp.layout().addWidget(RightBottomPanel.search_results_page())
-        
+
         scroll_area = comp.scroll_area(rbp)
-        rbp = scroll_area # prev. rbp contents now contained in scroll are
+        rbp = scroll_area  # prev. rbp contents now contained in scroll are
         return [rtp, rbp]
 
     def layer_view(self, *panels):
         """Layer the view with all created panels."""
         self.view = qtw.QHBoxLayout()
         if len(panels) != 2:
-            print("""\n\n>> The # of HBOX panels has changed! \
-            \nPlease see views.py. A traceback can be found below.\n\n\n""")
+            print(
+                """\n\n>> The # of HBOX panels has changed! \
+            \nPlease see views.py. A traceback can be found below.\n\n\n"""
+            )
             raise SystemError(sys.last_traceback())
         self.view.addWidget(panels[0], 3)
         self.view.addWidget(panels[1], 7)
