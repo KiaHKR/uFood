@@ -110,10 +110,9 @@ class Components:
         return menu
 
     def __donate_btn(self):
-        donate_btn = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap(self._path + "fb_icon.png"))
+        donate_btn = qtw.QLabel(
+            pixmap=qtg.QPixmap(self._path + "fb_icon.png").scaled(30, 30)
         )
-        donate_btn.setIconSize(qtc.QSize(30, 30))
         donate_btn.setObjectName(self.__object_names[5])
         return donate_btn
 

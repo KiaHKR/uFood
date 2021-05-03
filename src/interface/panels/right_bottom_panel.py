@@ -17,16 +17,11 @@ class Components:
         "ingredients",
         "scroll_area",
     )
-    __path = "src/interface/assets"
+    path = "src/interface/assets/"
 
     def __init__(self):
         self.widgets[self.__object_names[0]] = self.__search_count()
-        self.widgets[self.__object_names[1]] = self.__thumbnail_img()
-        self.widgets[self.__object_names[2]] = self.__recipe_title()
-        self.widgets[self.__object_names[3]] = self.__diet_type()
-        self.widgets[self.__object_names[4]] = self.__total_time()
         self.widgets[self.__object_names[5]] = self.__total_time_icon()
-        self.widgets[self.__object_names[6]] = self.__ingredients()
         self.widgets[self.__object_names[7]] = self.__scroll_area()
 
     def __search_count(self):
@@ -37,39 +32,40 @@ class Components:
         )
         return count
 
-    def __thumbnail_img(self):
+    def thumbnail_img(self, path_thumbnail):
+        # might need to change this
         img = qtw.QLabel(
-            pixmap=qtg.QPixmap(self.__path + "img_placeholder.png").scaled(
+            pixmap=qtg.QPixmap(path_thumbnail).scaled(
                 120, 120
             )
         )
         img.setObjectName(self.__object_names[1])
         return img
 
-    def __recipe_title(self):
-        title = qtw.QLabel("[RECIPE NAME]")
+    def recipe_title(self, name):
+        title = qtw.QLabel(name)
         title.setObjectName(self.__object_names[2])
         return title
 
-    def __diet_type(self):
-        diet_type = qtw.QLabel("[DIET TYPE]")
+    def diet_type(self, diet):
+        diet_type = qtw.QLabel(diet)
         diet_type.setObjectName(self.__object_names[3])
         return diet_type
 
-    def __total_time(self):
-        total_time = qtw.QLabel("[TOTAL TIME]")
+    def total_time(self, time):
+        total_time = qtw.QLabel(time)
         total_time.setObjectName(self.__object_names[4])
         return total_time
 
     def __total_time_icon(self):
         total_time_icon = qtw.QLabel(
-            pixmap=qtg.QPixmap(self.__path + "timer2.png")
+            pixmap=qtg.QPixmap(self.path + "timer2.png")
         )
         total_time_icon.setObjectName(self.__object_names[5])
         return total_time_icon
 
-    def __ingredients(self):
-        ingredients = qtw.QLabel("[INGREDIENT LIST]")
+    def ingredients(self, ingr):
+        ingredients = qtw.QLabel(ingr)
         ingredients.setObjectName(self.__object_names[6])
         return ingredients
 

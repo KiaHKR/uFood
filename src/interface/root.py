@@ -1,4 +1,4 @@
-import sys
+import os
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -6,12 +6,13 @@ from PyQt5 import QtCore as qtc
 from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
+from src.interface.styling import qss
 
 # import bottom rpanel
 # import logic/query
 
 
-app = qtw.QApplication(sys.argv)
+app = qtw.QApplication(os.sys.argv)
 lpanel = lcomp().widgets
 t_rpanel = rtcomp().widgets
 b_rpanel = rbcomp().widgets
@@ -33,8 +34,25 @@ class View(qtw.QWidget):
         super().__init__(*args, **kwargs)
         root_view = Root()
 
+        # left panel
         self.left_panel_widget = self.__left_panel_build()
         root_view.layout().addWidget(self.left_panel_widget)
+        
+        # right panel
+        right_panel_widget = qtw.QWidget()
+        right_panel_widget.setLayout(qtw.QVBoxLayout())
+
+        # right top panel
+        rtop_panel = self.__right_top_build()
+
+        # right bottom panel
+        info = self.__right_bottom_build()
+        
+        b_rpanel["scroll_area"].setWidget(info)
+        right_panel_widget.layout().addWidget(rtop_panel)
+        
+        right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
+        root_view.layout().addWidget(right_panel_widget)
 
         self.qTimer = qtc.QTimer()
         self.qTimer.setInterval(1)
@@ -44,7 +62,9 @@ class View(qtw.QWidget):
         self.qTimer.start()
 
         root_view.show()
-        sys.exit(app.exec_())
+        os.sys.exit(app.exec_())
+
+    # !-- Left Panel
 
     def __left_panel_build(self):
         left_panel_widget = qtw.QWidget()
@@ -54,7 +74,7 @@ class View(qtw.QWidget):
         )  # Grabbing logo size from window size
         left_panel_widget.layout().addWidget(lpanel["logo"])
         left_panel_widget.layout().addWidget(self.__search_widget_build())
-
+        left_panel_widget.layout().addWidget(self.__donate_build())
         return left_panel_widget
 
     def __search_widget_build(self):
@@ -79,6 +99,63 @@ class View(qtw.QWidget):
 
         return search_widget
 
+    def __donate_build(self):
+        """Build donate feature."""
+        donate = qtw.QPushButton()
+        donate.setLayout(qtw.QHBoxLayout())
+        donate.layout().addWidget(lpanel["donate_btn"], 0)
+        donate.layout().addWidget(lpanel["donate_text"], 8)
+        donate.setFixedSize(135, 50)
+        donate.setStyleSheet('border: none;')
+        donate.clicked.connect(lambda: Controller.donate_url())
+        return donate
+    
+
+
+    # !-- Right Top Panel
+    def __right_top_build(self):
+        top_layout = qtw.QHBoxLayout()
+
+        top_layout.addWidget(t_rpanel["back_btn"])
+        top_layout.addWidget(t_rpanel["win_text"])
+        top_layout.addWidget(t_rpanel["fav_btn"])
+        top_layout.addWidget(t_rpanel["recipes_btn"])
+
+        widget = qtw.QWidget()
+        widget.setLayout(top_layout)
+        return widget
+
+    # !-- Right bottom panel
+    def __right_bottom_build(self):
+        bottom_layout = qtw.QWidget()
+        bottom_layout.setStyleSheet('border:2px solid green;')
+        bottom_layout.setLayout(qtw.QVBoxLayout())
+        
+        # while there are results
+        bottom_layout.layout().addWidget(self.__recipe_card())
+        return bottom_layout
+
+    def __recipe_card(self, name="[RECIPE NAME]", diet_type="[DIET TYPE]", total_time="[TOTAL TIME]", ingr="[INGREDIENT LIST]", pk_id='Error', thumbnail=rbcomp.path + 'img_placeholder.png'):
+        recipe_card = qtw.QWidget()
+        recipe_card.setLayout(qtw.QHBoxLayout())
+        info = qtw.QWidget()
+        info.setLayout(qtw.QVBoxLayout())
+        info.layout().addWidget(rbcomp().recipe_title(name))
+        info.layout().addWidget(rbcomp().diet_type(diet_type))
+        time = qtw.QWidget()
+        time.setLayout(qtw.QHBoxLayout())
+        time.layout().addWidget(b_rpanel["total_time_icon"])
+        time.layout().addWidget(rbcomp().total_time(total_time))
+        info.layout().addWidget(time)
+        info.layout().addWidget(rbcomp().ingredients(ingr))
+
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail))
+        recipe_card.layout().addWidget(info)
+        recipe_card.setObjectName(pk_id)
+
+        return recipe_card
+
+
 
 class Controller:
     def update_logo_size(left_panel_widget):
@@ -90,3 +167,6 @@ class Controller:
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,
             )
         )
+    
+    def donate_url():
+        os.startfile('https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif') #noqa: E502

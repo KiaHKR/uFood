@@ -14,7 +14,7 @@ class Compontents:
         'fav_btn',
         'recipes_btn'
     )
-    __path = 'src/interface/assets'
+    __path = 'src/interface/assets/'
 
     def __init__(self):
         self.widgets[self.__object_names[0]] = self.__back_btn()
@@ -34,6 +34,7 @@ class Compontents:
                 qtg.QPixmap(self.__path + 'back_icon.png')
             )
         )
+        back_btn.setIconSize(qtc.QSize(30, 30))
         back_btn.setObjectName(self.__object_names[0])
         return back_btn
     
@@ -43,6 +44,7 @@ class Compontents:
                 qtg.QPixmap(self.__path + 'fav_icon.png')
             )
         )
+        fav_btn.setIconSize(qtc.QSize(30, 30))
         fav_btn.setObjectName(self.__object_names[1])
         return fav_btn
 
@@ -52,5 +54,6 @@ class Compontents:
                 qtg.QPixmap(self.__path + 'recipes_icon.png')
             )
         )
+        recipes_btn.setIconSize(qtc.QSize(30, 30))
         recipes_btn.setObjectName(self.__object_names[2])
         return recipes_btn
