@@ -34,12 +34,10 @@ class Components:
 
     def thumbnail_img(self, path_thumbnail):
         # might need to change this
-        img = qtw.QLabel(
-            pixmap=qtg.QPixmap(path_thumbnail).scaled(
-                120, 120
-            )
-        )
+        img = qtw.QLabel(pixmap=qtg.QPixmap(path_thumbnail).scaled(120, 120))
         img.setObjectName(self.__object_names[1])
+        img.setFixedSize(135, 135)
+        img.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         return img
 
     def recipe_title(self, name):
@@ -59,9 +57,13 @@ class Components:
 
     def __total_time_icon(self):
         total_time_icon = qtw.QLabel(
-            pixmap=qtg.QPixmap(self.path + "timer2.png")
+            pixmap=qtg.QPixmap(self.path + "timer2.png").scaled(30, 30)
         )
+        total_time_icon.setFixedSize(35, 35)
+        total_time_icon.setContentsMargins(0, 0, 0, 0)
+        total_time_icon.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         total_time_icon.setObjectName(self.__object_names[5])
+
         return total_time_icon
 
     def ingredients(self, ingr):
