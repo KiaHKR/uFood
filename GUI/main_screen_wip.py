@@ -36,22 +36,12 @@ class MainWindow(qtw.QWidget):
         self.rt_panel = self.set_right_tpanel()
         self.rb_panel = self.set_right_bpanel()
 
-<<<<<<< HEAD
         rb_panel = qtw.QWidget()
         rb_panel.setLayout(qtw.QVBoxLayout())
         for _ in range(0, 40):
             rb_panel.layout().addWidget(
                 self.set_right_bpanel('search_results')
                 )
-=======
-        # for _ in range(0, 100):  # for testing purposes only
-        #     button = qtw.QPushButton(
-        #         """
-        #     Helllllooooo000000000000000000000000000000000000000000000000000000000000000000000000000000
-        #     """
-        #     )
-        #     self.rb_panel.layout().addWidget(button)
->>>>>>> dev_tom
 
         scroll_area = qtw.QScrollArea()
         scroll_area.setWidget(self.rb_panel)
@@ -70,11 +60,7 @@ class MainWindow(qtw.QWidget):
         )
 
         rpanel = qtw.QWidget()
-<<<<<<< HEAD
         # rpanel.setStyleSheet('border: 2px solid green;')
-=======
-        rpanel.setStyleSheet("border: 2px solid green;")
->>>>>>> dev_tom
         rpanel.setLayout(qtw.QVBoxLayout())
         rpanel.layout().addWidget(self.rt_panel, 0)
         rpanel.layout().addWidget(scroll_area, 7)
@@ -102,13 +88,8 @@ class MainWindow(qtw.QWidget):
         left_panel.setFixedWidth(300)
 
         menu = qtw.QMenu()
-<<<<<<< HEAD
         menu.setContentsMargins(0, 0, 0, 0)
         act1 = qtw.QAction('Vegan', menu)
-=======
-        menu.setContentsMargins(5, 0, 0, 0)
-        act1 = qtw.QAction("Vegan", menu)
->>>>>>> dev_tom
         act1.setCheckable(True)
         act2 = qtw.QAction("Vegetarian", menu)
         act2.setCheckable(True)
@@ -136,7 +117,6 @@ class MainWindow(qtw.QWidget):
             icon=qtg.QIcon(qtg.QPixmap('assets/filter_icon.png'))
             )
         dietary_filter.setMenu(menu)
-<<<<<<< HEAD
         dietary_filter.setStyleSheet("""
             background-color: white;
             """)
@@ -144,27 +124,13 @@ class MainWindow(qtw.QWidget):
         # dietary_filter.setFixedSize(60, 30)
 
         filter.layout().addWidget(dietary_filter)
-=======
-        dietary_filter.setStyleSheet(
-            """
-            margin-left: 5px;
-            background-color: white;
-            """
-        )
-        dietary_filter.setFixedWidth(25)
->>>>>>> dev_tom
 
         bg_search_icon = qtw.QLabel()
         bg_search_icon.setLayout(qtw.QStackedLayout())
 
         search_bar = qtw.QLineEdit()
-<<<<<<< HEAD
         search_bar.setStyleSheet('background-color: white; font-size: 14px;')
         search_bar.setFixedSize(207, 40)
-=======
-        search_bar.setStyleSheet("background-color: white; font-size: 14px;")
-        search_bar.setFixedSize(240, 40)
->>>>>>> dev_tom
         search_bar.setContentsMargins(20, 0, 20, 0)
 
         # Create drop down search results
@@ -238,19 +204,12 @@ class MainWindow(qtw.QWidget):
             background-color: transparent;
             margin-top: 1px;
             position: absolute;
-<<<<<<< HEAD
             """)
         bg_search_icon.setStyleSheet("""
             background-color: white;
             margin-top: 1.1px;
             """)
         bg_search_icon.setFixedSize(qtc.QSize(30, search_bar.height()-1))
-=======
-        """
-        )
-        pre.setStyleSheet("background-color: white; margin-top: 1.1px;")
-        pre.setFixedSize(qtc.QSize(30, search_bar.height() - 1))
->>>>>>> dev_tom
         search_button.setFixedSize(qtc.QSize(30, search_bar.height()))
 
         search = qtw.QWidget()
@@ -259,12 +218,7 @@ class MainWindow(qtw.QWidget):
         search.layout().addWidget(search_bar, 0, 0)
         search.layout().addWidget(bg_search_icon, 0, 2)
         search.layout().addWidget(search_button, 0, 2)
-<<<<<<< HEAD
         search.layout().addWidget(filter, 0, 3)
-=======
-        search.layout().addWidget(list_box, 1, 0)
-        search.layout().addWidget(dietary_filter, 0, 3)
->>>>>>> dev_tom
         search.layout().setAlignment(qtc.Qt.AlignTop)
         search.layout().setSpacing(0)
 
@@ -274,13 +228,9 @@ class MainWindow(qtw.QWidget):
             icon=qtg.QIcon(qtg.QPixmap("GUI/assets/fb_icon.png"))
         )
         fb_icon.setIconSize(qtc.QSize(30, 30))
-<<<<<<< HEAD
         fb_icon.setStyleSheet('background: transparent;')
         
         
-=======
-        fb_icon.setStyleSheet("background: transparent;")
->>>>>>> dev_tom
         donate = qtw.QWidget()
         # donate.setStyleSheet('border: 2px solid red')
         donate.setLayout(qtw.QHBoxLayout())
@@ -303,11 +253,7 @@ class MainWindow(qtw.QWidget):
     def set_right_tpanel(self):
         """Set top rightmost hbox panel [icon bar]."""
         r_top = qtw.QWidget()
-<<<<<<< HEAD
         # r_top.setStyleSheet('border:2px solid powderblue;')
-=======
-        r_top.setStyleSheet("border:2px solid powderblue;")
->>>>>>> dev_tom
         r_top.setLayout(qtw.QHBoxLayout())
         self.rtop_text = qtw.QLabel('')
         self.rtop_text.setStyleSheet("""
@@ -315,11 +261,6 @@ class MainWindow(qtw.QWidget):
             font-size: 20px;
             """)
 
-<<<<<<< HEAD
-=======
-        text = qtw.QLabel()
-        text.setStyleSheet("border: none; color: white; font-size: 20px")
->>>>>>> dev_tom
         favorites_icon = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap("GUI/assets/fav_icon.png"))
         )
@@ -329,30 +270,16 @@ class MainWindow(qtw.QWidget):
         favorites_icon.setIconSize(qtc.QSize(30, 30))
 
         recipes_icon = qtw.QPushButton(
-<<<<<<< HEAD
             icon=qtg.QIcon(qtg.QPixmap('assets/recipes_icon.png'))
             )
         recipes_icon.setStyleSheet('border: None; margin-top: 4px;')
-=======
-            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/recipes_icon.png"))
-        )
-        recipes_icon.setStyleSheet("border: None; margin-top: 4px;")
-        # favorites_icon.setStyleSheet('background-color: white;')
->>>>>>> dev_tom
         recipes_icon.setFixedSize(40, 30)
         recipes_icon.setIconSize(qtc.QSize(30, 30))
 
         back_icon = qtw.QPushButton(
-<<<<<<< HEAD
             icon=qtg.QIcon(qtg.QPixmap('assets/back_icon.png'))
             )
         back_icon.setStyleSheet('border: None;')
-=======
-            icon=qtg.QIcon(qtg.QPixmap("GUI/assets/back_icon.png"))
-        )
-        back_icon.setStyleSheet("border: None;")
-        # favorites_icon.setStyleSheet('background-color: white;')
->>>>>>> dev_tom
         back_icon.setFixedSize(40, 30)
         back_icon.setIconSize(qtc.QSize(30, 30))
 
