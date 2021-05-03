@@ -36,7 +36,8 @@ class View(qtw.QWidget):
 
         # left panel
         self.left_panel_widget = self.__left_panel_build()
-        root_view.layout().addWidget(self.left_panel_widget)
+        self.left_panel_widget.setMinimumWidth(300)
+        root_view.layout().addWidget(self.left_panel_widget, 3)
         
         # right panel
         right_panel_widget = qtw.QWidget()
@@ -52,7 +53,9 @@ class View(qtw.QWidget):
         right_panel_widget.layout().addWidget(rtop_panel)
         
         right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
-        root_view.layout().addWidget(right_panel_widget)
+        right_panel_widget.setMinimumWidth(750)
+
+        root_view.layout().addWidget(right_panel_widget, 7)
 
         self.qTimer = qtc.QTimer()
         self.qTimer.setInterval(1)
@@ -131,8 +134,9 @@ class View(qtw.QWidget):
         bottom_layout.setStyleSheet('border:2px solid green;')
         bottom_layout.setLayout(qtw.QVBoxLayout())
         
+        recipe_card = self.__recipe_card()
         # while there are results
-        bottom_layout.layout().addWidget(self.__recipe_card())
+        bottom_layout.layout().addWidget(recipe_card)
         return bottom_layout
 
     def __recipe_card(self, name="[RECIPE NAME]", diet_type="[DIET TYPE]", total_time="[TOTAL TIME]", ingr="[INGREDIENT LIST]", pk_id='Error', thumbnail=rbcomp.path + 'img_placeholder.png'):
@@ -152,6 +156,7 @@ class View(qtw.QWidget):
         recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail))
         recipe_card.layout().addWidget(info)
         recipe_card.setObjectName(pk_id)
+        recipe_card.setFixedHeight(150)
 
         return recipe_card
 
