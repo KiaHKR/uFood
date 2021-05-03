@@ -17,6 +17,8 @@ class Components:
         "donate_text",
         "filter_dropdown",
         "logo",
+        "save_btn",
+        "export_btn",
     )
     _path = "src/interface/assets/"
 
@@ -30,6 +32,8 @@ class Components:
         self.widgets[self.__object_names[6]] = self.__donate_text()
         self.widgets[self.__object_names[7]] = self.__drop_down_results()
         self.widgets[self.__object_names[8]] = self.__logo()
+        self.widgets[self.__object_names[9]] = self.__save_btn()
+        self.widgets[self.__object_names[10]] = self.__export_btn()
 
     def __search_bar(self):
         search_bar = qtw.QLineEdit()
@@ -68,6 +72,22 @@ class Components:
         )
         search_btn_bg.setObjectName(self.__object_names[2])
         return search_btn_bg
+
+    def __save_btn(self):
+        save_btn = qtw.QLabel(
+            pixmap=qtg.QPixmap(self._path + "save.png").scaled(30, 30)
+        )
+        save_btn.setObjectName(self.__object_names[9])
+        save_btn.setFixedSize(30, 30)
+        return save_btn
+
+    def __export_btn(self):
+        export_btn = qtw.QLabel(
+            pixmap=qtg.QPixmap(self._path + "export.png").scaled(30, 30)
+        )
+        export_btn.setObjectName(self.__object_names[10])
+        export_btn.setFixedSize(30, 30)
+        return export_btn
 
     def __search_filter_btn(self):
         search_filter_btn = qtw.QPushButton(

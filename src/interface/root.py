@@ -154,7 +154,16 @@ class View(qtw.QWidget):
         info.setLayout(qtw.QVBoxLayout())
         info.layout().addWidget(rbcomp().recipe_title(name))
         info.layout().addWidget(rbcomp().diet_type(diet_type))
+
         time = qtw.QWidget()
+
+        buttons = qtw.QWidget()
+        buttons.setLayout(qtw.QVBoxLayout())
+        buttons.layout().addWidget(lpanel["save_btn"])
+        buttons.layout().addWidget(lpanel["export_btn"])
+        buttons.layout().setSpacing(0)
+        
+
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(b_rpanel["total_time_icon"])
         time.layout().addWidget(rbcomp().total_time(total_time))
@@ -165,8 +174,10 @@ class View(qtw.QWidget):
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail))
-        recipe_card.layout().addWidget(info)
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(info, 9)
+        recipe_card.layout().addWidget(buttons, 1)
+        
         recipe_card.setObjectName(pk_id)
         recipe_card.setFixedHeight(150)
         return recipe_card
