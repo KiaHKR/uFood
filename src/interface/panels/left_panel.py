@@ -17,10 +17,8 @@ class Components:
         "donate_text",
         "filter_dropdown",
         "logo",
-        "save_btn",
-        "export_btn",
     )
-    _path = "src/interface/assets/"
+    path = "src/interface/assets/"
 
     def __init__(self):
         self.widgets[self.__object_names[0]] = self.__search_bar()
@@ -32,8 +30,6 @@ class Components:
         self.widgets[self.__object_names[6]] = self.__donate_text()
         self.widgets[self.__object_names[7]] = self.__drop_down_results()
         self.widgets[self.__object_names[8]] = self.__logo()
-        self.widgets[self.__object_names[9]] = self.__save_btn()
-        self.widgets[self.__object_names[10]] = self.__export_btn()
 
     def __search_bar(self):
         search_bar = qtw.QLineEdit()
@@ -47,7 +43,7 @@ class Components:
 
     def __search_btn(self):
         search_btn = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap(self._path + "search.png"))
+            icon=qtg.QIcon(qtg.QPixmap(self.path + "search.png"))
         )
         search_btn.setIconSize(qtc.QSize(25, 25))
         search_btn.setObjectName(self.__object_names[1])
@@ -73,25 +69,9 @@ class Components:
         search_btn_bg.setObjectName(self.__object_names[2])
         return search_btn_bg
 
-    def __save_btn(self):
-        save_btn = qtw.QLabel(
-            pixmap=qtg.QPixmap(self._path + "save.png").scaled(30, 30)
-        )
-        save_btn.setObjectName(self.__object_names[9])
-        save_btn.setFixedSize(30, 30)
-        return save_btn
-
-    def __export_btn(self):
-        export_btn = qtw.QLabel(
-            pixmap=qtg.QPixmap(self._path + "export.png").scaled(30, 30)
-        )
-        export_btn.setObjectName(self.__object_names[10])
-        export_btn.setFixedSize(30, 30)
-        return export_btn
-
     def __search_filter_btn(self):
         search_filter_btn = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap(self._path + "filter_icon.png"))
+            icon=qtg.QIcon(qtg.QPixmap(self.path + "filter_icon.png"))
         )
         search_filter_btn.setStyleSheet("background-color: white;")
         search_filter_btn.setObjectName("search_filter_btn")
@@ -131,7 +111,7 @@ class Components:
 
     def __donate_btn(self):
         donate_btn = qtw.QLabel(
-            pixmap=qtg.QPixmap(self._path + "fb_icon.png").scaled(30, 30)
+            pixmap=qtg.QPixmap(self.path + "fb_icon.png").scaled(30, 30)
         )
         donate_btn.setObjectName(self.__object_names[5])
         return donate_btn

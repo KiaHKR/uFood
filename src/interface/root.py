@@ -159,10 +159,9 @@ class View(qtw.QWidget):
 
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
-        buttons.layout().addWidget(lpanel["save_btn"])
-        buttons.layout().addWidget(lpanel["export_btn"])
+        buttons.layout().addWidget(b_rpanel["save_btn"])
+        buttons.layout().addWidget(b_rpanel["export_btn"])
         buttons.layout().setSpacing(0)
-        
 
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(b_rpanel["total_time_icon"])
@@ -177,7 +176,7 @@ class View(qtw.QWidget):
         recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
         recipe_card.layout().addWidget(info, 9)
         recipe_card.layout().addWidget(buttons, 1)
-        
+
         recipe_card.setObjectName(pk_id)
         recipe_card.setFixedHeight(150)
         return recipe_card
@@ -187,7 +186,7 @@ class Controller:
     def update_logo_size(left_panel_widget):
         """Changes size of logo pixmap, based on parent panel size."""
         lpanel["logo"].setPixmap(
-            qtg.QPixmap(lcomp._path + "logo_placeholder.png").scaled(
+            qtg.QPixmap(lcomp.path + "logo_placeholder.png").scaled(
                 left_panel_widget.width() // 1.9,
                 left_panel_widget.height() // 2.5,
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,

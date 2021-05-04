@@ -16,6 +16,8 @@ class Components:
         "total_time_icon",
         "ingredients",
         "scroll_area",
+        "save_btn",
+        "export_btn",
     )
     path = "src/interface/assets/"
 
@@ -23,6 +25,24 @@ class Components:
         self.widgets[self.__object_names[0]] = self.__search_count()
         self.widgets[self.__object_names[5]] = self.__total_time_icon()
         self.widgets[self.__object_names[7]] = self.__scroll_area()
+        self.widgets[self.__object_names[8]] = self.__save_btn()
+        self.widgets[self.__object_names[9]] = self.__export_btn()
+
+    def __export_btn(self):
+        export_btn = qtw.QLabel(
+            pixmap=qtg.QPixmap(self.path + "export.png").scaled(30, 30)
+        )
+        export_btn.setObjectName(self.__object_names[9])
+        export_btn.setFixedSize(30, 30)
+        return export_btn
+
+    def __save_btn(self):
+        save_btn = qtw.QLabel(
+            pixmap=qtg.QPixmap(self.path + "save.png").scaled(30, 30)
+        )
+        save_btn.setObjectName(self.__object_names[8])
+        save_btn.setFixedSize(30, 30)
+        return save_btn
 
     def __search_count(self):
         count = qtw.QLabel("0")
