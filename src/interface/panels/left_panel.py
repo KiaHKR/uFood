@@ -56,6 +56,7 @@ class Components:
             position: absolute;
         """
         )
+        search_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return search_btn
 
     def __search_icon_bg(self):
@@ -75,6 +76,7 @@ class Components:
         )
         search_filter_btn.setStyleSheet("background-color: white;")
         search_filter_btn.setObjectName("search_filter_btn")
+        # search_filter_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         search_filter_btn.setFixedSize(
             30, self.widgets[self.__object_names[0]].height() - 1
         )
@@ -113,6 +115,7 @@ class Components:
         donate_btn = qtw.QLabel(
             pixmap=qtg.QPixmap(self.path + "fb_icon.png").scaled(30, 30)
         )
+        donate_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         donate_btn.setObjectName(self.__object_names[5])
         return donate_btn
 
@@ -125,6 +128,7 @@ class Components:
             color: white;
         """
         )
+        donate_text.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         donate_text.setObjectName(self.__object_names[6])
         return donate_text
 
