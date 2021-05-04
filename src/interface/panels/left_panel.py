@@ -154,10 +154,14 @@ class Components:
             qss.scrollbar()
             + """QListWidget{
                 background-color: white;
-                margin-left: 20px;
+                margin-left: 0px;
                 font-size: 14px;
         }"""
         )
+        drop_down_results.setVisible(False)
+        drop_down_results.setMaximumWidth(300)
+        drop_down_results.setMinimumWidth(150)
+        drop_down_results.setMaximumHeight(200)
         drop_down_results.setObjectName(self.__object_names[7])
         return drop_down_results
 
