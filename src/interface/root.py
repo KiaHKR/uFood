@@ -1,3 +1,4 @@
+"""Root file to carry root, Views and controller class."""
 import os
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
@@ -20,6 +21,7 @@ b_rpanel = rbcomp().widgets
 
 
 class Root(qtw.QWidget):
+    """Parent class for containing ui."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # -- Build root panel
@@ -31,7 +33,10 @@ class Root(qtw.QWidget):
 
 
 class View(qtw.QWidget):
+    """Parent Layout for left and right widget."""
+
     def __init__(self, *args, **kwargs):
+        """Contructor of view class."""
         super().__init__(*args, **kwargs)
         root_view = Root()
 
@@ -72,6 +77,7 @@ class View(qtw.QWidget):
     # !-- Left Panel
 
     def __left_panel_build(self):
+        """For building left panel."""
         left_panel_widget = qtw.QWidget()
         left_panel_widget.setLayout(qtw.QVBoxLayout())
         Controller.update_logo_size(
@@ -148,6 +154,7 @@ class View(qtw.QWidget):
 
     # !-- Right Top Panel
     def __right_top_build(self):
+        """For building right top panel."""
         top_layout = qtw.QHBoxLayout()
 
         top_layout.addWidget(t_rpanel["back_btn"])
@@ -161,6 +168,7 @@ class View(qtw.QWidget):
 
     # !-- Right bottom panel
     def __right_bottom_build(self):
+        """Widget of right bottom panel."""
         bottom_layout = qtw.QWidget()
         # bottom_layout.setStyleSheet("border:2px solid green;")
         bottom_layout.setLayout(qtw.QVBoxLayout())
@@ -180,13 +188,12 @@ class View(qtw.QWidget):
         pk_id="Error",
         thumbnail=rbcomp.path + "img_placeholder.png",
     ):
+        """Widgets of recipe cards."""
         recipe_card = qtw.QWidget()
         recipe_card.setLayout(qtw.QHBoxLayout())
         recipe_card.setStyleSheet("QWidget::hover"
-                            "{"
-                            "background-color : #141e24;"
-                            "}")
-        
+                                "{background-color : #141e24;}")
+
         info = qtw.QWidget()
         info.setLayout(qtw.QVBoxLayout())
         info.setStyleSheet("background-color: transparent;")
@@ -223,8 +230,10 @@ class View(qtw.QWidget):
 
 
 class Controller:
+    """Controller class."""
+
     def update_logo_size(left_panel_widget):
-        """Changes size of logo pixmap, based on parent panel size."""
+        """For changing size of logo pixmap, based on parent panel size."""
         lpanel["logo"].setPixmap(
             qtg.QPixmap(lcomp.path + "logo_placeholder.png").scaled(
                 left_panel_widget.width() // 1.9,
@@ -235,12 +244,13 @@ class Controller:
         lpanel["logo"].setFixedHeight(left_panel_widget.height() // 2.5)
 
     def donate_url():
+        """Url link for Facebook group."""
         os.startfile(
             "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
         )  # noqa: E502
 
     def save_recipe(id):
-        """Saves recipe id to pickle file."""
+        """For saving recipe id to pickle file."""
         # TODO # get recipe id to save.
         s = logic.Sync()
         s.add_fav(id)
@@ -250,16 +260,19 @@ class Controller:
         # TODO # get recipe info by id.
 
     def update_dropdown():
+        """Update dropdown menu."""
         Controller.update_dropdown_vis()
         Controller.update_dropdown_results()
 
     def update_dropdown_vis():
+        """Visuals of dropdown."""
         if lpanel["search_bar"].text():
             lpanel["filter_dropdown"].setVisible(True)
         else:
             lpanel["filter_dropdown"].setVisible(False)
 
     def update_dropdown_results():
+        """Update results of dropdown."""
         lpanel["filter_dropdown"].clear()
         result_list = logic.Logic.get_matching_ingredients(
             lpanel["search_bar"].text()
@@ -272,6 +285,7 @@ class Controller:
         lpanel["filter_dropdown"].addItems(result_list)
 
     def select_ingredient(ingr):
+        """For selecting ingredients."""
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         lpanel["search_bar"].clear()

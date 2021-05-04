@@ -1,3 +1,4 @@
+"""Right_bottom_panel for containing components class."""
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
@@ -6,6 +7,8 @@ from src.interface.styling import qss
 
 
 class Components:
+    """Components class holds all Widgets for right_bottom_panel."""
+
     widgets = {}
     __object_names = (
         "search_count",
@@ -22,6 +25,7 @@ class Components:
     path = "src/interface/assets/"
 
     def __init__(self):
+        """Is constructor of the components class."""
         self.widgets[self.__object_names[0]] = self.__search_count()
         self.widgets[self.__object_names[5]] = self.__total_time_icon()
         self.widgets[self.__object_names[7]] = self.__scroll_area()
@@ -29,6 +33,7 @@ class Components:
         self.widgets[self.__object_names[9]] = self.__export_btn()
 
     def __export_btn(self):
+        """For the export button label."""
         export_btn = qtw.QLabel(
             pixmap=qtg.QPixmap(self.path + "download_icon.png").scaled(30, 30)
         )
@@ -39,13 +44,15 @@ class Components:
         return export_btn
 
     def __save_btn(self, saved=False):
-        if saved == False:
+        """For the save button label."""
+        if saved is False:
             save_btn = qtw.QLabel(
                 pixmap=qtg.QPixmap(self.path + "heart_icon.png").scaled(30, 30)
             )
-        elif saved == True:
+        elif saved is True:
             save_btn = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png").scaled(30, 30)
+                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png")
+                .scaled(30, 30)
             )
 
         save_btn.setObjectName(self.__object_names[8])
@@ -55,6 +62,7 @@ class Components:
         return save_btn
 
     def __search_count(self):
+        """For counting searches."""
         count = qtw.QLabel("0")
         count.setObjectName(self.__object_names[0])
         count.setStyleSheet(
@@ -63,6 +71,7 @@ class Components:
         return count
 
     def thumbnail_img(self, path_thumbnail):
+        """For label that hold the recipe thumbnail."""
         # might need to change this
         img = qtw.QLabel(pixmap=qtg.QPixmap(path_thumbnail).scaled(120, 120))
         img.setObjectName(self.__object_names[1])
@@ -73,6 +82,7 @@ class Components:
         return img
 
     def recipe_title(self, name):
+        """Label for recipe title."""
         title = qtw.QLabel(name)
         title.setStyleSheet(
             "color: white; font-size: 20px; font-weight: bold;"
@@ -81,6 +91,7 @@ class Components:
         return title
 
     def diet_type(self, diet):
+        """Label for diet type."""
         diet_type = qtw.QLabel(diet)
         if diet == "Vegan":
             diet_colour = "#32a852"
@@ -102,6 +113,7 @@ class Components:
         return diet_type
 
     def total_time(self, time):
+        """Label for cooking time."""
         total_time = qtw.QLabel(time)
         total_time.setStyleSheet(
             "color: white; font-size: 8px; font-weight: bold;"
@@ -110,6 +122,7 @@ class Components:
         return total_time
 
     def __total_time_icon(self):
+        """Label for timer icon."""
         total_time_icon = qtw.QLabel(
             pixmap=qtg.QPixmap(self.path + "timer2.png").scaled(30, 30)
         )
@@ -121,6 +134,7 @@ class Components:
         return total_time_icon
 
     def ingredients(self, ingr):
+        """Label for recipe ingredients."""
         ingredients = qtw.QLabel(ingr)
         ingredients.setStyleSheet(
             "color: white; font-size: 12px; font-weight: bold;"
@@ -129,6 +143,7 @@ class Components:
         return ingredients
 
     def __scroll_area(self):
+        """Scroll area for all the recipe cards."""
         scroll_area = qtw.QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setStyleSheet(qss.scrollbar())

@@ -1,3 +1,4 @@
+"""Right_top_panel file for components class."""
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
@@ -6,11 +7,14 @@ from src.interface.styling import qss
 
 
 class Compontents:
+    """Components class holds all widgets for right top panel."""
+
     widgets = {}
     __object_names = ("back_btn", "win_text", "fav_btn", "recipes_btn")
     __path = "src/interface/assets/"
 
     def __init__(self):
+        """Is constructor for components class."""
         self.widgets[self.__object_names[0]] = self.__back_btn()
         self.widgets[self.__object_names[1]] = self.__win_text()
         self.widgets[self.__object_names[2]] = self.__fav_btn()

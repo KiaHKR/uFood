@@ -1,3 +1,4 @@
+"""Logic file for Logic and sync class."""
 import pickle
 from src.bin import query
 
@@ -9,10 +10,11 @@ class Logic:
     """Logic for the more complex actions."""
 
     def add_fav(self, id):
-        """Adds a favorite to pickle."""
+        """For adding a favorite to pickle."""
         Sync.add_fav(id)
 
     def get_matching_ingredients(search):
+        """For getting matching ingredients to search."""
         master_ingr = search_object.get_ingredient(search)
 
         ingr_list = []
@@ -24,6 +26,7 @@ class Logic:
         return ingr_list
 
     def add_ingr_selected(ingr):
+        """For adding the selected ingredients."""
         selected_ingredients.append(ingr.text())
 
 
@@ -31,7 +34,7 @@ class Sync:
     """Dynchronization for objects when writing to/reading from."""
 
     def __init__(self):
-        """Initializes by reading and saving the current pickle in a list."""
+        """For initializing by reading and saving the current pickle in a list."""
         self.file = "src/interface/assets/pickle.pickle"
         self.fav_list = []
         self.pickle_read()
