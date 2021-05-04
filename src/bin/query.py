@@ -10,7 +10,6 @@ class Search:
             database="ufood",
         )
         self.mycursor = self.mydb.cursor()
-        pass
 
     def recipe_name_search(self, srch):
         return_list = []

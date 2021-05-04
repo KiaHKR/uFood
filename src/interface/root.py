@@ -9,10 +9,6 @@ from src.interface.panels.right_bottom_panel import Components as rbcomp
 from src.interface.styling import qss
 from src.bin import logic
 
-# import bottom rpanel
-# import logic/query
-
-
 app = qtw.QApplication(os.sys.argv)
 lpanel = lcomp().widgets
 t_rpanel = rtcomp().widgets
@@ -146,7 +142,6 @@ class View(qtw.QWidget):
         bottom_layout = qtw.QWidget()
         bottom_layout.setStyleSheet("border:2px solid green;")
         bottom_layout.setLayout(qtw.QVBoxLayout())
-        bottom_layout.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
 
         # while there are results
         bottom_layout.layout().addWidget(self.__recipe_card())
@@ -239,3 +234,7 @@ class Controller:
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         lpanel["search_bar"].clear()
+
+    def update_results():
+        lpanel["scroll_area"].removeWidget
+        pass

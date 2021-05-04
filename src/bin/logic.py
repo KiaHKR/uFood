@@ -1,4 +1,7 @@
 import pickle
+from PyQt5 import QtCore
+
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from src.bin import query
 
 selected_ingredients = []
@@ -24,6 +27,11 @@ class Logic:
 
     def add_ingr_selected(ingr):
         selected_ingredients.append(ingr.text())
+
+    def generate_recipe_cards(result_list):
+        result_box = QWidget()
+        result_box.setLayout(QVBoxLayout())
+        result_box.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
 
 class Sync:
