@@ -21,6 +21,7 @@ class Compontents:
         self.widgets[self.__object_names[3]] = self.__recipes_btn()
 
     def __win_text(self):
+        """For for top panel label."""
         win_text = qtw.QLabel("[ TEXT ]")
         win_text.setObjectName("win_text")
         win_text.setStyleSheet(
@@ -30,6 +31,7 @@ class Compontents:
         return win_text
 
     def __back_btn(self):
+        """Back botton of the top panel."""
         back_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.__path + "back_icon.png"))
         )
@@ -41,6 +43,7 @@ class Compontents:
         return back_btn
 
     def __fav_btn(self):
+        """Push button for favorites."""
         fav_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.__path + "fav_icon.png"))
         )
@@ -52,6 +55,7 @@ class Compontents:
         return fav_btn
 
     def __recipes_btn(self):
+        """Push button for trending recipes."""
         recipes_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.__path + "recipes_icon.png"))
         )

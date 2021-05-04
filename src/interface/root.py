@@ -22,7 +22,9 @@ b_rpanel = rbcomp().widgets
 
 class Root(qtw.QWidget):
     """Parent class for containing ui."""
+
     def __init__(self, *args, **kwargs):
+        """Is constructor of root class."""
         super().__init__(*args, **kwargs)
         # -- Build root panel
         layout = qtw.QHBoxLayout()
