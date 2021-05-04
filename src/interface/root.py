@@ -38,7 +38,7 @@ class View(qtw.QWidget):
         self.left_panel_widget = self.__left_panel_build()
         self.left_panel_widget.setMinimumWidth(300)
         root_view.layout().addWidget(self.left_panel_widget, 3)
-        
+
         # right panel
         right_panel_widget = qtw.QWidget()
         right_panel_widget.setLayout(qtw.QVBoxLayout())
@@ -48,10 +48,11 @@ class View(qtw.QWidget):
 
         # right bottom panel
         info = self.__right_bottom_build()
-        
+        info.setMinimumWidth(725)
+
         b_rpanel["scroll_area"].setWidget(info)
         right_panel_widget.layout().addWidget(rtop_panel)
-        
+
         right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
         right_panel_widget.setMinimumWidth(750)
 
@@ -109,11 +110,9 @@ class View(qtw.QWidget):
         donate.layout().addWidget(lpanel["donate_btn"], 0)
         donate.layout().addWidget(lpanel["donate_text"], 8)
         donate.setFixedSize(135, 50)
-        donate.setStyleSheet('border: none;')
+        donate.setStyleSheet("border: none;")
         donate.clicked.connect(lambda: Controller.donate_url())
         return donate
-    
-
 
     # !-- Right Top Panel
     def __right_top_build(self):
@@ -131,35 +130,57 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         bottom_layout = qtw.QWidget()
-        bottom_layout.setStyleSheet('border:2px solid green;')
+        bottom_layout.setStyleSheet("border:2px solid green;")
         bottom_layout.setLayout(qtw.QVBoxLayout())
-        
-        recipe_card = self.__recipe_card()
+        bottom_layout.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
+
         # while there are results
-        bottom_layout.layout().addWidget(recipe_card)
+        bottom_layout.layout().addWidget(self.__recipe_card())
+        bottom_layout.layout().addWidget(self.__recipe_card())
         return bottom_layout
 
-    def __recipe_card(self, name="[RECIPE NAME]", diet_type="[DIET TYPE]", total_time="[TOTAL TIME]", ingr="[INGREDIENT LIST]", pk_id='Error', thumbnail=rbcomp.path + 'img_placeholder.png'):
+    def __recipe_card(
+        self,
+        name="[RECIPE NAME]",
+        diet_type="[DIET TYPE]",
+        total_time="[TOTAL TIME]",
+        ingr="[INGREDIENT LIST]",
+        pk_id="Error",
+        thumbnail=rbcomp.path + "img_placeholder.png",
+    ):
         recipe_card = qtw.QWidget()
         recipe_card.setLayout(qtw.QHBoxLayout())
         info = qtw.QWidget()
         info.setLayout(qtw.QVBoxLayout())
         info.layout().addWidget(rbcomp().recipe_title(name))
         info.layout().addWidget(rbcomp().diet_type(diet_type))
+
         time = qtw.QWidget()
+
+        buttons = qtw.QWidget()
+        buttons.setLayout(qtw.QVBoxLayout())
+        buttons.layout().addWidget(lpanel["save_btn"])
+        buttons.layout().addWidget(lpanel["export_btn"])
+        buttons.layout().setSpacing(0)
+        
+
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(b_rpanel["total_time_icon"])
         time.layout().addWidget(rbcomp().total_time(total_time))
+        time.layout().setContentsMargins(0, 0, 0, 0)
+        time.layout().setSpacing(0)
         info.layout().addWidget(time)
         info.layout().addWidget(rbcomp().ingredients(ingr))
+        info.layout().setContentsMargins(0, 0, 0, 0)
+        info.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail))
-        recipe_card.layout().addWidget(info)
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(info, 9)
+        recipe_card.layout().addWidget(buttons, 1)
+        
         recipe_card.setObjectName(pk_id)
         recipe_card.setFixedHeight(150)
-
         return recipe_card
-
 
 
 class Controller:
@@ -172,6 +193,8 @@ class Controller:
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,
             )
         )
-    
+
     def donate_url():
-        os.startfile('https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif') #noqa: E502
+        os.startfile(
+            "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
+        )  # noqa: E502
