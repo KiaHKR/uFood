@@ -7,6 +7,7 @@ from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 from src.interface.styling import qss
+from src.bin import logic
 
 # import bottom rpanel
 # import logic/query
@@ -93,8 +94,21 @@ class View(qtw.QWidget):
         # Connect filter btn to filter menu
         lpanel["search_filter_btn"].setMenu(lpanel["search_filter_menu"])
 
+        # Search bar on change connection
+        lpanel["search_bar"].textChanged.connect(
+            lambda: Controller.update_dropdown()
+        )
+
+        # filter_dropdown on select connection
+        lpanel["filter_dropdown"].itemClicked.connect(
+            lambda: Controller.select_ingredient(
+                lpanel["filter_dropdown"].currentItem()
+            )
+        )
+
         # Add widgets to parent search layout
         search_widget.layout().addWidget(lpanel["search_bar"], 0, 0)
+        search_widget.layout().addWidget(lpanel["filter_dropdown"], 1, 0)
         search_widget.layout().addWidget(lpanel["search_btn_bg"], 0, 2)
         search_widget.layout().addWidget(lpanel["search_btn"], 0, 2)
         search_widget.layout().addWidget(lpanel["search_filter_btn"], 0, 3)
@@ -192,8 +206,36 @@ class Controller:
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,
             )
         )
+        lpanel["logo"].setFixedHeight(left_panel_widget.height() // 2.5)
 
     def donate_url():
         os.startfile(
             "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
         )  # noqa: E502
+
+    def update_dropdown():
+        Controller.update_dropdown_vis()
+        Controller.update_dropdown_results()
+
+    def update_dropdown_vis():
+        if lpanel["search_bar"].text():
+            lpanel["filter_dropdown"].setVisible(True)
+        else:
+            lpanel["filter_dropdown"].setVisible(False)
+
+    def update_dropdown_results():
+        lpanel["filter_dropdown"].clear()
+        result_list = logic.Logic.get_matching_ingredients(
+            lpanel["search_bar"].text()
+        )
+        if len(result_list) <= 8:
+            lpanel["filter_dropdown"].setMaximumHeight(len(result_list) * 30)
+        else:
+            lpanel["filter_dropdown"].setMaximumHeight(200)
+
+        lpanel["filter_dropdown"].addItems(result_list)
+
+    def select_ingredient(ingr):
+        logic.Logic.add_ingr_selected(ingr)
+        Controller.update_dropdown()
+        lpanel["search_bar"].clear()
