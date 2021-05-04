@@ -1,4 +1,6 @@
 import pickle
+from pathlib import Path
+from PyPDF2 import PdfFileReader
 from src.bin import query
 
 selected_ingredients = []
@@ -53,3 +55,24 @@ class Sync:
             return (
                 self.fav_list
             )  # send the list of fav id's to some class ehhee
+
+
+class Pdf:
+    """Creating a pdf od a recipe."""
+
+    # https://realpython.com/creating-modifying-pdf/
+    def __init__(self, name, instructions, source):
+        """Creates a pdf with recipe info."""
+        pdf_path = Path.home() / "Downloads" / "recipe.pdf"
+
+        pdf_reader = PdfFileReader(str(pdf_path))
+
+        with pdf_path.open(mode="w") as output_file:
+
+            title = pdf_reader.documentInfo.title
+            num_pages = pdf_reader.getNumPages()
+            output_file.write(f"{title}\\nNumber of pages: {num_pages}\\n\\n")
+
+            for page in pdf_reader.pages:
+                text = page.extractText()
+                output_file.write(text)

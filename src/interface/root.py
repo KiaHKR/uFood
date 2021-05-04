@@ -1,4 +1,5 @@
 import os
+from re import search
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -240,6 +241,8 @@ class Controller:
     def export(id):
         """Export recipe as pdf."""
         # TODO # get recipe info by id.
+        name, instructions, source = search.get_export_info(id)
+        logic.Pdf(name, instructions, source)
 
     def update_dropdown():
         Controller.update_dropdown_vis()

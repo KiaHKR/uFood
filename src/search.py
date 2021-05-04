@@ -92,8 +92,18 @@ class Search:
             instr = x[0]
         return instr.replace("$", "\n")
 
-    def get_export_info(self):
+    def get_export_info(self, recipeid):
         """Retrieves information about a (selected) recipe with an id. To later save."""
+        self.mycursor.execute(
+            "SELECT name, instructions, source FROM recipes WHERE id = '"
+            + recipeid
+            + "';"
+        )
+        for x in self.mycursor:
+            name = x[0]
+            instr = x[1]
+            source = x[2]
+        return name, instr.replace("$", "\n"), source
 
 
 pe = Search()
