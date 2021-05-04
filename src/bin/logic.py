@@ -9,7 +9,8 @@ class Logic:
     """Logic for the more complex actions."""
 
     def add_fav(self, id):
-        Sync.fave_list.append(id)
+        """Adds a favorite to pickle."""
+        Sync.add_fav(id)
 
     def get_matching_ingredients(search):
         master_ingr = search_object.get_ingredient(search)
@@ -29,8 +30,16 @@ class Logic:
 class Sync:
     """Dynchronization for objects when writing to/reading from."""
 
-    file = "src/interface/assets/pickle.pickle"
-    fav_list = []
+    def __init__(self):
+        """Initializes by reading and saving the current pickle in a list."""
+        self.file = "src/interface/assets/pickle.pickle"
+        self.fav_list = []
+        self.pickle_read()
+
+    def add_fav(self, id):
+        """Add new item to a list and renew pickle."""
+        self.fav_list.append(id)
+        self.pickle_write()
 
     def pickle_write(self):
         """Write to bin."""

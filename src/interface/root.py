@@ -117,6 +117,24 @@ class View(qtw.QWidget):
 
         return search_widget
 
+    def __save_build(self):
+        """Build save feature."""
+        save = qtw.QPushButton()
+        save.setLayout(qtw.QHBoxLayout())
+        save.setFixedSize(50, 50)
+        save.layout().addWidget(b_rpanel["save_btn"])
+        save.clicked.connect(lambda: Controller.save())
+        return save
+
+    def __export_build(self):
+        """Build export feature."""
+        export = qtw.QPushButton()
+        export.setLayout(qtw.QHBoxLayout())
+        export.setFixedSize(50, 50)
+        export.layout().addWidget(b_rpanel["export_btn"])
+        export.clicked.connect(lambda: Controller.export())
+        return export
+
     def __donate_build(self):
         """Build donate feature."""
         donate = qtw.QPushButton()
@@ -173,8 +191,8 @@ class View(qtw.QWidget):
 
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
-        buttons.layout().addWidget(b_rpanel["save_btn"])
-        buttons.layout().addWidget(b_rpanel["export_btn"])
+        buttons.layout().addWidget(self.__save_build())
+        buttons.layout().addWidget(self.__export_build())
         buttons.layout().setSpacing(0)
 
         time.setLayout(qtw.QHBoxLayout())
@@ -212,6 +230,16 @@ class Controller:
         os.startfile(
             "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
         )  # noqa: E502
+
+    def save_recipe(id):
+        """Saves recipe id to pickle file."""
+        # TODO # get recipe id to save.
+        s = logic.Sync()
+        s.add_fav(id)
+
+    def export(id):
+        """Export recipe as pdf."""
+        # TODO # get recipe info by id.
 
     def update_dropdown():
         Controller.update_dropdown_vis()
