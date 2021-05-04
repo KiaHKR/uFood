@@ -30,18 +30,22 @@ class Components:
 
     def __export_btn(self):
         export_btn = qtw.QLabel(
-            pixmap=qtg.QPixmap(self.path + "export.png").scaled(30, 30)
+            pixmap=qtg.QPixmap(self.path + "download_icon.png").scaled(30, 30)
         )
         export_btn.setObjectName(self.__object_names[9])
         export_btn.setFixedSize(30, 30)
+        export_btn.setStyleSheet("border : none;")
+        export_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return export_btn
 
     def __save_btn(self):
         save_btn = qtw.QLabel(
-            pixmap=qtg.QPixmap(self.path + "save.png").scaled(30, 30)
+            pixmap=qtg.QPixmap(self.path + "heart_icon.png").scaled(30, 30)
         )
         save_btn.setObjectName(self.__object_names[8])
         save_btn.setFixedSize(30, 30)
+        save_btn.setStyleSheet("border : none;")
+        save_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return save_btn
 
     def __search_count(self):
@@ -62,16 +66,36 @@ class Components:
 
     def recipe_title(self, name):
         title = qtw.QLabel(name)
+        title.setStyleSheet(
+            "color: white; font-size: 20px; font-weight: bold;"
+        )
         title.setObjectName(self.__object_names[2])
         return title
 
     def diet_type(self, diet):
         diet_type = qtw.QLabel(diet)
+        if diet == "Vegan":
+            diet_colour = "#32a852"
+        elif diet == "Vegetarian":
+            diet_colour = "#137d2c"
+        elif diet == "Pescatarian":
+            diet_colour = "#2a75a3"
+        elif diet == "keto":
+            diet_colour = "#d18436"
+        else:
+            diet_colour = "#8c0000"  # remove later
+
+        diet_type.setStyleSheet(
+            f"color: {diet_colour}; font-size: 14px; font-weight: bold;"
+        )
         diet_type.setObjectName(self.__object_names[3])
         return diet_type
 
     def total_time(self, time):
         total_time = qtw.QLabel(time)
+        total_time.setStyleSheet(
+            "color: white; font-size: 8px; font-weight: bold;"
+        )
         total_time.setObjectName(self.__object_names[4])
         return total_time
 
@@ -88,6 +112,9 @@ class Components:
 
     def ingredients(self, ingr):
         ingredients = qtw.QLabel(ingr)
+        ingredients.setStyleSheet(
+            "color: white; font-size: 12px; font-weight: bold;"
+        )
         ingredients.setObjectName(self.__object_names[6])
         return ingredients
 

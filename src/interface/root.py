@@ -122,8 +122,15 @@ class View(qtw.QWidget):
         """Build save feature."""
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
-        save.setFixedSize(50, 50)
         save.layout().addWidget(b_rpanel["save_btn"])
+        save.setStyleSheet(
+            "border :2px solid ;"
+            "border-top-color : #4f0005; "
+            "border-left-color :#4f0005;"
+            "border-right-color :#4f0005;"
+            "border-bottom-color : #4f0005"
+        )
+        save.setFixedSize(50, 50)
         save.clicked.connect(lambda: Controller.save())
         return save
 
@@ -132,6 +139,14 @@ class View(qtw.QWidget):
         export = qtw.QPushButton()
         export.setLayout(qtw.QHBoxLayout())
         export.setFixedSize(50, 50)
+        # export.setStyleSheet("border: none;")
+        export.setStyleSheet(
+            "border :2px solid ;"
+            "border-top-color : #f9f9f9; "
+            "border-left-color :#f9f9f9;"
+            "border-right-color :#f9f9f9;"
+            "border-bottom-color : #f9f9f9"
+        )
         export.layout().addWidget(b_rpanel["export_btn"])
         export.clicked.connect(lambda: Controller.export())
         return export
@@ -163,7 +178,7 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         bottom_layout = qtw.QWidget()
-        bottom_layout.setStyleSheet("border:2px solid green;")
+        # bottom_layout.setStyleSheet("border:2px solid green;")
         bottom_layout.setLayout(qtw.QVBoxLayout())
         bottom_layout.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
 

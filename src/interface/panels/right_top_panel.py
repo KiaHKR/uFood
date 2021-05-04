@@ -33,6 +33,7 @@ class Compontents:
         back_btn.setObjectName(self.__object_names[0])
         back_btn.setStyleSheet("border: none;")
         back_btn.setFixedWidth(35)
+        back_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return back_btn
 
     def __fav_btn(self):
@@ -43,6 +44,7 @@ class Compontents:
         fav_btn.setObjectName(self.__object_names[1])
         fav_btn.setStyleSheet("border: none;")
         fav_btn.setFixedWidth(35)
+        fav_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return fav_btn
 
     def __recipes_btn(self):
@@ -53,4 +55,5 @@ class Compontents:
         recipes_btn.setObjectName(self.__object_names[2])
         recipes_btn.setStyleSheet("border: none;")
         recipes_btn.setFixedWidth(35)
+        recipes_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return recipes_btn
