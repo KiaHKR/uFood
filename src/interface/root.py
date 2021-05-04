@@ -122,13 +122,6 @@ class View(qtw.QWidget):
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
         save.layout().addWidget(b_rpanel["save_btn"])
-        save.setStyleSheet(
-            "border :2px solid ;"
-            "border-top-color : #4f0005; "
-            "border-left-color :#4f0005;"
-            "border-right-color :#4f0005;"
-            "border-bottom-color : #4f0005"
-        )
         save.setFixedSize(50, 50)
         save.clicked.connect(lambda: Controller.save())
         return save
@@ -138,14 +131,6 @@ class View(qtw.QWidget):
         export = qtw.QPushButton()
         export.setLayout(qtw.QHBoxLayout())
         export.setFixedSize(50, 50)
-        # export.setStyleSheet("border: none;")
-        export.setStyleSheet(
-            "border :2px solid ;"
-            "border-top-color : #f9f9f9; "
-            "border-left-color :#f9f9f9;"
-            "border-right-color :#f9f9f9;"
-            "border-bottom-color : #f9f9f9"
-        )
         export.layout().addWidget(b_rpanel["export_btn"])
         export.clicked.connect(lambda: Controller.export())
         return export
@@ -197,8 +182,15 @@ class View(qtw.QWidget):
     ):
         recipe_card = qtw.QWidget()
         recipe_card.setLayout(qtw.QHBoxLayout())
+        recipe_card.setStyleSheet("QWidget::hover"
+                            "{"
+                            "background-color : #141e24;"
+                            "}")
+        
         info = qtw.QWidget()
         info.setLayout(qtw.QVBoxLayout())
+        info.setStyleSheet("background-color: transparent;")
+        # info.setStyleSheet("border: none;")
         info.layout().addWidget(rbcomp().recipe_title(name))
         info.layout().addWidget(rbcomp().diet_type(diet_type))
 
@@ -206,6 +198,7 @@ class View(qtw.QWidget):
 
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
+        buttons.setStyleSheet("background-color: transparent;")
         buttons.layout().addWidget(self.__save_build())
         buttons.layout().addWidget(self.__export_build())
         buttons.layout().setSpacing(0)

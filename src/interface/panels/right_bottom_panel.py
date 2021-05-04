@@ -38,10 +38,16 @@ class Components:
         export_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return export_btn
 
-    def __save_btn(self):
-        save_btn = qtw.QLabel(
-            pixmap=qtg.QPixmap(self.path + "heart_icon.png").scaled(30, 30)
-        )
+    def __save_btn(self, saved=False):
+        if saved == False:
+            save_btn = qtw.QLabel(
+                pixmap=qtg.QPixmap(self.path + "heart_icon.png").scaled(30, 30)
+            )
+        elif saved == True:
+            save_btn = qtw.QLabel(
+                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png").scaled(30, 30)
+            )
+
         save_btn.setObjectName(self.__object_names[8])
         save_btn.setFixedSize(30, 30)
         save_btn.setStyleSheet("border : none;")
@@ -60,7 +66,9 @@ class Components:
         # might need to change this
         img = qtw.QLabel(pixmap=qtg.QPixmap(path_thumbnail).scaled(120, 120))
         img.setObjectName(self.__object_names[1])
-        img.setFixedSize(135, 135)
+        img.setFixedSize(132, 132)
+        img.setStyleSheet("background-color: transparent;")
+        # img.setStyleSheet("border: none;")
         img.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         return img
 
@@ -80,8 +88,10 @@ class Components:
             diet_colour = "#137d2c"
         elif diet == "Pescatarian":
             diet_colour = "#2a75a3"
-        elif diet == "keto":
+        elif diet == "Keto":
             diet_colour = "#d18436"
+        elif diet == "Paleo":
+            diet_colour = "#336600"
         else:
             diet_colour = "#8c0000"  # remove later
 
