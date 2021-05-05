@@ -1,3 +1,4 @@
+"""Search file for containing search class."""
 import mysql.connector
 
 

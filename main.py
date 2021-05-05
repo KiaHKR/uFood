@@ -1,3 +1,4 @@
+"""Main file for launching application."""
 from src.interface.root import View
 
 
