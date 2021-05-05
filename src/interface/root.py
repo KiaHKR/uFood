@@ -12,7 +12,7 @@ from src.interface.styling import qss
 from src.bin import logic
 
 # import bottom rpanel
-# import logic/query
+from src.bin import query
 
 
 app = qtw.QApplication(os.sys.argv)
@@ -194,8 +194,9 @@ class View(qtw.QWidget):
         """Widgets of recipe cards."""
         recipe_card = qtw.QWidget()
         recipe_card.setLayout(qtw.QHBoxLayout())
-        recipe_card.setStyleSheet("QWidget::hover"
-                                "{background-color : #141e24;}")
+        recipe_card.setStyleSheet(
+            "QWidget::hover" "{background-color : #141e24;}"
+        )
 
         info = qtw.QWidget()
         info.setLayout(qtw.QVBoxLayout())
@@ -258,10 +259,10 @@ class Controller:
         s = logic.Sync()
         s.add_fav(id)
 
-    def export(id):
+    def export():  # add id as parameter and remove "2" from the fucntion call.
         """Export recipe as pdf."""
         # TODO # get recipe info by id.
-        name, instructions, source = search.get_export_info(id)
+        name, instructions, source = query.Search().get_export_info("2")
         logic.Pdf(name, instructions, source)
 
     def update_dropdown():

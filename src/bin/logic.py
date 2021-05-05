@@ -1,8 +1,8 @@
 """Logic file for Logic and sync class."""
 import pickle
-from pathlib import Path
-from PyPDF2 import PdfFileReader
+from fpdf import FPDF
 from src.bin import query
+from pathlib import Path
 
 selected_ingredients = []
 search_object = query.Search()
@@ -63,19 +63,32 @@ class Sync:
 class Pdf:
     """Creating a pdf od a recipe."""
 
-    # https://realpython.com/creating-modifying-pdf/
+    # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
     def __init__(self, name, instructions, source):
         """Creates a pdf with recipe info."""
-        pdf_path = Path.home() / "Downloads" / "recipe.pdf"
+        # Create an instance of the fpdf class
+        pdf = FPDF()
 
-        pdf_reader = PdfFileReader(str(pdf_path))
+        # Add a page
+        pdf.add_page()
 
-        with pdf_path.open(mode="w") as output_file:
+        # set style and size of font
+        # that you want in the pdf
+        pdf.set_font("Arial", size=14)
 
-            title = pdf_reader.documentInfo.title
-            num_pages = pdf_reader.getNumPages()
-            output_file.write(f"{title}\\nNumber of pages: {num_pages}\\n\\n")
+        # create a cell
+        pdf.cell(100, 10, txt=name, ln=1, align="C")
 
-            for page in pdf_reader.pages:
-                text = page.extractText()
-                output_file.write(text)
+        # add another cell
+        pdf.multi_cell(
+            100,
+            10,
+            txt="Instructions: \n" + instructions,
+            align="C",
+        )
+
+        pdf.cell(200, 20, txt=source, ln=2, align="C")
+
+        # save the pdf with name .pdf
+        home = str(Path.home())
+        pdf.output(home + "/Downloads/recipe.pdf")  # or name + ".pdf"
