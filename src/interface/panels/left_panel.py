@@ -82,11 +82,13 @@ class Components:
         search_filter_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.path + "filter_icon.png"))
         )
-        search_filter_btn.setStyleSheet("background-color: white;")
+        search_filter_btn.setStyleSheet(
+            "background-color: white; border: none;"
+        )
         search_filter_btn.setObjectName("search_filter_btn")
         # search_filter_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         search_filter_btn.setFixedSize(
-            30, self.widgets[self.__object_names[0]].height() - 1
+            30, self.widgets[self.__object_names[0]].height() - 2
         )
         search_filter_btn.setContentsMargins(5, 0, 0, 0)
         return search_filter_btn
