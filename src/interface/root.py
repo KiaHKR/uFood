@@ -1,4 +1,5 @@
 """Root file to carry root, Views and controller class."""
+from logging import log
 import os
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
@@ -121,7 +122,7 @@ class View(qtw.QWidget):
 
         return search_widget
 
-    def __save_build(self):
+    def __save_build():
         """Build save feature."""
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
@@ -130,7 +131,7 @@ class View(qtw.QWidget):
         save.clicked.connect(lambda: Controller.save())
         return save
 
-    def __export_build(self):
+    def __export_build():
         """Build export feature."""
         export = qtw.QPushButton()
         export.setLayout(qtw.QHBoxLayout())
@@ -167,24 +168,16 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         """Widget of right bottom panel."""
-        bottom_layout = qtw.QWidget()
-        # bottom_layout.setStyleSheet("border:2px solid green;")
-        bottom_layout.setLayout(qtw.QVBoxLayout())
-        bottom_layout.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
-
-        # while there are results
-        bottom_layout.layout().addWidget(self.__recipe_card())
-        bottom_layout.layout().addWidget(self.__recipe_card())
+        bottom_layout = Controller.generate_trending()
         return bottom_layout
 
-    def __recipe_card(
-        self,
+    def recipe_card(
         name="[RECIPE NAME]",
         diet_type="[DIET TYPE]",
         total_time="[TOTAL TIME]",
         ingr="[INGREDIENT LIST]",
         pk_id="Error",
-        thumbnail=rbcomp.path + "img_placeholder.png",
+        thumbnail=None,
     ):
         """Widgets of recipe cards."""
         recipe_card = qtw.QWidget()
@@ -205,8 +198,8 @@ class View(qtw.QWidget):
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
-        buttons.layout().addWidget(self.__save_build())
-        buttons.layout().addWidget(self.__export_build())
+        buttons.layout().addWidget(View.__save_build())
+        buttons.layout().addWidget(View.__export_build())
         buttons.layout().setSpacing(0)
 
         time.setLayout(qtw.QHBoxLayout())
@@ -220,6 +213,7 @@ class View(qtw.QWidget):
         info.layout().setSpacing(0)
 
         recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+
         recipe_card.layout().addWidget(info, 9)
         recipe_card.layout().addWidget(buttons, 1)
 
@@ -289,6 +283,20 @@ class Controller:
         Controller.update_dropdown()
         lpanel["search_bar"].clear()
 
-    def update_results():
-        lpanel["scroll_area"].removeWidget
-        pass
+    def generate_trending():
+        widget = logic.Logic.generate_result_vBox()
+        trending_list = logic.Logic.get_trending()
+
+        for i in trending_list:
+            print()
+            recipe_card = View.recipe_card(
+                i[0].title(),
+                i[2].replace(",", ", "),
+                str(i[1])[:-3],
+                i[3].replace(",", ", "),
+                str(i[4]),
+                i[5],
+            )
+            widget.layout().addWidget(recipe_card)
+
+        return widget

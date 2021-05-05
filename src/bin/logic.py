@@ -32,10 +32,15 @@ class Logic:
         """For adding the selected ingredients."""
         selected_ingredients.append(ingr.text())
 
-    def generate_recipe_cards(result_list):
+    def generate_result_vBox():
         result_box = QWidget()
         result_box.setLayout(QVBoxLayout())
+        result_box.setObjectName("result_box")
         result_box.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        return result_box
+
+    def get_trending():
+        return search_object.trending()[:5]
 
 
 class Sync:

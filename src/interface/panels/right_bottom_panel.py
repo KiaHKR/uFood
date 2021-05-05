@@ -1,7 +1,9 @@
 """Right_bottom_panel for containing components class."""
+from types import FrameType
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+import urllib.request as request
 
 from src.interface.styling import qss
 
@@ -51,8 +53,9 @@ class Components:
             )
         elif saved is True:
             save_btn = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png")
-                .scaled(30, 30)
+                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png").scaled(
+                    30, 30
+                )
             )
 
         save_btn.setObjectName(self.__object_names[8])
@@ -72,8 +75,25 @@ class Components:
 
     def thumbnail_img(self, path_thumbnail):
         """For label that hold the recipe thumbnail."""
+
+        if path_thumbnail is None:
+            img = qtw.QLabel(
+                pixmap=qtg.QPixmap(self.path + "img_placeholder.png").scaled(
+                    120, 120
+                )
+            )
+        else:
+            req = request.Request(
+                path_thumbnail, headers={"User-Agent": "Mozilla/5.0"}
+            )
+            url = request.urlopen(req).read()
+            pixmap = qtg.QPixmap()
+            pixmap.loadFromData(url)
+            pixmap.scaled(120, 120)
+            img = qtw.QLabel()
+            img.setPixmap(pixmap)
+
         # might need to change this
-        img = qtw.QLabel(pixmap=qtg.QPixmap(path_thumbnail).scaled(120, 120))
         img.setObjectName(self.__object_names[1])
         img.setFixedSize(132, 132)
         img.setStyleSheet("background-color: transparent;")
@@ -147,5 +167,6 @@ class Components:
         scroll_area = qtw.QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setStyleSheet(qss.scrollbar())
+        scroll_area.setFrameShape(qtw.QFrame.Shape.NoFrame)
         scroll_area.setObjectName(self.__object_names[7])
         return scroll_area
