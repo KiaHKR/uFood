@@ -11,10 +11,13 @@ from src.interface.panels.right_bottom_panel import Components as rbcomp
 from src.interface.styling import qss
 from src.bin import logic
 
+<<<<<<< HEAD
 # import bottom rpanel
 from src.bin import query
 
 
+=======
+>>>>>>> dev_lasse
 app = qtw.QApplication(os.sys.argv)
 lpanel = lcomp().widgets
 t_rpanel = rtcomp().widgets
@@ -295,3 +298,7 @@ class Controller:
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         lpanel["search_bar"].clear()
+
+    def update_results():
+        lpanel["scroll_area"].removeWidget
+        pass

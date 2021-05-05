@@ -1,6 +1,12 @@
 """Logic file for Logic and sync class."""
 import pickle
+<<<<<<< HEAD
 from fpdf import FPDF
+=======
+from PyQt5 import QtCore
+
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
+>>>>>>> dev_lasse
 from src.bin import query
 from pathlib import Path
 
@@ -30,6 +36,11 @@ class Logic:
     def add_ingr_selected(ingr):
         """For adding the selected ingredients."""
         selected_ingredients.append(ingr.text())
+
+    def generate_recipe_cards(result_list):
+        result_box = QWidget()
+        result_box.setLayout(QVBoxLayout())
+        result_box.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
 
 class Sync:
