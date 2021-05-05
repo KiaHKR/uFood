@@ -1,12 +1,9 @@
 """Logic file for Logic and sync class."""
 import pickle
-<<<<<<< HEAD
 from fpdf import FPDF
-=======
 from PyQt5 import QtCore
 
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
->>>>>>> dev_lasse
 from src.bin import query
 from pathlib import Path
 
