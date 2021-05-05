@@ -1,3 +1,4 @@
+"""File for containing Components class."""
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
@@ -6,6 +7,8 @@ from src.interface.styling import qss
 
 
 class Components:
+    """Components class that holds all widgets."""
+
     widgets = {}
     __object_names = (
         "search_bar",
@@ -21,6 +24,7 @@ class Components:
     path = "src/interface/assets/"
 
     def __init__(self):
+        """Components class constructor."""
         self.widgets[self.__object_names[0]] = self.__search_bar()
         self.widgets[self.__object_names[1]] = self.__search_btn()
         self.widgets[self.__object_names[2]] = self.__search_icon_bg()
@@ -32,6 +36,7 @@ class Components:
         self.widgets[self.__object_names[8]] = self.__logo()
 
     def __search_bar(self):
+        """Search bar widget for ingredients."""
         search_bar = qtw.QLineEdit()
         search_bar.setObjectName("search_bar")
         search_bar.setFixedHeight(40)
@@ -42,6 +47,7 @@ class Components:
         return search_bar
 
     def __search_btn(self):
+        """Button to begin searching for ingredients."""
         search_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.path + "search.png"))
         )
@@ -56,9 +62,11 @@ class Components:
             position: absolute;
         """
         )
+        search_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return search_btn
 
     def __search_icon_bg(self):
+        """Icon for search button."""
         search_btn_bg = qtw.QLabel()
         search_btn_bg.setStyleSheet(
             "background-color: white; margin-top: 1.1px;"
@@ -70,11 +78,13 @@ class Components:
         return search_btn_bg
 
     def __search_filter_btn(self):
+        """Filter button for selecting diet type."""
         search_filter_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.path + "filter_icon.png"))
         )
         search_filter_btn.setStyleSheet("background-color: white;")
         search_filter_btn.setObjectName("search_filter_btn")
+        # search_filter_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         search_filter_btn.setFixedSize(
             30, self.widgets[self.__object_names[0]].height() - 1
         )
@@ -82,6 +92,7 @@ class Components:
         return search_filter_btn
 
     def __search_filter_menu(self):
+        """Menu for selecting diet type."""
         menu = qtw.QMenu()
         menu.setContentsMargins(5, 0, 0, 0)
         act1 = qtw.QAction("Vegan", menu)
@@ -110,13 +121,16 @@ class Components:
         return menu
 
     def __donate_btn(self):
+        """Donate label for facebook link."""
         donate_btn = qtw.QLabel(
             pixmap=qtg.QPixmap(self.path + "fb_icon.png").scaled(30, 30)
         )
+        donate_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         donate_btn.setObjectName(self.__object_names[5])
         return donate_btn
 
     def __donate_text(self):
+        """Text for next to donate image."""
         donate_text = qtw.QLabel("DONATE")
         donate_text.setStyleSheet(
             """
@@ -125,10 +139,12 @@ class Components:
             color: white;
         """
         )
+        donate_text.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         donate_text.setObjectName(self.__object_names[6])
         return donate_text
 
     def __drop_down_results(self):
+        """Drop down menu to show results of search bar."""
         drop_down_results = qtw.QListWidget()
         drop_down_results.setStyleSheet(
             qss.scrollbar()
@@ -146,6 +162,7 @@ class Components:
         return drop_down_results
 
     def __logo(self):
+        """Label to hold the application logo."""
         logo = qtw.QLabel()
         logo.setObjectName(self.__object_names[8])
         logo.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
