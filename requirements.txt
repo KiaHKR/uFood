@@ -1,2 +1,3 @@
 fpdf
 PyQT5
+mysql-connector-python
