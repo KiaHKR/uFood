@@ -96,7 +96,7 @@ class Pdf:
             100,
             10,
             txt="Igredients: \n" + ingred,
-            align="C",
+            align="L",
         )
 
         # Instructions
