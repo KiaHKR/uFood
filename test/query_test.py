@@ -16,11 +16,9 @@ class TestQueryClass(unittest.TestCase):
 
     def test_recipe_name_search(self):
         """Tests the recipe search by name."""
-        exp_list = []
-        exp_list.append(('Basic Omlette', "00:07:00", 'Vegetarian', 'eggs,milk', 32, 'https://media.eggs.ca/assets/RecipePhotos/_resampled/FillWyIxMjgwIiwiNzIwIl0/Basic-Omelette-CMS.jpg'))
         connection = query.Search()
-        res = connection.recipe_name_search("Omlette")
-        exp = exp_list
+        res = len(connection.recipe_name_search("Omlette"))
+        exp = 1
         self.assertEqual(res, exp)
 
     def test_trending(self):
@@ -34,7 +32,7 @@ class TestQueryClass(unittest.TestCase):
         """Tests the search of recipe by ingredient."""
         connection = query.Search()
         res = len(connection.ingredient_name_search(["eggs"]))
-        exp = 6
+        exp = 7
         self.assertEqual(res, exp)
 
     def test_cooking_time_search(self):
@@ -54,7 +52,7 @@ class TestQueryClass(unittest.TestCase):
     def test_get_instructions(self):
         """Test the search for instructions with recipeID."""
         connection = query.Search()
-        res = connection.get_instruction("1")
+        res = connection.get_instructions("1")
         self.assertIn("STEP 1", res)
 
     def test_get_ingredients(self):
@@ -69,7 +67,7 @@ class TestQueryClass(unittest.TestCase):
         connection = query.Search()
         qry = connection.get_export_info("1")
         res = len(qry)
-        exp = 3
+        exp = 4
         self.assertEqual(res, exp)
 
         
