@@ -256,8 +256,10 @@ class Controller:
     def export():  # add id as parameter and remove "2" from the fucntion call.
         """Export recipe as pdf."""
         # TODO # get recipe info by id.
-        name, instructions, source = query.Search().get_export_info("2")
-        logic.Pdf(name, instructions, source)
+        name, ingred, instructions, source = query.Search().get_export_info(
+            "2"
+        )
+        logic.Pdf(name, ingred, instructions, source)
 
     def update_dropdown():
         """Update dropdown menu."""

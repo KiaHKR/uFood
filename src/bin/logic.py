@@ -77,22 +77,29 @@ class Pdf:
     """Creating a pdf od a recipe."""
 
     # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
-    def __init__(self, name, instructions, source):
+    def __init__(self, name, ingred, instructions, source):
         """Creates a pdf with recipe info."""
         # Create an instance of the fpdf class
         pdf = FPDF()
 
         # Add a page
         pdf.add_page()
+        pdf.set_font("Arial", size=10)
 
-        # set style and size of font
-        # that you want in the pdf
-        pdf.set_font("Arial", size=14)
-
+        # Title
         # create a cell
         pdf.cell(100, 10, txt=name, ln=1, align="C")
 
-        # add another cell
+        # Ingredients
+
+        pdf.multi_cell(
+            100,
+            10,
+            txt="Igredients: \n" + ingred,
+            align="C",
+        )
+
+        # Instructions
         pdf.multi_cell(
             100,
             10,
@@ -100,7 +107,8 @@ class Pdf:
             align="C",
         )
 
-        pdf.cell(200, 20, txt=source, ln=2, align="C")
+        # Source
+        pdf.cell(200, 20, txt="Source", ln=1, align="C", link=source)
 
         # save the pdf with name .pdf
         home = str(Path.home())

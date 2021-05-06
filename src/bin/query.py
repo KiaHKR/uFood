@@ -110,12 +110,25 @@ class Search:
     def get_export_info(self, recipeid):
         """Retrieves information about a (selected) recipe with an id. To later save."""
         self.mycursor.execute(
-            "SELECT name, instructions, source FROM recipes WHERE id = '"
-            + recipeid
-            + "';"
+            "SELECT recipes.name, GROUP_CONCAT(CONCAT_WS(' '"
+            ", ingredients_has_recipes.amount, "
+            + "ingredients_has_recipes.measurements_name, "
+            + "ingredients_has_recipes.ingredients_name) SEPARATOR '@')as 'Ingredients', "
+            + "recipes.instructions, "
+            + "recipes.source "
+            + "FROM recipes "
+            + "INNER JOIN ingredients_has_recipes "
+            + "ON recipes.id = ingredients_has_recipes.recipes_id "
+            "WHERE recipes.id = '" + recipeid + "';"
         )
         for x in self.mycursor:
             name = x[0]
-            instr = x[1]
-            source = x[2]
-        return name, instr.replace("$", "\n"), source
+            ingred = x[1]
+            instr = x[2]
+            source = x[3]
+        return (
+            name,
+            ingred.replace("@", "\n"),
+            instr.replace("$", "\n"),
+            source,
+        )
