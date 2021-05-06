@@ -1,9 +1,7 @@
 """Logic file for Logic and sync class."""
 import pickle
 from fpdf import FPDF
-from PyQt5 import QtCore
 
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from src.bin import query
 from pathlib import Path
 
@@ -34,15 +32,17 @@ class Logic:
         """For adding the selected ingredients."""
         selected_ingredients.append(ingr.text())
 
-    def generate_result_vBox():
-        result_box = QWidget()
-        result_box.setLayout(QVBoxLayout())
-        result_box.setObjectName("result_box")
-        result_box.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-        return result_box
-
     def get_trending():
+        """Returns list of top 5 trending from query."""
         return search_object.trending()[:5]
+
+    def get_ingredient_search():
+        """Returns list of recipes matching ingredients."""
+        list = search_object.ingredient_name_search(selected_ingredients)
+        for i in list:
+            print(i)
+
+        return list
 
 
 class Sync:

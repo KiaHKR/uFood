@@ -9,7 +9,6 @@ from PyQt5 import QtCore as qtc
 from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
-from src.interface.styling import qss
 from src.bin import logic
 
 # import bottom rpanel
@@ -36,13 +35,15 @@ class Root(qtw.QWidget):
         self.setLayout(layout)
 
 
+root_view = Root()
+
+
 class View(qtw.QWidget):
     """Parent Layout for left and right widget."""
 
     def __init__(self, *args, **kwargs):
         """Contructor of view class."""
         super().__init__(*args, **kwargs)
-        root_view = Root()
 
         # left panel
         self.left_panel_widget = self.__left_panel_build()
@@ -50,23 +51,20 @@ class View(qtw.QWidget):
         root_view.layout().addWidget(self.left_panel_widget, 3)
 
         # right panel
-        right_panel_widget = qtw.QWidget()
-        right_panel_widget.setLayout(qtw.QVBoxLayout())
+        self.right_panel_widget = qtw.QWidget()
+        self.right_panel_widget.setLayout(qtw.QVBoxLayout())
 
         # right top panel
         rtop_panel = self.__right_top_build()
 
         # right bottom panel
-        info = self.__right_bottom_build()
-        info.setMinimumWidth(725)
+        self.__right_bottom_build()
+        self.right_panel_widget.layout().addWidget(rtop_panel)
 
-        b_rpanel["scroll_area"].setWidget(info)
-        right_panel_widget.layout().addWidget(rtop_panel)
+        self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
+        self.right_panel_widget.setMinimumWidth(750)
 
-        right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
-        right_panel_widget.setMinimumWidth(750)
-
-        root_view.layout().addWidget(right_panel_widget, 7)
+        root_view.layout().addWidget(self.right_panel_widget, 7)
 
         self.qTimer = qtc.QTimer()
         self.qTimer.setInterval(1)
@@ -75,7 +73,16 @@ class View(qtw.QWidget):
         )
         self.qTimer.start()
 
+        # filter_dropdown on select connection
+        lpanel["filter_dropdown"].itemClicked.connect(
+            lambda: Controller.select_ingredient(
+                lpanel["filter_dropdown"].currentItem()
+            )
+        )
+
         root_view.show()
+        self.__right_bottom_refresh()
+
         os.sys.exit(app.exec_())
 
     # !-- Left Panel
@@ -107,13 +114,6 @@ class View(qtw.QWidget):
         # Search bar on change connection
         lpanel["search_bar"].textChanged.connect(
             lambda: Controller.update_dropdown()
-        )
-
-        # filter_dropdown on select connection
-        lpanel["filter_dropdown"].itemClicked.connect(
-            lambda: Controller.select_ingredient(
-                lpanel["filter_dropdown"].currentItem()
-            )
         )
 
         # Add widgets to parent search layout
@@ -173,8 +173,10 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         """Widget of right bottom panel."""
-        bottom_layout = Controller.generate_trending()
-        return bottom_layout
+        Controller.generate_trending()
+
+    def __right_bottom_refresh(self):
+        self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -291,13 +293,17 @@ class Controller:
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         lpanel["search_bar"].clear()
+        Controller.update_ingredient_search_results()
 
     def generate_trending():
-        widget = logic.Logic.generate_result_vBox()
+        """Generates the VBox widget with the list of trending recipes."""
         trending_list = logic.Logic.get_trending()
+        Controller.generate_recipe_cards(trending_list)
 
-        for i in trending_list:
-            print()
+    def generate_recipe_cards(recipe_list):
+        """Generates a VBox with a list of recipe cards in it."""
+        widget_list = []
+        for i in recipe_list:
             recipe_card = View.recipe_card(
                 i[0].title(),
                 i[2].replace(",", ", "),
@@ -306,6 +312,39 @@ class Controller:
                 str(i[4]),
                 i[5],
             )
-            widget.layout().addWidget(recipe_card)
+            widget_list.append(recipe_card)
+            # print(i[0] + " addded, id: " + str(i[4]))
 
-        return widget
+        for i in range(len(widget_list)):
+            b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[i])
+
+        # for i in widget_list:
+
+    def update_ingredient_search_results():
+        """Takes care of everything to do with updating
+        ingredient_search results."""
+        Controller.delete_recipe_cards()
+        result_list = logic.Logic.get_ingredient_search()
+        Controller.generate_recipe_cards(result_list)
+        root_view.children()[2].children()[0].layout().addWidget(
+            b_rpanel["scroll_area"]
+        )
+
+    def delete_recipe_cards():
+        for i in reversed(
+            range(b_rpanel["scroll_area"].widget().layout().count())
+        ):
+            remove_widget = (
+                b_rpanel["scroll_area"].widget().layout().takeAt(i).widget()
+            )
+            b_rpanel["scroll_area"].widget().layout().removeWidget(
+                remove_widget
+            )
+            remove_widget.deleteLater()
+
+        root_view.children()[2].children()[0].removeWidget(
+            b_rpanel["scroll_area"]
+        )
+
+    def change_page():
+        pass
