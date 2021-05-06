@@ -186,7 +186,7 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         """Widget of right bottom panel."""
-        Controller.generate_trending()
+        Controller.build_trending()
 
     def __right_bottom_refresh(self):
         self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
@@ -323,14 +323,25 @@ class Controller:
         logic.Logic.remove_ingr_selected(ingr)
         Controller.update_dropdown()
         Controller.update_selected()
-        Controller.update_ingredient_search_results()
+        if len(logic.selected_ingredients) > 0:
+            Controller.update_ingredient_search_results()
+        else:
+            Controller.update_trending()
 
-    def generate_trending():
+    def build_trending():
+        """Same as update_trending(), but only used on initial build."""
+        trending_list = logic.Logic.get_trending()
+        Controller.generate_recipe_cards(trending_list, True)
+        Controller.update_section_header("Trending Recipes")
+
+    def update_trending():
         """Generates the VBox widget with the list of trending recipes."""
+        Controller.delete_recipe_cards()
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
+        Controller.update_section_header("Trending Recipes")
 
-    def generate_recipe_cards(recipe_list):
+    def generate_recipe_cards(recipe_list, build=False):
         """Generates a VBox with a list of recipe cards in it."""
         widget_list = []
         for i in recipe_list:
@@ -356,10 +367,10 @@ class Controller:
         else:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
 
-        # for i in widget_list:
-
-    def get_id(id):
-        print(id)
+        if not build:
+            root_view.children()[2].children()[0].layout().addWidget(
+                b_rpanel["scroll_area"]
+            )
 
     def update_ingredient_search_results():
         """Takes care of everything to do with updating
@@ -367,9 +378,7 @@ class Controller:
         Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search()
         Controller.generate_recipe_cards(result_list)
-        root_view.children()[2].children()[0].layout().addWidget(
-            b_rpanel["scroll_area"]
-        )
+        Controller.update_section_header("Search Results")
 
     def delete_recipe_cards():
         for i in reversed(
@@ -386,6 +395,9 @@ class Controller:
         root_view.children()[2].children()[0].removeWidget(
             b_rpanel["scroll_area"]
         )
+
+    def update_section_header(text):
+        t_rpanel["win_text"].setText(text)
 
     def change_page():
         pass
