@@ -9,7 +9,6 @@ from PyQt5 import QtCore as qtc
 from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
-from src.interface.styling import qss
 from src.bin import logic
 
 # import bottom rpanel
@@ -52,20 +51,20 @@ class View(qtw.QWidget):
         root_view.layout().addWidget(self.left_panel_widget, 3)
 
         # right panel
-        right_panel_widget = qtw.QWidget()
-        right_panel_widget.setLayout(qtw.QVBoxLayout())
+        self.right_panel_widget = qtw.QWidget()
+        self.right_panel_widget.setLayout(qtw.QVBoxLayout())
 
         # right top panel
         rtop_panel = self.__right_top_build()
 
         # right bottom panel
         self.__right_bottom_build()
-        right_panel_widget.layout().addWidget(rtop_panel)
+        self.right_panel_widget.layout().addWidget(rtop_panel)
 
-        right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
-        right_panel_widget.setMinimumWidth(750)
+        self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
+        self.right_panel_widget.setMinimumWidth(750)
 
-        root_view.layout().addWidget(right_panel_widget, 7)
+        root_view.layout().addWidget(self.right_panel_widget, 7)
 
         self.qTimer = qtc.QTimer()
         self.qTimer.setInterval(1)
@@ -73,6 +72,11 @@ class View(qtw.QWidget):
             lambda: Controller.update_logo_size(self.left_panel_widget)
         )
         self.qTimer.start()
+
+        self.timer = qtc.QTimer()
+        self.timer.setInterval(1)
+        self.timer.timeout.connect(lambda: self.__right_bottom_refresh())
+        self.timer.start()
 
         # filter_dropdown on select connection
         lpanel["filter_dropdown"].itemClicked.connect(
@@ -173,6 +177,10 @@ class View(qtw.QWidget):
     def __right_bottom_build(self):
         """Widget of right bottom panel."""
         Controller.generate_trending()
+
+    def __right_bottom_refresh(self):
+        self.right_panel_widget.layout().removeWidget(b_rpanel["scroll_area"])
+        self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -318,7 +326,6 @@ class Controller:
         for i in range(len(widget_list)):
             card = widget_list[i]
             b_rpanel["scroll_area"].widget().layout().addWidget(card)
-            card.show()
 
         # for i in widget_list:
 
@@ -328,6 +335,7 @@ class Controller:
         Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search()
         Controller.generate_recipe_cards(result_list)
+        b_rpanel["scroll_area"].show()
 
     def delete_recipe_cards():
         for i in reversed(
