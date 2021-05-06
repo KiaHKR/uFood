@@ -1,9 +1,7 @@
 """Logic file for Logic and sync class."""
 import pickle
 from fpdf import FPDF
-from PyQt5 import QtCore
 
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from src.bin import query
 from pathlib import Path
 
@@ -34,15 +32,17 @@ class Logic:
         """For adding the selected ingredients."""
         selected_ingredients.append(ingr.text())
 
-    def generate_result_vBox():
-        result_box = QWidget()
-        result_box.setLayout(QVBoxLayout())
-        result_box.setObjectName("result_box")
-        result_box.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-        return result_box
-
     def get_trending():
+        """Returns list of top 5 trending from query."""
         return search_object.trending()[:5]
+
+    def get_ingredient_search():
+        """Returns list of recipes matching ingredients."""
+        list = search_object.ingredient_name_search(selected_ingredients)
+        for i in list:
+            print(i)
+
+        return list
 
 
 class Sync:
@@ -77,22 +77,29 @@ class Pdf:
     """Creating a pdf od a recipe."""
 
     # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
-    def __init__(self, name, instructions, source):
+    def __init__(self, name, ingred, instructions, source):
         """Creates a pdf with recipe info."""
         # Create an instance of the fpdf class
         pdf = FPDF()
 
         # Add a page
         pdf.add_page()
+        pdf.set_font("Arial", size=10)
 
-        # set style and size of font
-        # that you want in the pdf
-        pdf.set_font("Arial", size=14)
-
+        # Title
         # create a cell
         pdf.cell(100, 10, txt=name, ln=1, align="C")
 
-        # add another cell
+        # Ingredients
+
+        pdf.multi_cell(
+            100,
+            10,
+            txt="Igredients: \n" + ingred,
+            align="C",
+        )
+
+        # Instructions
         pdf.multi_cell(
             100,
             10,
@@ -100,7 +107,8 @@ class Pdf:
             align="C",
         )
 
-        pdf.cell(200, 20, txt=source, ln=2, align="C")
+        # Source
+        pdf.cell(200, 20, txt="Source", ln=1, align="C", link=source)
 
         # save the pdf with name .pdf
         home = str(Path.home())
