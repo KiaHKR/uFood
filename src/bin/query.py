@@ -43,7 +43,7 @@ class Search:
         return_list = []
         for x in ing_list[0 : len(ing_list) - 1]:
             ingred += (
-                "ingredients_has_recipes.ingredients_name = '" + x + "' or "
+                "ingredients_has_recipes.ingredients_name = '" + x + "' and "
             )
         ingred += (
             " ingredients_has_recipes.ingredients_name = '"
