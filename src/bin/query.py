@@ -37,7 +37,7 @@ class Search:
             return_list.append(x)
         return return_list
 
-    def ingredient_name_search(self, ing_list):  # TODO JOE MAMA
+    def ingredient_name_search(self, ing_list):
         """For searching ingredients."""
         ingred = ""
         return_list = []
@@ -119,3 +119,6 @@ class Search:
             instr = x[1]
             source = x[2]
         return name, instr.replace("$", "\n"), source
+
+
+
