@@ -52,10 +52,7 @@ class View(qtw.QWidget):
         rtop_panel = self.__right_top_build()
 
         # right bottom panel
-        info = self.__right_bottom_build()
-        info.setMinimumWidth(725)
-
-        b_rpanel["scroll_area"].setWidget(info)
+        self.__right_bottom_build()
         right_panel_widget.layout().addWidget(rtop_panel)
 
         right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
@@ -69,6 +66,13 @@ class View(qtw.QWidget):
             lambda: Controller.update_logo_size(self.left_panel_widget)
         )
         self.qTimer.start()
+
+        # filter_dropdown on select connection
+        lpanel["filter_dropdown"].itemClicked.connect(
+            lambda: Controller.select_ingredient(
+                lpanel["filter_dropdown"].currentItem()
+            )
+        )
 
         root_view.show()
         os.sys.exit(app.exec_())
@@ -102,13 +106,6 @@ class View(qtw.QWidget):
         # Search bar on change connection
         lpanel["search_bar"].textChanged.connect(
             lambda: Controller.update_dropdown()
-        )
-
-        # filter_dropdown on select connection
-        lpanel["filter_dropdown"].itemClicked.connect(
-            lambda: Controller.select_ingredient(
-                lpanel["filter_dropdown"].currentItem()
-            )
         )
 
         # Add widgets to parent search layout
@@ -168,8 +165,7 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         """Widget of right bottom panel."""
-        bottom_layout = Controller.generate_trending()
-        return bottom_layout
+        Controller.generate_trending()
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -282,13 +278,17 @@ class Controller:
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         lpanel["search_bar"].clear()
+        Controller.update_ingredient_search_results()
 
     def generate_trending():
-        widget = logic.Logic.generate_result_vBox()
+        """Generates the VBox widget with the list of trending recipes."""
         trending_list = logic.Logic.get_trending()
+        Controller.generate_recipe_cards(trending_list)
 
-        for i in trending_list:
-            print()
+    def generate_recipe_cards(recipe_list):
+        """Generates a VBox with a list of recipe cards in it."""
+        widget_list = []
+        for i in recipe_list:
             recipe_card = View.recipe_card(
                 i[0].title(),
                 i[2].replace(",", ", "),
@@ -297,6 +297,26 @@ class Controller:
                 str(i[4]),
                 i[5],
             )
-            widget.layout().addWidget(recipe_card)
+            widget_list.append(recipe_card)
+            print(i[0] + " addded, id: " + str(i[4]))
 
-        return widget
+        for i in widget_list:
+            b_rpanel["scroll_area"].widget().layout().addWidget(i)
+
+    def update_ingredient_search_results():
+        """Takes care of everything to do with updating
+        ingredient_search results."""
+        Controller.delete_recipe_cards()
+        result_list = logic.Logic.get_ingredient_search()
+        Controller.generate_recipe_cards(result_list)
+
+    def delete_recipe_cards():
+        for i in reversed(
+            range(b_rpanel["scroll_area"].widget().layout().count())
+        ):
+            b_rpanel["scroll_area"].widget().layout().itemAt(
+                i
+            ).widget().deleteLater()
+
+    def change_page():
+        pass

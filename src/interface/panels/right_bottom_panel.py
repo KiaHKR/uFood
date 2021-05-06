@@ -169,4 +169,13 @@ class Components:
         scroll_area.setStyleSheet(qss.scrollbar())
         scroll_area.setFrameShape(qtw.QFrame.Shape.NoFrame)
         scroll_area.setObjectName(self.__object_names[7])
+
+        result_box = qtw.QWidget()
+        result_box.setLayout(qtw.QVBoxLayout())
+        result_box.setObjectName("result_box")
+        result_box.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
+        result_box.setMinimumWidth(725)
+
+        scroll_area.setWidget(result_box)
+
         return scroll_area
