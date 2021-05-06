@@ -1,6 +1,7 @@
 """Root file to carry root, Views and controller class."""
 from logging import log
 import os
+from re import search
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -10,6 +11,10 @@ from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 from src.interface.styling import qss
 from src.bin import logic
+
+# import bottom rpanel
+from src.bin import query
+
 
 app = qtw.QApplication(os.sys.argv)
 lpanel = lcomp().widgets
@@ -246,9 +251,11 @@ class Controller:
         s = logic.Sync()
         s.add_fav(id)
 
-    def export(id):
+    def export():  # add id as parameter and remove "2" from the fucntion call.
         """Export recipe as pdf."""
         # TODO # get recipe info by id.
+        name, instructions, source = query.Search().get_export_info("2")
+        logic.Pdf(name, instructions, source)
 
     def update_dropdown():
         """Update dropdown menu."""

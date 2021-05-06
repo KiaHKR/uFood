@@ -106,3 +106,16 @@ class Search:
             for y in x:
                 return_list.append(y)
         return return_list
+
+    def get_export_info(self, recipeid):
+        """Retrieves information about a (selected) recipe with an id. To later save."""
+        self.mycursor.execute(
+            "SELECT name, instructions, source FROM recipes WHERE id = '"
+            + recipeid
+            + "';"
+        )
+        for x in self.mycursor:
+            name = x[0]
+            instr = x[1]
+            source = x[2]
+        return name, instr.replace("$", "\n"), source
