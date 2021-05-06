@@ -315,8 +315,6 @@ class Controller:
             widget_list.append(recipe_card)
             # print(i[0] + " addded, id: " + str(i[4]))
 
-        b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[-1])
-
         for i in range(len(widget_list)):
             b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[i])
 
