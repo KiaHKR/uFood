@@ -73,11 +73,6 @@ class View(qtw.QWidget):
         )
         self.qTimer.start()
 
-        self.timer = qtc.QTimer()
-        self.timer.setInterval(1)
-        self.timer.timeout.connect(lambda: self.__right_bottom_refresh())
-        self.timer.start()
-
         # filter_dropdown on select connection
         lpanel["filter_dropdown"].itemClicked.connect(
             lambda: Controller.select_ingredient(
@@ -86,6 +81,8 @@ class View(qtw.QWidget):
         )
 
         root_view.show()
+        self.__right_bottom_refresh()
+
         os.sys.exit(app.exec_())
 
     # !-- Left Panel
@@ -179,7 +176,6 @@ class View(qtw.QWidget):
         Controller.generate_trending()
 
     def __right_bottom_refresh(self):
-        self.right_panel_widget.layout().removeWidget(b_rpanel["scroll_area"])
         self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
 
     def recipe_card(
@@ -319,13 +315,8 @@ class Controller:
 
         b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[-1])
 
-        label = qtw.QLabel("TEXT")
-        label.setStyleSheet("color: white")
-        b_rpanel["scroll_area"].widget().layout().addWidget(label)
-
         for i in range(len(widget_list)):
-            card = widget_list[i]
-            b_rpanel["scroll_area"].widget().layout().addWidget(card)
+            b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[i])
 
         # for i in widget_list:
 
@@ -335,7 +326,9 @@ class Controller:
         Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search()
         Controller.generate_recipe_cards(result_list)
-        b_rpanel["scroll_area"].show()
+        root_view.children()[2].children()[0].layout().addWidget(
+            b_rpanel["scroll_area"]
+        )
 
     def delete_recipe_cards():
         for i in reversed(
@@ -348,6 +341,10 @@ class Controller:
                 remove_widget
             )
             remove_widget.deleteLater()
+
+        root_view.children()[2].children()[0].removeWidget(
+            b_rpanel["scroll_area"]
+        )
 
     def change_page():
         pass
