@@ -31,13 +31,15 @@ class Root(qtw.QWidget):
         self.setLayout(layout)
 
 
+root_view = Root()
+
+
 class View(qtw.QWidget):
     """Parent Layout for left and right widget."""
 
     def __init__(self, *args, **kwargs):
         """Contructor of view class."""
         super().__init__(*args, **kwargs)
-        root_view = Root()
 
         # left panel
         self.left_panel_widget = self.__left_panel_build()
@@ -298,10 +300,20 @@ class Controller:
                 i[5],
             )
             widget_list.append(recipe_card)
-            print(i[0] + " addded, id: " + str(i[4]))
+            # print(i[0] + " addded, id: " + str(i[4]))
 
-        for i in widget_list:
-            b_rpanel["scroll_area"].widget().layout().addWidget(i)
+        b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[-1])
+
+        label = qtw.QLabel("TEXT")
+        label.setStyleSheet("color: white")
+        b_rpanel["scroll_area"].widget().layout().addWidget(label)
+
+        for i in range(len(widget_list)):
+            card = widget_list[i]
+            b_rpanel["scroll_area"].widget().layout().addWidget(card)
+            card.show()
+
+        # for i in widget_list:
 
     def update_ingredient_search_results():
         """Takes care of everything to do with updating
@@ -314,9 +326,13 @@ class Controller:
         for i in reversed(
             range(b_rpanel["scroll_area"].widget().layout().count())
         ):
-            b_rpanel["scroll_area"].widget().layout().itemAt(
-                i
-            ).widget().deleteLater()
+            remove_widget = (
+                b_rpanel["scroll_area"].widget().layout().takeAt(i).widget()
+            )
+            b_rpanel["scroll_area"].widget().layout().removeWidget(
+                remove_widget
+            )
+            remove_widget.deleteLater()
 
     def change_page():
         pass

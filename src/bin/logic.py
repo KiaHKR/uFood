@@ -36,7 +36,11 @@ class Logic:
 
     def get_ingredient_search():
         """Returns list of recipes matching ingredients."""
-        return search_object.ingredient_name_search(selected_ingredients)
+        list = search_object.ingredient_name_search(selected_ingredients)
+        for i in list:
+            print(i)
+
+        return list
 
 
 class Sync:

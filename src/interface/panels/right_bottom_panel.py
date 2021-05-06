@@ -166,8 +166,8 @@ class Components:
         """Scroll area for all the recipe cards."""
         scroll_area = qtw.QScrollArea()
         scroll_area.setWidgetResizable(True)
-        scroll_area.setStyleSheet(qss.scrollbar())
-        scroll_area.setFrameShape(qtw.QFrame.Shape.NoFrame)
+        scroll_area.setStyleSheet(qss.scrollbar() + "border: 2px solid red;")
+        # scroll_area.setFrameShape(qtw.QFrame.Shape.NoFrame)
         scroll_area.setObjectName(self.__object_names[7])
 
         result_box = qtw.QWidget()
@@ -175,6 +175,7 @@ class Components:
         result_box.setObjectName("result_box")
         result_box.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
         result_box.setMinimumWidth(725)
+        result_box.setStyleSheet("border: 2px solid green;")
 
         scroll_area.setWidget(result_box)
 
