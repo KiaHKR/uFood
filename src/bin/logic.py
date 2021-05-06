@@ -1,9 +1,11 @@
 """Logic file for Logic and sync class."""
 import pickle
+from fpdf import FPDF
 from PyQt5 import QtCore
 
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from src.bin import query
+from pathlib import Path
 
 selected_ingredients = []
 search_object = query.Search()
@@ -69,3 +71,37 @@ class Sync:
             return (
                 self.fav_list
             )  # send the list of fav id's to some class ehhee
+
+
+class Pdf:
+    """Creating a pdf od a recipe."""
+
+    # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
+    def __init__(self, name, instructions, source):
+        """Creates a pdf with recipe info."""
+        # Create an instance of the fpdf class
+        pdf = FPDF()
+
+        # Add a page
+        pdf.add_page()
+
+        # set style and size of font
+        # that you want in the pdf
+        pdf.set_font("Arial", size=14)
+
+        # create a cell
+        pdf.cell(100, 10, txt=name, ln=1, align="C")
+
+        # add another cell
+        pdf.multi_cell(
+            100,
+            10,
+            txt="Instructions: \n" + instructions,
+            align="C",
+        )
+
+        pdf.cell(200, 20, txt=source, ln=2, align="C")
+
+        # save the pdf with name .pdf
+        home = str(Path.home())
+        pdf.output(home + "/Downloads/recipe.pdf")  # or name + ".pdf"
