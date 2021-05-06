@@ -123,14 +123,6 @@ class Search:
         )
         for x in self.mycursor:
             name = x[0]
-<<<<<<< HEAD
-            instr = x[1]
-            source = x[2]
-        return name, instr.replace("$", "\n"), source
-
-
-
-=======
             ingred = x[1]
             instr = x[2]
             source = x[3]
@@ -140,4 +132,3 @@ class Search:
             instr.replace("$", "\n"),
             source,
         )
->>>>>>> development
