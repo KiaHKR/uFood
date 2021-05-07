@@ -403,13 +403,15 @@ class Controller:
 
     def show_all_recipes():
         """Show all recipes."""
+        Controller.clear_tags()
         Controller.delete_recipe_cards()
         recipes = query.Search().recipe_name_search("")
         Controller.generate_recipe_cards(recipes)
         Controller.update_section_header("All Recipes")
 
-    # ! -- TODO - If page changes, we removed all tags BEFORE making new recipe cards, etc.
-    # ! -- TODO - Fix timer icon sizing
+    def clear_tags():
+        logic.selected_ingredients = []
+        Controller.update_selected()
 
     def change_page():
         pass
