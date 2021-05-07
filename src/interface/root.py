@@ -73,13 +73,6 @@ class View(qtw.QWidget):
         )
         self.qTimer.start()
 
-        # filter_dropdown on select connection
-        lpanel["filter_dropdown"].itemClicked.connect(
-            lambda: Controller.select_ingredient(
-                lpanel["filter_dropdown"].currentItem()
-            )
-        )
-
         root_view.show()
         self.__right_bottom_refresh()
 
@@ -104,6 +97,13 @@ class View(qtw.QWidget):
         search_widget = qtw.QWidget()
         search_widget.setLayout(qtw.QGridLayout())
 
+        # filter_dropdown on select connection
+        lpanel["filter_dropdown"].itemClicked.connect(
+            lambda: Controller.select_ingredient(
+                lpanel["filter_dropdown"].currentItem()
+            )
+        )
+
         # Construct search button
         search_icon_widget = qtw.QWidget()
         search_icon_widget.setLayout(qtw.QStackedLayout())
@@ -116,9 +116,22 @@ class View(qtw.QWidget):
             lambda: Controller.update_dropdown()
         )
 
+        # Selected ingredients on item clicked connection
+        lpanel["selected_items"].itemClicked.connect(
+            lambda: Controller.remove_ingredient(
+                lpanel["selected_items"].currentItem()
+            )
+        )
+
+        # Create stacked layout for selected ingr and drop down
+        search_stack = qtw.QWidget()
+        search_stack.setLayout(qtw.QStackedLayout())
+        search_stack.layout().addWidget(lpanel["filter_dropdown"])
+        search_stack.layout().addWidget(lpanel["selected_items"])
+
         # Add widgets to parent search layout
         search_widget.layout().addWidget(lpanel["search_bar"], 0, 0)
-        search_widget.layout().addWidget(lpanel["filter_dropdown"], 1, 0)
+        search_widget.layout().addWidget(search_stack, 1, 0)
         search_widget.layout().addWidget(lpanel["search_btn_bg"], 0, 2)
         search_widget.layout().addWidget(lpanel["search_btn"], 0, 2)
         search_widget.layout().addWidget(lpanel["search_filter_btn"], 0, 3)
@@ -173,7 +186,7 @@ class View(qtw.QWidget):
     # !-- Right bottom panel
     def __right_bottom_build(self):
         """Widget of right bottom panel."""
-        Controller.generate_trending()
+        Controller.build_trending()
 
     def __right_bottom_refresh(self):
         self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
@@ -268,6 +281,15 @@ class Controller:
         Controller.update_dropdown_vis()
         Controller.update_dropdown_results()
 
+    def update_selected():
+        """Update visibility of selected ingr."""
+        if len(logic.selected_ingredients) != 0:
+            lpanel["selected_items"].setVisible(True)
+        else:
+            lpanel["selected_items"].setVisible(False)
+        lpanel["selected_items"].clear()
+        lpanel["selected_items"].addItems(logic.selected_ingredients)
+
     def update_dropdown_vis():
         """Visuals of dropdown."""
         if lpanel["search_bar"].text():
@@ -292,15 +314,34 @@ class Controller:
         """For selecting ingredients."""
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
+        Controller.update_selected()
         lpanel["search_bar"].clear()
         Controller.update_ingredient_search_results()
 
-    def generate_trending():
+    def remove_ingredient(ingr):
+        """For removing ingredients."""
+        logic.Logic.remove_ingr_selected(ingr)
+        Controller.update_dropdown()
+        Controller.update_selected()
+        if len(logic.selected_ingredients) > 0:
+            Controller.update_ingredient_search_results()
+        else:
+            Controller.update_trending()
+
+    def build_trending():
+        """Same as update_trending(), but only used on initial build."""
+        trending_list = logic.Logic.get_trending()
+        Controller.generate_recipe_cards(trending_list, True)
+        Controller.update_section_header("Trending Recipes")
+
+    def update_trending():
         """Generates the VBox widget with the list of trending recipes."""
+        Controller.delete_recipe_cards()
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
+        Controller.update_section_header("Trending Recipes")
 
-    def generate_recipe_cards(recipe_list):
+    def generate_recipe_cards(recipe_list, build=False):
         """Generates a VBox with a list of recipe cards in it."""
         widget_list = []
         for i in recipe_list:
@@ -313,12 +354,23 @@ class Controller:
                 i[5],
             )
             widget_list.append(recipe_card)
-            # print(i[0] + " addded, id: " + str(i[4]))
 
-        for i in range(len(widget_list)):
-            b_rpanel["scroll_area"].widget().layout().addWidget(widget_list[i])
+        no_recipes = qtw.QLabel("No recipes found!")
+        no_recipes.setStyleSheet("color: white; font-size: 25px")
+        no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
 
-        # for i in widget_list:
+        if len(widget_list) != 0:
+            for i in range(len(widget_list)):
+                b_rpanel["scroll_area"].widget().layout().addWidget(
+                    widget_list[i]
+                )
+        else:
+            b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
+
+        if not build:
+            root_view.children()[2].children()[0].layout().addWidget(
+                b_rpanel["scroll_area"]
+            )
 
     def update_ingredient_search_results():
         """Takes care of everything to do with updating
@@ -326,9 +378,7 @@ class Controller:
         Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search()
         Controller.generate_recipe_cards(result_list)
-        root_view.children()[2].children()[0].layout().addWidget(
-            b_rpanel["scroll_area"]
-        )
+        Controller.update_section_header("Search Results")
 
     def delete_recipe_cards():
         for i in reversed(
@@ -345,6 +395,9 @@ class Controller:
         root_view.children()[2].children()[0].removeWidget(
             b_rpanel["scroll_area"]
         )
+
+    def update_section_header(text):
+        t_rpanel["win_text"].setText(text)
 
     def change_page():
         pass

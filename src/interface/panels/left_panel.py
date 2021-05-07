@@ -4,6 +4,7 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 
 from src.interface.styling import qss
+import src.bin.logic as logic
 
 
 class Components:
@@ -20,6 +21,7 @@ class Components:
         "donate_text",
         "filter_dropdown",
         "logo",
+        "selected_items",
     )
     path = "src/interface/assets/"
 
@@ -34,6 +36,7 @@ class Components:
         self.widgets[self.__object_names[6]] = self.__donate_text()
         self.widgets[self.__object_names[7]] = self.__drop_down_results()
         self.widgets[self.__object_names[8]] = self.__logo()
+        self.widgets[self.__object_names[9]] = self.__selected_items()
 
     def __search_bar(self):
         """Search bar widget for ingredients."""
@@ -151,9 +154,11 @@ class Components:
         drop_down_results.setStyleSheet(
             qss.scrollbar()
             + """QListWidget{
-                background-color: white;
+                color: white;
+                background-color: #1c1c1c;
                 margin-left: 0px;
                 font-size: 14px;
+                border: none;
         }"""
         )
         drop_down_results.setVisible(False)
@@ -169,3 +174,22 @@ class Components:
         logo.setObjectName(self.__object_names[8])
         logo.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         return logo
+
+    def __selected_items(self):
+        """List widget to hold selected items."""
+        list = qtw.QListWidget()
+        list.setStyleSheet(
+            qss.scrollbar()
+            + """QListWidget{
+                color: white;
+                background-color: transparent;
+                margin-top: 50px;
+                margin-left: 0px;
+                font-size: 14px;
+                border: none;
+        }"""
+        )
+        list.setVisible(False)
+        list.setObjectName(self.__object_names[9])
+        list.addItems(logic.selected_ingredients)
+        return list

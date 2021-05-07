@@ -32,17 +32,17 @@ class Logic:
         """For adding the selected ingredients."""
         selected_ingredients.append(ingr.text())
 
+    def remove_ingr_selected(ingr):
+        """For removing the selected ingredient."""
+        selected_ingredients.remove(ingr.text())
+
     def get_trending():
         """Returns list of top 5 trending from query."""
         return search_object.trending()[:5]
 
     def get_ingredient_search():
         """Returns list of recipes matching ingredients."""
-        list = search_object.ingredient_name_search(selected_ingredients)
-        for i in list:
-            print(i)
-
-        return list
+        return search_object.ingredient_name_search(selected_ingredients)
 
 
 class Sync:
@@ -96,7 +96,7 @@ class Pdf:
             100,
             10,
             txt="Igredients: \n" + ingred,
-            align="C",
+            align="L",
         )
 
         # Instructions
