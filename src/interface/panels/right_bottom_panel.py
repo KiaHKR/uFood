@@ -49,13 +49,13 @@ class Components:
         """For the save button label."""
         if saved is False:
             save_btn = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "heart_icon.png").scaled(30, 30)
+                pixmap=qtg.QPixmap(self.path + "fav_icon_empty.png").scaled(
+                    30, 30
+                )
             )
         elif saved is True:
             save_btn = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png").scaled(
-                    30, 30
-                )
+                pixmap=qtg.QPixmap(self.path + "fav_icon.png").scaled(30, 30)
             )
 
         save_btn.setObjectName(self.__object_names[8])
