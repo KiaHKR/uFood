@@ -116,6 +116,9 @@ class View(qtw.QWidget):
             lambda: Controller.update_dropdown()
         )
 
+        # Search bar on return pressed connection
+        # lpanel["search_bar"].returnPressed.connect(lambda:Controller.)
+
         # Selected ingredients on item clicked connection
         lpanel["selected_items"].itemClicked.connect(
             lambda: Controller.remove_ingredient(
@@ -276,29 +279,19 @@ class Controller:
         )
         logic.Pdf(name, ingred, instructions, source)
 
+    # Dropdown from search bar update -----
+
     def update_dropdown():
         """Update dropdown menu."""
-        Controller.update_dropdown_vis()
         Controller.update_dropdown_results()
 
-    def update_selected():
-        """Update visibility of selected ingr."""
-        if len(logic.selected_ingredients) != 0:
-            lpanel["selected_items"].setVisible(True)
-        else:
-            lpanel["selected_items"].setVisible(False)
-        lpanel["selected_items"].clear()
-        lpanel["selected_items"].addItems(logic.selected_ingredients)
-
-    def update_dropdown_vis():
-        """Visuals of dropdown."""
+    def update_dropdown_results():
+        """Update results of dropdown."""
         if lpanel["search_bar"].text():
             lpanel["filter_dropdown"].setVisible(True)
         else:
             lpanel["filter_dropdown"].setVisible(False)
 
-    def update_dropdown_results():
-        """Update results of dropdown."""
         lpanel["filter_dropdown"].clear()
         result_list = logic.Logic.get_matching_ingredients(
             lpanel["search_bar"].text()
@@ -309,6 +302,8 @@ class Controller:
             lpanel["filter_dropdown"].setMaximumHeight(200)
 
         lpanel["filter_dropdown"].addItems(result_list)
+
+    # Select and remove selected ingredients -----
 
     def select_ingredient(ingr):
         """For selecting ingredients."""
@@ -328,6 +323,19 @@ class Controller:
         else:
             Controller.update_trending()
 
+    # Update the list of selected ingredients ------
+
+    def update_selected():
+        """Update visibility of selected ingr."""
+        if len(logic.selected_ingredients) != 0:
+            lpanel["selected_items"].setVisible(True)
+        else:
+            lpanel["selected_items"].setVisible(False)
+        lpanel["selected_items"].clear()
+        lpanel["selected_items"].addItems(logic.selected_ingredients)
+
+    # Trending build and update --------
+
     def build_trending():
         """Same as update_trending(), but only used on initial build."""
         trending_list = logic.Logic.get_trending()
@@ -340,6 +348,8 @@ class Controller:
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
+
+    # Generate and delte recipe cards ---------
 
     def generate_recipe_cards(recipe_list, build=False):
         """Generates a VBox with a list of recipe cards in it."""
@@ -372,15 +382,9 @@ class Controller:
                 b_rpanel["scroll_area"]
             )
 
-    def update_ingredient_search_results():
-        """Takes care of everything to do with updating
-        ingredient_search results."""
-        Controller.delete_recipe_cards()
-        result_list = logic.Logic.get_ingredient_search()
-        Controller.generate_recipe_cards(result_list)
-        Controller.update_section_header("Search Results")
-
     def delete_recipe_cards():
+        """Clears scroll_area and removes the scroll_area from the
+        right_panel."""
         for i in reversed(
             range(b_rpanel["scroll_area"].widget().layout().count())
         ):
@@ -396,8 +400,28 @@ class Controller:
             b_rpanel["scroll_area"]
         )
 
+    # Section management ---------
+
     def update_section_header(text):
         t_rpanel["win_text"].setText(text)
 
     def change_page():
         pass
+
+    # Different search methods -------
+
+    def update_ingredient_search_results():
+        """Takes care of everything to do with updating
+        ingredient_search results."""
+        Controller.delete_recipe_cards()
+        result_list = logic.Logic.get_ingredient_search()
+        Controller.generate_recipe_cards(result_list)
+        Controller.update_section_header("Search Results")
+
+    def update_name_search_results():
+        """Takes recipes matching with selected ingr and
+        searches in the names."""
+        if len(logic.selected_ingredients) > 0:
+            pass
+        else:
+            pass
