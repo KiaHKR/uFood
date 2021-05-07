@@ -134,7 +134,7 @@ class Components:
 
     def __donate_text(self):
         """Text for next to donate image."""
-        donate_text = qtw.QLabel("DONATE")
+        donate_text = qtw.QLabel("DONATE FOOD")
         donate_text.setStyleSheet(
             """
             font-weight: bold;

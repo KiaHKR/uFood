@@ -15,13 +15,25 @@ class Search:
         )
         self.mycursor = self.mydb.cursor()
 
+    def recipe_id_search(self, srch):
+        """For searching recipe names."""
+        return_list = []
+        self.mycursor.execute(
+            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time',GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets',GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE recipes.id LIKE '%%"
+            + srch
+            + "%%' Group by name"
+        )
+        for x in self.mycursor:
+            return_list.append(x)
+        return return_list
+
     def recipe_name_search(self, srch):
         """For searching recipe names."""
         return_list = []
         self.mycursor.execute(
             "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time',GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets',GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE recipes.name LIKE '%%"
             + srch
-            + "%%' Group by name"
+            + "%%' Group by name;"
         )
         for x in self.mycursor:
             return_list.append(x)
@@ -31,7 +43,7 @@ class Search:
         """For finding trending recipes."""
         return_list = []
         self.mycursor.execute(
-            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time', GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets', GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id GROUP BY name ORDER BY times_accessed ASC"
+            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time', GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets', GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id GROUP BY name ORDER BY times_accessed ASC;"
         )
         for x in self.mycursor:
             return_list.append(x)
@@ -40,24 +52,33 @@ class Search:
     def ingredient_name_search(self, ing_list):
         """For searching ingredients."""
         ingred = ""
-        return_list = []
+        ingredient_list = []
+        id_list = []
         for x in ing_list[0 : len(ing_list) - 1]:
             ingred += (
-                "ingredients_has_recipes.ingredients_name = '" + x + "' and "
+                "ingredients_has_recipes.ingredients_name = '" + x + "' or "
             )
         ingred += (
             " ingredients_has_recipes.ingredients_name = '"
             + ing_list[-1]
             + "'"
         )
-        self.mycursor.execute(
-            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time', GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets', GROUP_CONCAT(DISTINCT ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE "
-            + ingred
-            + " GROUP BY name"
-        )
-        for x in self.mycursor:
-            return_list.append(x)
-        return return_list
+        self.mycursor.execute("SELECT recipes.id as 'ID' FROM recipes  INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE "+ingred+" GROUP BY ID")
+        for id in self.mycursor:
+            id_list.append(str(id[0]))
+        temp = []
+        
+        for id in id_list:
+            self.mycursor.execute("SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time', GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets', GROUP_CONCAT(DISTINCT ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE ingredients_has_recipes.recipes_id = '"+id+"'")
+            for yo in self.mycursor:
+                a= yo[3]
+                b=""
+                for x in ing_list:
+                    if x in a:
+                        a = a.replace(x+",", "")
+                        b += x+", "
+                ingredient_list.append((yo[0],yo[1], yo[2], a, b, yo[4], yo[5]))
+        return ingredient_list
 
     def cooking_time_search(self, time):
         """For searching recipes by cooking time."""
@@ -119,7 +140,7 @@ class Search:
             + "FROM recipes "
             + "INNER JOIN ingredients_has_recipes "
             + "ON recipes.id = ingredients_has_recipes.recipes_id "
-            "WHERE recipes.id = '" + recipeid + "';"
+            + "WHERE recipes.id = '" + recipeid + "';"
         )
         for x in self.mycursor:
             name = x[0]
@@ -132,3 +153,8 @@ class Search:
             instr.replace("$", "\n"),
             source,
         )
+
+pi = Search()
+x = pi.ingredient_name_search(["eggs", "milk"])
+for y in x:
+    print(y)
