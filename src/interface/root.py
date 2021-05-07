@@ -267,7 +267,6 @@ class Controller:
 
     def save(id):
         """For saving recipe id to pickle file."""
-        # TODO # get recipe id to save.
         s = logic.Sync()
         s.add_fav(id)
 
