@@ -1,5 +1,5 @@
 """Root file to carry root, Views and controller class."""
-from logging import log
+from logging import log, root
 import os
 from re import search
 from PyQt5 import QtWidgets as qtw
@@ -33,6 +33,10 @@ class Root(qtw.QWidget):
         self.resize(self.screen.width() // 2, self.screen.height() // 2)
         self.setStyleSheet("background-color: #1c1c1c;")
         self.setLayout(layout)
+        self.setWindowTitle("uFood")
+        self.setWindowIcon(
+            qtg.QIcon(qtg.QPixmap(lcomp.path + "carrot_icon.png"))
+        )
 
 
 root_view = Root()
@@ -73,9 +77,9 @@ class View(qtw.QWidget):
         )
         self.qTimer.start()
 
-        root_view.show()
         self.__right_bottom_refresh()
 
+        root_view.show()
         os.sys.exit(app.exec_())
 
     # !-- Left Panel
