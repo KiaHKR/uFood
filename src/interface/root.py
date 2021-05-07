@@ -357,8 +357,6 @@ class Controller:
                 i[5],
             )
             widget_list.append(recipe_card)
-            print(recipe_card)
-        print(len(widget_list))
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)

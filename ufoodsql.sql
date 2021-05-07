@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.24, for Win64 (x86_64)
 --
 -- Host: localhost    Database: ufood
 -- ------------------------------------------------------
--- Server version	8.0.23
+-- Server version	8.0.24
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `diets`;
 CREATE TABLE `diets` (
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -34,7 +34,7 @@ CREATE TABLE `diets` (
 
 LOCK TABLES `diets` WRITE;
 /*!40000 ALTER TABLE `diets` DISABLE KEYS */;
-INSERT INTO `diets` VALUES ('Keto'),('Paleo'),('Vegan'),('Vegetarian');
+INSERT INTO `diets` VALUES ('Keto'),('None'),('Paleo'),('Vegan'),('Vegetarian');
 /*!40000 ALTER TABLE `diets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS `ingredients`;
 CREATE TABLE `ingredients` (
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +80,7 @@ CREATE TABLE `ingredients_has_recipes` (
   CONSTRAINT `fk_ingredients_has_recipes_ingredients1` FOREIGN KEY (`ingredients_name`) REFERENCES `ingredients` (`name`),
   CONSTRAINT `fk_ingredients_has_recipes_measurements1` FOREIGN KEY (`measurements_name`) REFERENCES `measurements` (`name`),
   CONSTRAINT `fk_ingredients_has_recipes_recipes1` FOREIGN KEY (`recipes_id`) REFERENCES `recipes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ DROP TABLE IF EXISTS `measurements`;
 CREATE TABLE `measurements` (
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `recipes` (
   `instructions` varchar(8192) NOT NULL,
   `img_link` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +160,7 @@ CREATE TABLE `recipes_has_diets` (
   KEY `fk_recipes_has_diets_recipes_idx` (`recipes_id`),
   CONSTRAINT `fk_recipes_has_diets_diets1` FOREIGN KEY (`diets_name`) REFERENCES `diets` (`name`),
   CONSTRAINT `fk_recipes_has_diets_recipes` FOREIGN KEY (`recipes_id`) REFERENCES `recipes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -169,7 +169,7 @@ CREATE TABLE `recipes_has_diets` (
 
 LOCK TABLES `recipes_has_diets` WRITE;
 /*!40000 ALTER TABLE `recipes_has_diets` DISABLE KEYS */;
-INSERT INTO `recipes_has_diets` VALUES (1,'Vegetarian'),(2,'Keto'),(2,'Paleo'),(5,'Keto'),(5,'Paleo'),(8,'Vegan'),(8,'Vegetarian'),(9,'Vegetarian'),(11,'Vegetarian'),(16,'Vegetarian'),(17,'Vegan'),(17,'Vegetarian'),(18,'Vegetarian'),(19,'Vegetarian'),(20,'Vegetarian'),(21,'Keto'),(24,'Vegetarian'),(26,'Keto'),(26,'Vegetarian'),(31,'Keto'),(31,'Vegetarian'),(32,'Vegetarian'),(33,'Vegetarian'),(35,'Vegetarian'),(36,'Vegan'),(36,'Vegetarian'),(37,'Keto'),(38,'Vegetarian'),(39,'Vegetarian');
+INSERT INTO `recipes_has_diets` VALUES (1,'Vegetarian'),(2,'Keto'),(2,'Paleo'),(3,'None'),(4,'None'),(5,'Keto'),(5,'Paleo'),(6,'None'),(7,'None'),(8,'Vegan'),(8,'Vegetarian'),(9,'Vegetarian'),(10,'None'),(11,'Vegetarian'),(12,'None'),(13,'None'),(14,'None'),(15,'None'),(16,'Vegetarian'),(17,'Vegan'),(17,'Vegetarian'),(18,'Vegetarian'),(19,'Vegetarian'),(20,'Vegetarian'),(21,'Keto'),(22,'None'),(23,'None'),(24,'Vegetarian'),(25,'None'),(26,'Keto'),(26,'Vegetarian'),(27,'None'),(28,'None'),(29,'None'),(30,'None'),(31,'Keto'),(31,'Vegetarian'),(32,'Vegetarian'),(33,'Vegetarian'),(34,'None'),(35,'Vegetarian'),(36,'Vegan'),(36,'Vegetarian'),(37,'Keto'),(38,'Vegetarian'),(39,'Vegetarian'),(40,'None');
 /*!40000 ALTER TABLE `recipes_has_diets` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -182,4 +182,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-07 15:00:21
+-- Dump completed on 2021-05-07 18:34:51
