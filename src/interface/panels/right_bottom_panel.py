@@ -49,13 +49,13 @@ class Components:
         """For the save button label."""
         if saved is False:
             save_btn = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "heart_icon.png").scaled(30, 30)
+                pixmap=qtg.QPixmap(self.path + "fav_icon_empty.png").scaled(
+                    30, 30
+                )
             )
         elif saved is True:
             save_btn = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "empty_heart_icon.png").scaled(
-                    30, 30
-                )
+                pixmap=qtg.QPixmap(self.path + "fav_icon.png").scaled(30, 30)
             )
 
         save_btn.setObjectName(self.__object_names[8])
@@ -113,7 +113,9 @@ class Components:
     def diet_type(self, diet):
         """Label for diet type."""
         diet_type = qtw.QLabel(diet)
-        if diet == "Vegan":
+        if diet == "None":
+            diet_colour = "transparent"
+        elif diet == "Vegan":
             diet_colour = "#32a852"
         elif diet == "Vegetarian":
             diet_colour = "#137d2c"
@@ -136,7 +138,7 @@ class Components:
         """Label for cooking time."""
         total_time = qtw.QLabel(time)
         total_time.setStyleSheet(
-            "color: white; font-size: 8px; font-weight: bold;"
+            "color: white; font-size: 12px; font-weight: bold;"
         )
         total_time.setObjectName(self.__object_names[4])
         return total_time
@@ -157,7 +159,7 @@ class Components:
         """Label for recipe ingredients."""
         ingredients = qtw.QLabel(ingr)
         ingredients.setStyleSheet(
-            "color: white; font-size: 12px; font-weight: bold;"
+            "color: white; font-size: 14px; font-style: italic;"
         )
         ingredients.setObjectName(self.__object_names[6])
         return ingredients
