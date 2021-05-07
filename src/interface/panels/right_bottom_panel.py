@@ -114,7 +114,7 @@ class Components:
         """Label for diet type."""
         diet_type = qtw.QLabel(diet)
         if diet == "None":
-            diet_colour = "transparent"
+            diet_colour = ""
         elif diet == "Vegan":
             diet_colour = "#32a852"
         elif diet == "Vegetarian":
@@ -138,7 +138,7 @@ class Components:
         """Label for cooking time."""
         total_time = qtw.QLabel(time)
         total_time.setStyleSheet(
-            "color: white; font-size: 8px; font-weight: bold;"
+            "color: white; font-size: 12px; font-weight: bold;"
         )
         total_time.setObjectName(self.__object_names[4])
         return total_time
@@ -159,7 +159,7 @@ class Components:
         """Label for recipe ingredients."""
         ingredients = qtw.QLabel(ingr)
         ingredients.setStyleSheet(
-            "color: white; font-size: 12px; font-weight: bold;"
+            "color: white; font-size: 14px; font-style: italic;"
         )
         ingredients.setObjectName(self.__object_names[6])
         return ingredients

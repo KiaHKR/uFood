@@ -410,7 +410,6 @@ class Controller:
 
     # ! -- TODO - If page changes, we removed all tags BEFORE making new recipe cards, etc.
     # ! -- TODO - Fix timer icon sizing
-    # ! -- TODO -
 
     def change_page():
         pass
