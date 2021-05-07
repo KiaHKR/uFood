@@ -19,9 +19,9 @@ class Search:
         """For searching recipe names."""
         return_list = []
         self.mycursor.execute(
-            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time',GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets',GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE recipes.id LIKE '%%"
+            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time',GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets',GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE recipes.id ="
             + srch
-            + "%%' Group by name"
+            + " Group by name"
         )
         for x in self.mycursor:
             return_list.append(x)
@@ -154,7 +154,3 @@ class Search:
             source,
         )
 
-pi = Search()
-x = pi.ingredient_name_search(["eggs", "milk"])
-for y in x:
-    print(y)
