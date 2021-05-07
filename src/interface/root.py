@@ -140,22 +140,22 @@ class View(qtw.QWidget):
 
         return search_widget
 
-    def __save_build():
+    def __save_build(id):
         """Build save feature."""
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
         save.layout().addWidget(b_rpanel["save_btn"])
         save.setFixedSize(50, 50)
-        save.clicked.connect(lambda: Controller.save())
+        save.clicked.connect(lambda: Controller.save(id))
         return save
 
-    def __export_build():
+    def __export_build(id):
         """Build export feature."""
         export = qtw.QPushButton()
         export.setLayout(qtw.QHBoxLayout())
         export.setFixedSize(50, 50)
         export.layout().addWidget(b_rpanel["export_btn"])
-        export.clicked.connect(lambda: Controller.export())
+        export.clicked.connect(lambda: Controller.export(id))
         return export
 
     def __donate_build(self):
@@ -164,7 +164,7 @@ class View(qtw.QWidget):
         donate.setLayout(qtw.QHBoxLayout())
         donate.layout().addWidget(lpanel["donate_btn"], 0)
         donate.layout().addWidget(lpanel["donate_text"], 8)
-        donate.setFixedSize(135, 50)
+        donate.setFixedSize(200, 50)
         donate.setStyleSheet("border: none;")
         donate.clicked.connect(lambda: Controller.donate_url())
         return donate
@@ -178,6 +178,10 @@ class View(qtw.QWidget):
         top_layout.addWidget(t_rpanel["win_text"])
         top_layout.addWidget(t_rpanel["fav_btn"])
         top_layout.addWidget(t_rpanel["recipes_btn"])
+
+        t_rpanel["recipes_btn"].clicked.connect(
+            lambda: Controller.show_all_recipes()
+        )
 
         widget = qtw.QWidget()
         widget.setLayout(top_layout)
@@ -203,7 +207,7 @@ class View(qtw.QWidget):
         recipe_card = qtw.QWidget()
         recipe_card.setLayout(qtw.QHBoxLayout())
         recipe_card.setStyleSheet(
-            "QWidget::hover" "{background-color : #141e24;}"
+            "QWidget::hover" "{background-color : #6c899d;}"
         )
 
         info = qtw.QWidget()
@@ -215,12 +219,22 @@ class View(qtw.QWidget):
 
         time = qtw.QWidget()
 
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(info, 9)
+        recipe_card.setObjectName(pk_id)
+        recipe_card.setFixedHeight(150)
+
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
-        buttons.layout().addWidget(View.__save_build())
-        buttons.layout().addWidget(View.__export_build())
+        buttons.layout().addWidget(View.__save_build(recipe_card.objectName()))
+
+        buttons.layout().addWidget(
+            View.__export_build(recipe_card.objectName())
+        )
         buttons.layout().setSpacing(0)
+
+        recipe_card.layout().addWidget(buttons, 1)
 
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(b_rpanel["total_time_icon"])
@@ -232,13 +246,6 @@ class View(qtw.QWidget):
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
-
-        recipe_card.layout().addWidget(info, 9)
-        recipe_card.layout().addWidget(buttons, 1)
-
-        recipe_card.setObjectName(pk_id)
-        recipe_card.setFixedHeight(150)
         return recipe_card
 
 
@@ -262,18 +269,14 @@ class Controller:
             "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
         )  # noqa: E502
 
-    def save_recipe(id):
+    def save(id):
         """For saving recipe id to pickle file."""
-        # TODO # get recipe id to save.
         s = logic.Sync()
         s.add_fav(id)
 
-    def export():  # add id as parameter and remove "2" from the fucntion call.
+    def export(id):
         """Export recipe as pdf."""
-        # TODO # get recipe info by id.
-        name, ingred, instructions, source = query.Search().get_export_info(
-            "2"
-        )
+        name, ingred, instructions, source = query.Search().get_export_info(id)
         logic.Pdf(name, ingred, instructions, source)
 
     def update_dropdown():
@@ -354,7 +357,6 @@ class Controller:
                 i[5],
             )
             widget_list.append(recipe_card)
-
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
@@ -398,6 +400,18 @@ class Controller:
 
     def update_section_header(text):
         t_rpanel["win_text"].setText(text)
+
+    def show_all_recipes():
+        """Show all recipes."""
+        Controller.clear_tags()
+        Controller.delete_recipe_cards()
+        recipes = query.Search().recipe_name_search("")
+        Controller.generate_recipe_cards(recipes)
+        Controller.update_section_header("All Recipes")
+
+    def clear_tags():
+        logic.selected_ingredients = []
+        Controller.update_selected()
 
     def change_page():
         pass
