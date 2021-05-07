@@ -164,7 +164,7 @@ class View(qtw.QWidget):
         donate.setLayout(qtw.QHBoxLayout())
         donate.layout().addWidget(lpanel["donate_btn"], 0)
         donate.layout().addWidget(lpanel["donate_text"], 8)
-        donate.setFixedSize(135, 50)
+        donate.setFixedSize(200, 50)
         donate.setStyleSheet("border: none;")
         donate.clicked.connect(lambda: Controller.donate_url())
         return donate
@@ -207,7 +207,7 @@ class View(qtw.QWidget):
         recipe_card = qtw.QWidget()
         recipe_card.setLayout(qtw.QHBoxLayout())
         recipe_card.setStyleSheet(
-            "QWidget::hover" "{background-color : #141e24;}"
+            "QWidget::hover" "{background-color : #6c899d;}"
         )
 
         info = qtw.QWidget()
@@ -407,6 +407,10 @@ class Controller:
         recipes = query.Search().recipe_name_search("")
         Controller.generate_recipe_cards(recipes)
         Controller.update_section_header("All Recipes")
+
+    # ! -- TODO - If page changes, we removed all tags BEFORE making new recipe cards, etc.
+    # ! -- TODO - Fix timer icon sizing
+    # ! -- TODO -
 
     def change_page():
         pass

@@ -113,7 +113,9 @@ class Components:
     def diet_type(self, diet):
         """Label for diet type."""
         diet_type = qtw.QLabel(diet)
-        if diet == "Vegan":
+        if diet == "None":
+            diet_colour = "transparent"
+        elif diet == "Vegan":
             diet_colour = "#32a852"
         elif diet == "Vegetarian":
             diet_colour = "#137d2c"
