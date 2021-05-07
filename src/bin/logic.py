@@ -112,4 +112,4 @@ class Pdf:
 
         # save the pdf with name .pdf
         home = str(Path.home())
-        pdf.output(home + "/Downloads/recipe.pdf")  # or name + ".pdf"
+        pdf.output(home + "/Downloads/" + name + ".pdf")  # or name + ".pdf"

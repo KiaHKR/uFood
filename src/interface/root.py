@@ -149,13 +149,13 @@ class View(qtw.QWidget):
         save.clicked.connect(lambda: Controller.save())
         return save
 
-    def __export_build():
+    def __export_build(id):
         """Build export feature."""
         export = qtw.QPushButton()
         export.setLayout(qtw.QHBoxLayout())
         export.setFixedSize(50, 50)
         export.layout().addWidget(b_rpanel["export_btn"])
-        export.clicked.connect(lambda: Controller.export())
+        export.clicked.connect(lambda: Controller.export(id))
         return export
 
     def __donate_build(self):
@@ -215,12 +215,21 @@ class View(qtw.QWidget):
 
         time = qtw.QWidget()
 
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(info, 9)
+        recipe_card.setObjectName(pk_id)
+        recipe_card.setFixedHeight(150)
+
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
         buttons.layout().addWidget(View.__save_build())
-        buttons.layout().addWidget(View.__export_build())
+        buttons.layout().addWidget(
+            View.__export_build(recipe_card.objectName())
+        )
         buttons.layout().setSpacing(0)
+
+        recipe_card.layout().addWidget(buttons, 1)
 
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(b_rpanel["total_time_icon"])
@@ -232,13 +241,6 @@ class View(qtw.QWidget):
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
-
-        recipe_card.layout().addWidget(info, 9)
-        recipe_card.layout().addWidget(buttons, 1)
-
-        recipe_card.setObjectName(pk_id)
-        recipe_card.setFixedHeight(150)
         return recipe_card
 
 
@@ -268,12 +270,9 @@ class Controller:
         s = logic.Sync()
         s.add_fav(id)
 
-    def export():  # add id as parameter and remove "2" from the fucntion call.
+    def export(id):
         """Export recipe as pdf."""
-        # TODO # get recipe info by id.
-        name, ingred, instructions, source = query.Search().get_export_info(
-            "2"
-        )
+        name, ingred, instructions, source = query.Search().get_export_info(id)
         logic.Pdf(name, ingred, instructions, source)
 
     def update_dropdown():
