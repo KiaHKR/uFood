@@ -114,7 +114,7 @@ class Components:
         """Label for diet type."""
         diet_type = qtw.QLabel(diet)
         if diet == "None":
-            diet_colour = ""
+            diet_colour = "transparent"
         elif diet == "Vegan":
             diet_colour = "#32a852"
         elif diet == "Vegetarian":
