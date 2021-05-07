@@ -179,6 +179,10 @@ class View(qtw.QWidget):
         top_layout.addWidget(t_rpanel["fav_btn"])
         top_layout.addWidget(t_rpanel["recipes_btn"])
 
+        t_rpanel["recipes_btn"].clicked.connect(
+            lambda: Controller.show_all_recipes()
+        )
+
         widget = qtw.QWidget()
         widget.setLayout(top_layout)
         return widget
@@ -224,7 +228,7 @@ class View(qtw.QWidget):
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
         buttons.layout().addWidget(View.__save_build(recipe_card.objectName()))
-    
+
         buttons.layout().addWidget(
             View.__export_build(recipe_card.objectName())
         )
@@ -353,7 +357,8 @@ class Controller:
                 i[5],
             )
             widget_list.append(recipe_card)
-
+            print(recipe_card)
+        print(len(widget_list))
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
@@ -397,6 +402,13 @@ class Controller:
 
     def update_section_header(text):
         t_rpanel["win_text"].setText(text)
+
+    def show_all_recipes():
+        """Show all recipes."""
+        Controller.delete_recipe_cards()
+        recipes = query.Search().recipe_name_search("")
+        Controller.generate_recipe_cards(recipes)
+        Controller.update_section_header("All Recipes")
 
     def change_page():
         pass
