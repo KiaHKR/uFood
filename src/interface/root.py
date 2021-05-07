@@ -140,13 +140,13 @@ class View(qtw.QWidget):
 
         return search_widget
 
-    def __save_build():
+    def __save_build(id):
         """Build save feature."""
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
         save.layout().addWidget(b_rpanel["save_btn"])
         save.setFixedSize(50, 50)
-        save.clicked.connect(lambda: Controller.save())
+        save.clicked.connect(lambda: Controller.save(id))
         return save
 
     def __export_build(id):
@@ -223,7 +223,7 @@ class View(qtw.QWidget):
         buttons = qtw.QWidget()
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
-        buttons.layout().addWidget(View.__save_build())
+        buttons.layout().addWidget(View.__save_build(recipe_card.objectName()))
         buttons.layout().addWidget(
             View.__export_build(recipe_card.objectName())
         )
@@ -264,7 +264,7 @@ class Controller:
             "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
         )  # noqa: E502
 
-    def save_recipe(id):
+    def save(id):
         """For saving recipe id to pickle file."""
         # TODO # get recipe id to save.
         s = logic.Sync()
