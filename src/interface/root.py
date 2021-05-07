@@ -224,6 +224,7 @@ class View(qtw.QWidget):
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
         buttons.layout().addWidget(View.__save_build(recipe_card.objectName()))
+    
         buttons.layout().addWidget(
             View.__export_build(recipe_card.objectName())
         )

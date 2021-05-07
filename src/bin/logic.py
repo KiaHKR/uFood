@@ -52,7 +52,10 @@ class Sync:
         """For initializing by reading and saving the current pickle in a list."""
         self.file = "src/interface/assets/pickle.pickle"
         self.fav_list = []
-        self.pickle_read()
+        try:
+            self.pickle_read()
+        except FileNotFoundError:
+            self.pickle_write()
 
     def add_fav(self, id):
         """Add new item to a list and renew pickle."""
@@ -65,12 +68,21 @@ class Sync:
             pickle.dump(self.fav_list, file)
 
     def pickle_read(self):
-        """Read and initiates from bin."""
-        with open(self.file, "rb") as file:
-            self.fav_list = pickle.load(file)
-            return (
-                self.fav_list
-            )  # send the list of fav id's to some class ehhee
+        
+        try:
+            with open(self.file, "rb") as file:
+                self.fav_list = pickle.load(file)
+                return self.fav_list
+        except FileNotFoundError as error:
+            raise FileNotFoundError from error
+        
+        
+        # """Read and initiates from bin."""
+        # with open(self.file, "rb") as file:
+        #     self.fav_list = pickle.load(file)
+        #     return (
+        #         self.fav_list
+        #     )  # send the list of fav id's to some class ehhee
 
 
 class Pdf:
