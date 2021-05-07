@@ -1,5 +1,4 @@
 """Query file for search class."""
-from os import X_OK
 import mysql.connector
 
 
@@ -154,3 +153,8 @@ class Search:
             instr.replace("$", "\n"),
             source,
         )
+
+pi = Search()
+x = pi.ingredient_name_search(["eggs", "milk"])
+for y in x:
+    print(y)
