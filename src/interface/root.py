@@ -368,14 +368,8 @@ class Controller:
         if len(widget_list) != 0:
             for i in range(len(widget_list)):
                 
-                root_view.children()[2].children()[0].removeWidget(
-                    b_rpanel["scroll_area"]
-                )
                 b_rpanel["scroll_area"].widget().layout().addWidget(
                     widget_list[i]
-                )
-                root_view.children()[2].children()[0].layout().addWidget(
-                b_rpanel["scroll_area"]
                 )
 
         else:
