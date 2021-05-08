@@ -2,6 +2,7 @@
 from logging import log
 import os
 from re import search
+from typing import Text
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -121,7 +122,11 @@ class View(qtw.QWidget):
         )
 
         # Search bar on return pressed connection
-        # lpanel["search_bar"].returnPressed.connect(lambda:Controller.)
+        lpanel["search_bar"].returnPressed.connect(
+            lambda: Controller.update_name_search_results(
+                lpanel["search_bar"].text()
+            )
+        )
 
         # Selected ingredients on item clicked connection
         lpanel["selected_items"].itemClicked.connect(
@@ -363,12 +368,12 @@ class Controller:
         widget_list = []
         for i in recipe_list:
             recipe_card = View.recipe_card(
-                i[0].title(), #NAME
+                i[0].title(),  # NAME
                 i[2].replace(",", ", "),
-                str(i[1])[:-3], #COOKTIME
+                str(i[1])[:-3],  # COOKTIME
                 i[3].replace(",", ", "),
-                str(i[4]), #ID 
-                i[5], #URL
+                str(i[4]),  # ID
+                i[5],  # URL
             )
             widget_list.append(recipe_card)
         no_recipes = qtw.QLabel("No recipes found!")
@@ -377,14 +382,14 @@ class Controller:
 
         if len(widget_list) != 0:
             for i in range(len(widget_list)):
-                
+
                 b_rpanel["scroll_area"].widget().layout().addWidget(
                     widget_list[i]
                 )
 
         else:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
-            
+
         if not build:
             root_view.children()[2].children()[0].layout().addWidget(
                 b_rpanel["scroll_area"]
@@ -436,12 +441,34 @@ class Controller:
         Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search()
         Controller.generate_recipe_cards(result_list)
-        Controller.update_section_header("Search Results")
+        Controller.update_section_header(
+            str(len(result_list)) + " Search Results"
+        )
 
-    def update_name_search_results():
+    def update_name_search_results(search):
         """Takes recipes matching with selected ingr and
         searches in the names."""
+        return_list = []
         if len(logic.selected_ingredients) > 0:
-            pass
+            print("line 457")
+            Controller.delete_recipe_cards()
+            result_list = logic.Logic.get_ingredient_search()
+            for i in result_list:
+                print(i)
+                print(search)
+                if search.lower() in i[0].lower():
+                    return_list.append(i)
         else:
-            pass
+            print("line 468")
+            Controller.delete_recipe_cards()
+            recipes = query.Search().recipe_name_search("")
+            for i in recipes:
+                print(i[0])
+                print(search)
+                if search.lower() in i[0].lower():
+                    return_list.append(i)
+
+        Controller.generate_recipe_cards(return_list)
+        Controller.update_section_header(
+            str(len(return_list)) + " Search Results"
+        )
