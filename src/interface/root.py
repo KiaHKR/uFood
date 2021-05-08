@@ -1,5 +1,5 @@
 """Root file to carry root, Views and controller class."""
-from logging import log, root
+from logging import log
 import os
 from re import search
 from PyQt5 import QtWidgets as qtw
@@ -77,9 +77,9 @@ class View(qtw.QWidget):
         )
         self.qTimer.start()
 
+        root_view.show()
         self.__right_bottom_refresh()
 
-        root_view.show()
         os.sys.exit(app.exec_())
 
     # !-- Left Panel
@@ -353,12 +353,12 @@ class Controller:
         widget_list = []
         for i in recipe_list:
             recipe_card = View.recipe_card(
-                i[0].title(),
+                i[0].title(), #NAME
                 i[2].replace(",", ", "),
-                str(i[1])[:-3],
+                str(i[1])[:-3], #COOKTIME
                 i[3].replace(",", ", "),
-                str(i[4]),
-                i[5],
+                str(i[4]), #ID 
+                i[5], #URL
             )
             widget_list.append(recipe_card)
         no_recipes = qtw.QLabel("No recipes found!")
@@ -367,12 +367,20 @@ class Controller:
 
         if len(widget_list) != 0:
             for i in range(len(widget_list)):
+                
+                root_view.children()[2].children()[0].removeWidget(
+                    b_rpanel["scroll_area"]
+                )
                 b_rpanel["scroll_area"].widget().layout().addWidget(
                     widget_list[i]
                 )
+                root_view.children()[2].children()[0].layout().addWidget(
+                b_rpanel["scroll_area"]
+                )
+
         else:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
-
+            
         if not build:
             root_view.children()[2].children()[0].layout().addWidget(
                 b_rpanel["scroll_area"]
