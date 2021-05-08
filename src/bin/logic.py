@@ -18,12 +18,12 @@ class Logic:
 
     def get_matching_ingredients(search):
         """For getting matching ingredients to search."""
-        master_ingr = search_object.get_ingredient(search)
+        master_ingr = search_object.get_ingredient(search.lower())
 
         ingr_list = []
 
         for i in master_ingr:
-            if search in i and i not in selected_ingredients:
+            if search.lower() in i and i not in selected_ingredients:
                 ingr_list.append(i)
 
         return ingr_list

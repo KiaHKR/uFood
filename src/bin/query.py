@@ -77,7 +77,7 @@ class Search:
                     if x in a:
                         a = a.replace(x+",", "")
                         b += x+", "
-                ingredient_list.append((yo[0],yo[1], yo[2], a, b, yo[4], yo[5]))
+                ingredient_list.append((yo[0],yo[1], yo[2], a, yo[4], yo[5], b))
         return ingredient_list
 
     def cooking_time_search(self, time):
@@ -153,8 +153,3 @@ class Search:
             instr.replace("$", "\n"),
             source,
         )
-
-pi = Search()
-x = pi.ingredient_name_search(["eggs", "milk"])
-for y in x:
-    print(y)
