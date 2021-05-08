@@ -33,6 +33,10 @@ class Root(qtw.QWidget):
         self.resize(self.screen.width() // 2, self.screen.height() // 2)
         self.setStyleSheet("background-color: #1c1c1c;")
         self.setLayout(layout)
+        self.setWindowTitle("uFood")
+        self.setWindowIcon(
+            qtg.QIcon(qtg.QPixmap(lcomp.path + "carrot_icon.png"))
+        )
 
 
 root_view = Root()
@@ -349,12 +353,12 @@ class Controller:
         widget_list = []
         for i in recipe_list:
             recipe_card = View.recipe_card(
-                i[0].title(),
+                i[0].title(), #NAME
                 i[2].replace(",", ", "),
-                str(i[1])[:-3],
+                str(i[1])[:-3], #COOKTIME
                 i[3].replace(",", ", "),
-                str(i[4]),
-                i[5],
+                str(i[4]), #ID 
+                i[5], #URL
             )
             widget_list.append(recipe_card)
         no_recipes = qtw.QLabel("No recipes found!")
@@ -363,12 +367,20 @@ class Controller:
 
         if len(widget_list) != 0:
             for i in range(len(widget_list)):
+                
+                root_view.children()[2].children()[0].removeWidget(
+                    b_rpanel["scroll_area"]
+                )
                 b_rpanel["scroll_area"].widget().layout().addWidget(
                     widget_list[i]
                 )
+                root_view.children()[2].children()[0].layout().addWidget(
+                b_rpanel["scroll_area"]
+                )
+
         else:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
-
+            
         if not build:
             root_view.children()[2].children()[0].layout().addWidget(
                 b_rpanel["scroll_area"]
