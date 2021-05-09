@@ -70,8 +70,10 @@ class Search:
                 b=""
                 for x in ing_list:
                     if x in a:
-                        a = a.replace(x+",", "")
+                        a = a.split(",")
+                        a.remove(x)
                         b += x+", "
+                        a = ",".join(a)
                 ingredient_list.append((yo[0],yo[1], yo[2], a, yo[4], yo[5], b))
         return ingredient_list
 
@@ -149,3 +151,7 @@ class Search:
             source,
         )
 
+pi = Search()
+i = pi.ingredient_name_search(["milk"])
+for x in i:
+    print(x)
