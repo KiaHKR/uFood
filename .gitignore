@@ -132,3 +132,4 @@ dmypy.json
 
 
 .vscode
+src/interface/assets/pickle.pickle
