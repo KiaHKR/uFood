@@ -10,6 +10,7 @@ from PyQt5 import QtCore as qtc
 from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
+from src.interface.threading.worker import Worker
 from src.bin import logic
 
 # import bottom rpanel
@@ -143,11 +144,17 @@ class View(qtw.QWidget):
                 lpanel["selected_items"].currentItem()
             )
         )
-        
+
         # Update slider time connector
-        lpanel["time_slider"].valueChanged.connect(lambda: Controller.update_label())
-         
-                 
+        lpanel["time_slider"].valueChanged.connect(
+            lambda: Controller.update_label()
+        )
+
+        # Update on slider released
+        lpanel["time_slider"].sliderReleased.connect(
+            lambda: Controller.update_slider()
+        )
+
         slider_hbox = qtw.QHBoxLayout()
         slider_hbox.addWidget(lpanel["time_slider"])
         slider_hbox.addSpacing(15)
@@ -161,7 +168,7 @@ class View(qtw.QWidget):
         # Create stacked layout for selected ingr and drop down
         search_stack = qtw.QWidget()
         search_stack.setLayout(qtw.QStackedLayout())
-        
+
         search_stack.layout().addWidget(lpanel["filter_dropdown"])
         search_stack.layout().addWidget(lpanel["selected_items"])
         # Add widgets to parent search layout
@@ -173,7 +180,6 @@ class View(qtw.QWidget):
         search_widget.layout().addWidget(lpanel["search_filter_btn"], 1, 3)
         search_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
         search_widget.layout().setSpacing(0)
-        
 
         return search_widget
 
@@ -231,9 +237,6 @@ class View(qtw.QWidget):
 
     def __right_bottom_refresh(self):
         self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
-        
-        
-    
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -379,7 +382,7 @@ class Controller:
     def build_trending():
         """Same as update_trending(), but only used on initial build."""
         trending_list = logic.Logic.get_trending()
-        Controller.generate_recipe_cards(trending_list, True)
+        Controller.generate_recipe_cards(trending_list, build=True)
         Controller.update_section_header("Trending Recipes")
 
     def update_trending():
@@ -389,10 +392,11 @@ class Controller:
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
 
-    # Generate and delte recipe cards ---------
+        # Generate and delte recipe cards ---------
 
     def generate_recipe_cards(recipe_list, build=False):
         """Generates a VBox with a list of recipe cards in it."""
+
         widget_list = []
         for i in recipe_list:
             recipe_card = View.recipe_card(
@@ -451,16 +455,13 @@ class Controller:
         """Show all recipes."""
         Controller.clear_tags()
         Controller.delete_recipe_cards()
-        recipes = query.Search().recipe_name_search("")
-        Controller.generate_recipe_cards(recipes)
+        recipes = logic.Logic.name_search(None, lpanel["time_slider"].value())
+        Controller.mult_thread_func(recipes)
         Controller.update_section_header("All Recipes")
 
     def clear_tags():
         logic.selected_ingredients = []
         Controller.update_selected()
-
-    def change_page():
-        pass
 
     # Different search methods -------
 
@@ -468,7 +469,9 @@ class Controller:
         """Takes care of everything to do with updating
         ingredient_search results."""
         Controller.delete_recipe_cards()
-        result_list = logic.Logic.get_ingredient_search()
+        result_list = logic.Logic.get_ingredient_search(
+            lpanel["time_slider"].value()
+        )
         Controller.generate_recipe_cards(result_list)
         Controller.update_section_header(
             str(len(result_list)) + " Search Results"
@@ -477,11 +480,25 @@ class Controller:
     def update_name_search_results(search):
         """Takes recipes matching with selected ingr and
         searches in the names."""
-        return_list = logic.Logic.name_search(search)
-        Controller.generate_recipe_cards(return_list)
-        Controller.update_section_header(
-            str(len(return_list)) + " Search Results"
+        return_list = logic.Logic.name_search(
+            search, lpanel["time_slider"].value()
         )
-    
+        if return_list is None:
+
+            pass
+        else:
+            Controller.generate_recipe_cards(return_list)
+            Controller.update_section_header(
+                str(len(return_list)) + " Search Results"
+            )
+
+    def update_slider():
+        if t_rpanel["win_text"].text() == "Trending Recipes":
+            pass
+        elif t_rpanel["win_text"].text() == "All Recipes":
+            Controller.update_name_search_results(None)
+        else:
+            Controller.update_name_search_results(lpanel["search_bar"].text())
+
     def update_label():
         lpanel["time_label"].setText(str(lpanel["time_slider"].value()))

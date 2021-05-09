@@ -194,19 +194,19 @@ class Components:
         list.setObjectName(self.__object_names[9])
         list.addItems(logic.selected_ingredients)
         return list
-    
+
     def __time_slider(self):
         """Slider to filter recipes based on cooking time"""
-        
+
         sl = qtw.QSlider(qtc.Qt.Horizontal)
         max_time = logic.Logic.max_cook_time()
-        sl.setRange( 0, max_time)
+        sl.setRange(0, max_time)
         sl.setValue(max_time)
         sl.setTickInterval(1)
         sl.setObjectName(self.__object_names[10])
 
         return sl
-    
+
     def __time_label(self):
         max_time = logic.Logic.max_cook_time()
         label = qtw.QLabel(str(max_time))
