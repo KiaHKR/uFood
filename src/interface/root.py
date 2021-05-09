@@ -1,5 +1,5 @@
 """Root file to carry root, Views and controller class."""
-from logging import log
+import concurrent.futures
 import os
 from re import search
 from typing import Text
@@ -102,6 +102,8 @@ class View(qtw.QWidget):
         search_widget = qtw.QWidget()
         search_widget.setLayout(qtw.QGridLayout())
 
+        # Logo goes to trending connection
+
         # filter_dropdown on select connection
         lpanel["filter_dropdown"].itemClicked.connect(
             lambda: Controller.select_ingredient(
@@ -123,6 +125,13 @@ class View(qtw.QWidget):
 
         # Search bar on return pressed connection
         lpanel["search_bar"].returnPressed.connect(
+            lambda: Controller.update_name_search_results(
+                lpanel["search_bar"].text()
+            )
+        )
+
+        # Search button connection
+        lpanel["search_btn"].pressed.connect(
             lambda: Controller.update_name_search_results(
                 lpanel["search_bar"].text()
             )
@@ -294,15 +303,15 @@ class Controller:
     # Dropdown from search bar update -----
 
     def update_dropdown():
-        """Update dropdown menu."""
-        Controller.update_dropdown_results()
-
-    def update_dropdown_results():
         """Update results of dropdown."""
         if lpanel["search_bar"].text():
             lpanel["filter_dropdown"].setVisible(True)
         else:
             lpanel["filter_dropdown"].setVisible(False)
+            if len(logic.selected_ingredients) > 0:
+                Controller.update_ingredient_search_results()
+            elif t_rpanel["win_text"].text() != "Trending Recipes":
+                Controller.update_trending()
 
         lpanel["filter_dropdown"].clear()
         result_list = logic.Logic.get_matching_ingredients(
@@ -376,6 +385,7 @@ class Controller:
                 i[5],  # URL
             )
             widget_list.append(recipe_card)
+
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
@@ -448,26 +458,7 @@ class Controller:
     def update_name_search_results(search):
         """Takes recipes matching with selected ingr and
         searches in the names."""
-        return_list = []
-        if len(logic.selected_ingredients) > 0:
-            print("line 457")
-            Controller.delete_recipe_cards()
-            result_list = logic.Logic.get_ingredient_search()
-            for i in result_list:
-                print(i)
-                print(search)
-                if search.lower() in i[0].lower():
-                    return_list.append(i)
-        else:
-            print("line 468")
-            Controller.delete_recipe_cards()
-            recipes = query.Search().recipe_name_search("")
-            for i in recipes:
-                print(i[0])
-                print(search)
-                if search.lower() in i[0].lower():
-                    return_list.append(i)
-
+        return_list = logic.Logic.name_search(search)
         Controller.generate_recipe_cards(return_list)
         Controller.update_section_header(
             str(len(return_list)) + " Search Results"

@@ -54,7 +54,6 @@ class Components:
         )
         search_btn.setIconSize(qtc.QSize(25, 25))
         search_btn.setObjectName(self.__object_names[1])
-        # set connection
         search_btn.setStyleSheet(
             """
             border: none;
