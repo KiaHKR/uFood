@@ -22,6 +22,8 @@ class Components:
         "filter_dropdown",
         "logo",
         "selected_items",
+        "time_slider",
+        "time_label",
     )
     path = "src/interface/assets/"
 
@@ -37,6 +39,8 @@ class Components:
         self.widgets[self.__object_names[7]] = self.__drop_down_results()
         self.widgets[self.__object_names[8]] = self.__logo()
         self.widgets[self.__object_names[9]] = self.__selected_items()
+        self.widgets[self.__object_names[10]] = self.__time_slider()
+        self.widgets[self.__object_names[11]] = self.__time_label()
 
     def __search_bar(self):
         """Search bar widget for ingredients."""
@@ -190,3 +194,24 @@ class Components:
         list.setObjectName(self.__object_names[9])
         list.addItems(logic.selected_ingredients)
         return list
+    
+    def __time_slider(self):
+        """Slider to filter recipes based on cooking time"""
+        
+        sl = qtw.QSlider(qtc.Qt.Horizontal)
+        max_time = logic.Logic.max_cook_time()
+        sl.setRange( 0, max_time)
+        sl.setValue(max_time)
+        sl.setTickInterval(1)
+        sl.setObjectName(self.__object_names[10])
+
+        return sl
+    
+    def __time_label(self):
+        max_time = logic.Logic.max_cook_time()
+        label = qtw.QLabel(str(max_time))
+        label.setAlignment(qtc.Qt.AlignCenter | qtc.Qt.AlignVCenter)
+        label.setMinimumWidth(80)
+        label.setStyleSheet("color: white;")
+        label.setObjectName(self.__object_names[11])
+        return label

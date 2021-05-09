@@ -165,3 +165,10 @@ class Search:
             instr.replace("$", "\n"),
             source,
         )
+        
+    def get_max_cooking_time(self):
+        self.mycursor.execute("SELECT MAX(cooking_time) FROM ufood.recipes;")
+        for x in self.mycursor:
+            time = x[0]
+        return(time)
+        

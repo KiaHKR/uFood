@@ -143,21 +143,37 @@ class View(qtw.QWidget):
                 lpanel["selected_items"].currentItem()
             )
         )
+        
+        # Update slider time connector
+        lpanel["time_slider"].valueChanged.connect(lambda: Controller.update_label())
+         
+                 
+        slider_hbox = qtw.QHBoxLayout()
+        slider_hbox.addWidget(lpanel["time_slider"])
+        slider_hbox.addSpacing(15)
+        slider_hbox.addWidget(lpanel["time_label"])
+
+        slider_widget = qtw.QWidget()
+        slider_widget.setLayout(slider_hbox)
+        slider_widget.setFixedHeight(30)
+        slider_widget.setStyleSheet("background-color: transparent;")
 
         # Create stacked layout for selected ingr and drop down
         search_stack = qtw.QWidget()
         search_stack.setLayout(qtw.QStackedLayout())
+        
         search_stack.layout().addWidget(lpanel["filter_dropdown"])
         search_stack.layout().addWidget(lpanel["selected_items"])
-
         # Add widgets to parent search layout
-        search_widget.layout().addWidget(lpanel["search_bar"], 0, 0)
-        search_widget.layout().addWidget(search_stack, 1, 0)
-        search_widget.layout().addWidget(lpanel["search_btn_bg"], 0, 2)
-        search_widget.layout().addWidget(lpanel["search_btn"], 0, 2)
-        search_widget.layout().addWidget(lpanel["search_filter_btn"], 0, 3)
+        search_widget.layout().addWidget(slider_widget, 0, 0)
+        search_widget.layout().addWidget(lpanel["search_bar"], 1, 0)
+        search_widget.layout().addWidget(search_stack, 2, 0)
+        search_widget.layout().addWidget(lpanel["search_btn_bg"], 1, 2)
+        search_widget.layout().addWidget(lpanel["search_btn"], 1, 2)
+        search_widget.layout().addWidget(lpanel["search_filter_btn"], 1, 3)
         search_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
         search_widget.layout().setSpacing(0)
+        
 
         return search_widget
 
@@ -215,6 +231,9 @@ class View(qtw.QWidget):
 
     def __right_bottom_refresh(self):
         self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
+        
+        
+    
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -463,3 +482,6 @@ class Controller:
         Controller.update_section_header(
             str(len(return_list)) + " Search Results"
         )
+    
+    def update_label():
+        lpanel["time_label"].setText(str(lpanel["time_slider"].value()))

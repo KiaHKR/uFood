@@ -39,6 +39,7 @@ class Logic:
 
     def get_trending():
         """Returns list of top 5 trending from query."""
+        Logic.max_cook_time()
         return reversed(search_object.trending()[-5:])
 
     def get_ingredient_search():
@@ -60,8 +61,12 @@ class Logic:
                 if search.lower() in i[0].lower():
                     return_list.append(i)
         return return_list
-
-
+    
+    def max_cook_time():
+        unformated_time = str(search_object.get_max_cooking_time())
+        split_list = unformated_time.split(":")
+        time_minutes = int(split_list[0])*60 + int(split_list[1])
+        return time_minutes
 class Sync:
     """Dynchronization for objects when writing to/reading from."""
 
