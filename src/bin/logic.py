@@ -3,6 +3,7 @@ import pickle
 from fpdf import FPDF
 
 from src.bin import query
+import src.interface.root as root
 from pathlib import Path
 
 selected_ingredients = []
@@ -38,11 +39,27 @@ class Logic:
 
     def get_trending():
         """Returns list of top 5 trending from query."""
-        return search_object.trending()[:5]
+        return reversed(search_object.trending()[-5:])
 
     def get_ingredient_search():
         """Returns list of recipes matching ingredients."""
         return search_object.ingredient_name_search(selected_ingredients)
+
+    def name_search(search):
+        return_list = []
+        if len(selected_ingredients) > 0:
+            root.Controller.delete_recipe_cards()
+            result_list = Logic.get_ingredient_search()
+            for i in result_list:
+                if search.lower() in i[0].lower():
+                    return_list.append(i)
+        else:
+            root.Controller.delete_recipe_cards()
+            recipes = query.Search().recipe_name_search("")
+            for i in recipes:
+                if search.lower() in i[0].lower():
+                    return_list.append(i)
+        return return_list
 
 
 class Sync:
@@ -68,15 +85,14 @@ class Sync:
             pickle.dump(self.fav_list, file)
 
     def pickle_read(self):
-        
+
         try:
             with open(self.file, "rb") as file:
                 self.fav_list = pickle.load(file)
                 return self.fav_list
         except FileNotFoundError as error:
             raise FileNotFoundError from error
-        
-        
+
         # """Read and initiates from bin."""
         # with open(self.file, "rb") as file:
         #     self.fav_list = pickle.load(file)
@@ -107,7 +123,7 @@ class Pdf:
         pdf.multi_cell(
             100,
             10,
-            txt="Igredients: \n" + ingred,
+            txt="Ingredients: \n" + ingred,
             align="L",
         )
 

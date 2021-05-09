@@ -54,20 +54,42 @@ class Search:
         ingred = ""
         ingredient_list = []
         id_list = []
-        for x in ing_list[0 : len(ing_list) - 1]:
-            ingred += (
-                "ingredients_has_recipes.ingredients_name = '" + x + "' or "
-            )
-        ingred += (
-            " ingredients_has_recipes.ingredients_name = '"
-            + ing_list[-1]
-            + "'"
-        )
-        self.mycursor.execute("SELECT recipes.id as 'ID' FROM recipes  INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE "+ingred+" GROUP BY ID")
+        if len(ing_list) == 1:
+            ingred=+"SELECT recipes.id"
+            +"FROM recipes "
+            +"INNER JOIN recipes_has_diets" 
+            +"ON recipes.id = recipes_has_diets.recipes_id "
+            +"INNER JOIN ingredients_has_recipes "
+            +"ON recipes.id = ingredients_has_recipes.recipes_id "
+            +"WHERE ingredients_has_recipes.recipes_id "
+            +"IN (SELECT recipes.id as 'ID' "
+            +"FROM recipes   "
+            +"INNER JOIN ingredients_has_recipes "
+            +"ON recipes.id = ingredients_has_recipes.recipes_id "
+            +"WHERE ingredients_name = '"+ing_list[0]+"')"
+        else:
+            ingred = "SELECT recipes.id "
+            +"FROM recipes "
+            +"INNER JOIN recipes_has_diets " 
+            +"ON recipes.id = recipes_has_diets.recipes_id "
+            +"INNER JOIN ingredients_has_recipes "
+            +"ON recipes.id = ingredients_has_recipes.recipes_id "
+            +"WHERE ingredients_has_recipes.recipe_id "
+            + "IN (SELECT recipes.id as 'ID' "
+            +"FROM recipes   "
+            +"INNER JOIN ingredients_has_recipes "
+            +"ON recipes.id = ingredients_has_recipes.recipes_id "
+            +"WHERE ingredients_name = '"+ing_list[0]+"') " 
+            for x in ing_list[1:]:
+                ingred =+ "AND ingredients_has_recipes.recipe_id "
+                + "IN (SELECT recipes.id as 'ID' "
+                +"FROM recipes   "
+                +"INNER JOIN ingredients_has_recipes "
+                +"ON recipes.id = ingredients_has_recipes.recipes_id "
+                +"WHERE ingredients_name = '"+x+"') " 
+        self.mycursor.execute(ingred)
         for id in self.mycursor:
-            id_list.append(str(id[0]))
-        temp = []
-        
+            id_list.append(str(id[0]))       
         for id in id_list:
             self.mycursor.execute("SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time', GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets', GROUP_CONCAT(DISTINCT ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE ingredients_has_recipes.recipes_id = '"+id+"'")
             for yo in self.mycursor:

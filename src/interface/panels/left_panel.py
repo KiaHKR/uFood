@@ -45,8 +45,6 @@ class Components:
         search_bar.setFixedHeight(40)
         search_bar.setPlaceholderText("Search me... I'm dry ;)")
         search_bar.setStyleSheet("background-color: white; font-size: 14px;")
-        # set connections
-        # set QSS
         return search_bar
 
     def __search_btn(self):
@@ -56,7 +54,6 @@ class Components:
         )
         search_btn.setIconSize(qtc.QSize(25, 25))
         search_btn.setObjectName(self.__object_names[1])
-        # set connection
         search_btn.setStyleSheet(
             """
             border: none;
