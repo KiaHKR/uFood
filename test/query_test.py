@@ -32,7 +32,7 @@ class TestQueryClass(unittest.TestCase):
         """Tests the search of recipe by ingredient."""
         connection = query.Search()
         res = len(connection.ingredient_name_search(["eggs"]))
-        exp = 7
+        exp = 16
         self.assertEqual(res, exp)
 
     def test_cooking_time_search(self):
@@ -69,5 +69,11 @@ class TestQueryClass(unittest.TestCase):
         res = len(qry)
         exp = 4
         self.assertEqual(res, exp)
+
+    def test_recipe_id_search(self):
+        """Test recipe search by ID"""
+        connection = query.Search()
+        res = len(connection.recipe_id_search("1"))
+        self.assertEqual(1, res)
 
         
