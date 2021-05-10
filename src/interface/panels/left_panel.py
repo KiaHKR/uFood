@@ -192,7 +192,7 @@ class Components:
         )
         list.setVisible(False)
         list.setObjectName(self.__object_names[9])
-        list.addItems(logic.selected_ingredients)
+
         return list
 
     def __time_slider(self):
