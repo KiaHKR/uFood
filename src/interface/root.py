@@ -453,7 +453,7 @@ class Controller:
         Controller.clear_tags()
         Controller.delete_recipe_cards()
         recipes = logic.Logic.name_search(None, lpanel["time_slider"].value())
-        Controller.mult_thread_func(recipes)
+        Controller.generate_recipe_cards(recipes)
         Controller.update_section_header("All Recipes")
 
     def clear_tags():
