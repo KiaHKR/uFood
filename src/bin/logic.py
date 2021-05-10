@@ -15,7 +15,9 @@ class Logic:
 
     def add_fav(self, id):
         """For adding a favorite to pickle."""
-        Sync.add_fav(id)
+        s = Sync()
+        s.add_favo(id)
+        return True
 
     def get_matching_ingredients(search):
         """For getting matching ingredients to search."""
@@ -39,8 +41,7 @@ class Logic:
 
     def get_trending():
         """Return list of top 5 trending from query."""
-        Logic.max_cook_time()
-        return reversed(search_object.trending()[-5:])
+        return list(reversed(search_object.trending()[-5:]))
 
     def get_ingredient_search(time_value):
         """Return list of recipes matching ingredients."""
@@ -109,7 +110,7 @@ class Sync:
         except FileNotFoundError:
             self.pickle_write()
 
-    def add_fav(self, id):
+    def add_favo(self, id):
         """Add new item to a list and renew pickle."""
         self.fav_list.append(id)
         self.pickle_write()
@@ -127,13 +128,6 @@ class Sync:
                 return self.fav_list
         except FileNotFoundError as error:
             raise FileNotFoundError from error
-
-        # """Read and initiates from bin."""
-        # with open(self.file, "rb") as file:
-        #     self.fav_list = pickle.load(file)
-        #     return (
-        #         self.fav_list
-        #     )  # send the list of fav id's to some class ehhee
 
 
 class Pdf:
@@ -175,4 +169,4 @@ class Pdf:
 
         # save the pdf with name .pdf
         home = str(Path.home())
-        pdf.output(home + "/Downloads/" + name + ".pdf")  # or name + ".pdf"
+        pdf.output(home + "/Downloads/" + name + ".pdf")
