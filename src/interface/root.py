@@ -1,6 +1,5 @@
 """Root file to carry root, Views and controller class."""
 import os
-from typing import Text
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -8,7 +7,7 @@ from PyQt5 import QtCore as qtc
 from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
-from src.bin import logic
+import src.bin.logic as logic
 
 # import bottom rpanel
 from src.bin import query

@@ -1,5 +1,5 @@
 """Main file for launching application."""
-from src.interface.root import Controller, View
+from src.interface.root import View
 
 
 if __name__ == "__main__":

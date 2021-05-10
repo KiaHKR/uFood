@@ -5,6 +5,9 @@ from PyQt5 import QtGui as qtg
 
 from src.interface.styling import qss
 import src.bin.logic as logic
+import src.bin.query as query
+
+search_object = query.Search()
 
 
 class Components:
@@ -192,14 +195,13 @@ class Components:
         )
         list.setVisible(False)
         list.setObjectName(self.__object_names[9])
-        list.addItems(logic.selected_ingredients)
         return list
 
     def __time_slider(self):
         """Slider to filter recipes based on cooking time"""
 
         sl = qtw.QSlider(qtc.Qt.Horizontal)
-        max_time = logic.Logic.max_cook_time()
+        max_time = self.max_cook_time()
         sl.setRange(0, max_time)
         sl.setValue(max_time)
         sl.setTickInterval(1)
@@ -208,10 +210,18 @@ class Components:
         return sl
 
     def __time_label(self):
-        max_time = logic.Logic.max_cook_time()
+        max_time = self.max_cook_time()
         label = qtw.QLabel(str(max_time))
         label.setAlignment(qtc.Qt.AlignCenter | qtc.Qt.AlignVCenter)
         label.setMinimumWidth(80)
         label.setStyleSheet("color: white;")
         label.setObjectName(self.__object_names[11])
         return label
+
+    def max_cook_time(self):
+        """Return the highest cook time of all recipes."""
+        unformated_time = str(search_object.get_max_cooking_time())
+        time_minutes = int(unformated_time.split(":")[0]) * 60 + int(
+            unformated_time.split(":")[1]
+        )
+        return time_minutes
