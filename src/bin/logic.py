@@ -49,7 +49,7 @@ class Logic:
         recipe_list = []
         for i in fave_id_list:
             result = query.Search().search_for_fav(i)
-            recipe_list.append(result[0]) 
+            recipe_list.append(result[0])
         return recipe_list
 
     def get_ingredient_search(time_value):
