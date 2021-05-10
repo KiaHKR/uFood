@@ -243,7 +243,7 @@ class View(qtw.QWidget):
         thumbnail=None,
     ):
         """Widgets of recipe cards."""
-        recipe_card = qtw.QWidget()
+        recipe_card = qtw.QPushButton()
         recipe_card.setLayout(qtw.QHBoxLayout())
         recipe_card.setStyleSheet(
             "QWidget::hover" "{background-color : #6c899d;}"
@@ -284,7 +284,10 @@ class View(qtw.QWidget):
         info.layout().addWidget(rbcomp().ingredients(ingr))
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
-
+        # recipe_card.setCursor(qtg.QCursor(qtc.Qt.OpenHandCursor))
+        recipe_card.clicked.connect(
+            lambda: Controller.export(recipe_card.objectName())
+        )
         return recipe_card
 
 
