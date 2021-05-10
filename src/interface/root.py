@@ -243,7 +243,7 @@ class View(qtw.QWidget):
         thumbnail=None,
     ):
         """Widgets of recipe cards."""
-        recipe_card = qtw.QWidget()
+        recipe_card = qtw.QPushButton()
         recipe_card.setLayout(qtw.QHBoxLayout())
         recipe_card.setStyleSheet(
             "QWidget::hover" "{background-color : #6c899d;}"
@@ -284,7 +284,10 @@ class View(qtw.QWidget):
         info.layout().addWidget(rbcomp().ingredients(ingr))
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
-
+        # recipe_card.setCursor(qtg.QCursor(qtc.Qt.OpenHandCursor))
+        recipe_card.clicked.connect(
+            lambda: Controller.export(recipe_card.objectName())
+        )
         return recipe_card
 
 
@@ -389,6 +392,12 @@ class Controller:
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
+
+    def build_favorites():
+        Controller.delete_recipe_cards()
+        Controller.update_section_header("Favorite Recipes")
+        favorite_list = logic.Logic.get_favorites()
+        Controller.generate_recipe_cards(favorite_list)
 
         # Generate and delte recipe cards ---------
 
