@@ -5,6 +5,7 @@ from fpdf import FPDF
 from src.bin import query
 import src.interface.root as root
 from pathlib import Path
+from PyQt5 import QtWidgets as qtw
 
 selected_ingredients = []
 search_object = query.Search()
@@ -98,7 +99,6 @@ class Logic:
 
         return return_list
 
-
     def max_cook_time():
         """Return the highest cook time of all recipes."""
         unformated_time = str(search_object.get_max_cooking_time())
@@ -184,3 +184,9 @@ class Pdf:
         # save the pdf with name .pdf
         home = str(Path.home())
         pdf.output(home + "/Downloads/" + name + ".pdf")
+        msg = qtw.QMessageBox()
+        msg.setWindowTitle("Info")
+        msg.setText(
+            "A pdf has successfully been downloaded to your downloads folder."
+        )
+        msg.exec_()
