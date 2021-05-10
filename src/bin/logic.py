@@ -1,4 +1,4 @@
-"""Logic file for Logic and sync class."""
+"""File for Logic and sync class."""
 import pickle
 from fpdf import FPDF
 
@@ -38,12 +38,12 @@ class Logic:
         selected_ingredients.remove(ingr.text())
 
     def get_trending():
-        """Returns list of top 5 trending from query."""
+        """Return list of top 5 trending from query."""
         Logic.max_cook_time()
         return reversed(search_object.trending()[-5:])
 
     def get_ingredient_search(time_value):
-        """Returns list of recipes matching ingredients."""
+        """Return list of recipes matching ingredients."""
         result_list = []
         return_list = search_object.ingredient_name_search(
             selected_ingredients
@@ -59,6 +59,7 @@ class Logic:
         return result_list
 
     def name_search(search, time_value):
+        """Search by recipe name, applies time and selected ingr."""
         return_list = []
         result_list = []
 
@@ -87,19 +88,14 @@ class Logic:
 
         return return_list
 
-    def max_cook_time():
-        unformated_time = str(search_object.get_max_cooking_time())
-        time_minutes = int(unformated_time.split(":")[0]) * 60 + int(
-            unformated_time.split(":")[1]
-        )
-        return time_minutes
+    
 
 
 class Sync:
     """Dynchronization for objects when writing to/reading from."""
 
     def __init__(self):
-        """For initializing by reading and saving the current pickle in a list."""
+        """Read the current pickle in a list."""
         self.file = "src/interface/assets/pickle.pickle"
         self.fav_list = []
         try:
@@ -118,7 +114,7 @@ class Sync:
             pickle.dump(self.fav_list, file)
 
     def pickle_read(self):
-
+        """Read from pickle file."""
         try:
             with open(self.file, "rb") as file:
                 self.fav_list = pickle.load(file)
@@ -139,7 +135,7 @@ class Pdf:
 
     # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
     def __init__(self, name, ingred, instructions, source):
-        """Creates a pdf with recipe info."""
+        """Create a pdf with recipe info."""
         # Create an instance of the fpdf class
         pdf = FPDF()
 
