@@ -98,6 +98,7 @@ class Logic:
 
         return return_list
 
+
     def max_cook_time():
         """Return the highest cook time of all recipes."""
         unformated_time = str(search_object.get_max_cooking_time())

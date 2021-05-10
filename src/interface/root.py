@@ -8,6 +8,7 @@ from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 import src.bin.logic as logic
+from src.interface.panels.right_bottom_panel import Components as comp
 
 # import bottom rpanel
 from src.bin import query
@@ -179,15 +180,6 @@ class View(qtw.QWidget):
 
         return search_widget
 
-    def __save_build(id):
-        """Build save feature."""
-        save = qtw.QPushButton()
-        save.setLayout(qtw.QHBoxLayout())
-        save.layout().addWidget(b_rpanel["save_btn"])
-        save.setFixedSize(50, 50)
-        save.clicked.connect(lambda: Controller.save(id))
-        return save
-
     def __export_build(id):
         """Build export feature."""
         export = qtw.QPushButton()
@@ -196,6 +188,15 @@ class View(qtw.QWidget):
         export.layout().addWidget(b_rpanel["export_btn"])
         export.clicked.connect(lambda: Controller.export(id))
         return export
+
+    def __save_build(id):
+        """Build save feature."""
+        save = qtw.QPushButton()
+        save.setLayout(qtw.QHBoxLayout())
+        save.layout().addWidget(comp().save_btn(id))
+        save.setFixedSize(50, 50)
+        save.clicked.connect(lambda: Controller.save(id))
+        return save
 
     def __donate_build(self):
         """Build donate feature."""
