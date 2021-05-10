@@ -460,13 +460,6 @@ class Controller:
 
     def show_all_recipes():
         """Show all recipes."""
-<<<<<<< HEAD
-        Controller.clear_tags()
-        Controller.delete_recipe_cards()
-        recipes = logic.Logic.name_search(None, lpanel["time_slider"].value())
-        Controller.generate_recipe_cards(recipes)
-        Controller.update_section_header("All Recipes")
-=======
         if Controller.pos != "All Recipes":
             Controller.clear_tags()
             Controller.delete_recipe_cards()
@@ -475,7 +468,6 @@ class Controller:
             )
             Controller.generate_recipe_cards(recipes)
             Controller.update_section_header("All Recipes")
->>>>>>> development
 
     def clear_tags():
         """Clear selected ingredient."""
