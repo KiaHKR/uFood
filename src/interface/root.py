@@ -198,7 +198,7 @@ class View(qtw.QWidget):
         save.clicked.connect(
             lambda: Controller.save(id),
             # lambda: Controller.update_favorites(),
-            )
+        )
         # save.clicked.connect()
         return save
 
@@ -323,8 +323,14 @@ class Controller:
         s = logic.Logic()
         s.add_fav(id)
         win_text = t_rpanel["win_text"].text()
-        if win_text == "Favorite Recipes":
+        if win_text == "Trending Recipes":
+            Controller.update_trending()
+        elif win_text == "Favorite Recipes":
             Controller.build_favorites()
+        elif "Search Results" in win_text:
+            Controller.update_name_search_results(lpanel["search_bar"].text())
+        elif win_text == "All Recipes":
+            Controller.show_all_recipes()
 
     def export(id):
         """Export recipe as pdf."""
