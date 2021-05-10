@@ -484,7 +484,6 @@ class Controller:
             search, lpanel["time_slider"].value()
         )
         if return_list is None:
-
             pass
         else:
             Controller.generate_recipe_cards(return_list)
