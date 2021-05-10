@@ -43,6 +43,15 @@ class Logic:
         """Return list of top 5 trending from query."""
         return list(reversed(search_object.trending()[-5:]))
 
+    def get_favorites():
+        """Returns the recipes saved to favorites."""
+        fave_id_list = Sync().pickle_read()
+        recipe_list = []
+        for i in fave_id_list:
+            result = query.Search().search_for_fav(i)
+            recipe_list.append(result[0]) 
+        return recipe_list
+
     def get_ingredient_search(time_value):
         """Return list of recipes matching ingredients."""
         result_list = []
@@ -112,8 +121,12 @@ class Sync:
 
     def add_favo(self, id):
         """Add new item to a list and renew pickle."""
-        self.fav_list.append(id)
-        self.pickle_write()
+        if id in self.fav_list:
+            self.fav_list.remove(id)
+            self.pickle_write()
+        elif id not in self.fav_list:
+            self.fav_list.append(id)
+            self.pickle_write()
 
     def pickle_write(self):
         """Write to bin."""

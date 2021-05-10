@@ -243,7 +243,7 @@ class View(qtw.QWidget):
         thumbnail=None,
     ):
         """Widgets of recipe cards."""
-        recipe_card = qtw.QWidget()
+        recipe_card = qtw.QPushButton()
         recipe_card.setLayout(qtw.QHBoxLayout())
         recipe_card.setStyleSheet(
             "QWidget::hover" "{background-color : #6c899d;}"
@@ -284,12 +284,17 @@ class View(qtw.QWidget):
         info.layout().addWidget(rbcomp().ingredients(ingr))
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
-
+        # recipe_card.setCursor(qtg.QCursor(qtc.Qt.OpenHandCursor))
+        recipe_card.clicked.connect(
+            lambda: Controller.export(recipe_card.objectName())
+        )
         return recipe_card
 
 
 class Controller:
     """Controller class."""
+
+    pos = "Trending"
 
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
@@ -305,8 +310,8 @@ class Controller:
     def donate_url():
         """Url link for Facebook group."""
         os.startfile(
-            "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"
-        )  # noqa: E502
+            "https://www.facebook.com/groups/1454991488172182/?notif_id=1620038256343772&notif_t=group_r2j_approved&ref=notif"  # noqa: E501
+        )
 
     def save(id):
         """For saving recipe id to pickle file."""
@@ -376,23 +381,28 @@ class Controller:
     # Trending build and update --------
 
     def build_trending():
-        """Same as update_trending(), but only used on initial build."""
+        """Update_trending(), but only used on initial build."""
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list, build=True)
         Controller.update_section_header("Trending Recipes")
 
     def update_trending():
-        """Generates the VBox widget with the list of trending recipes."""
+        """Generate the VBox widget with the list of trending recipes."""
         Controller.delete_recipe_cards()
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
 
+    def build_favorites():
+        Controller.delete_recipe_cards()
+        Controller.update_section_header("Favorite Recipes")
+        favorite_list = logic.Logic.get_favorites()
+        Controller.generate_recipe_cards(favorite_list)
+
         # Generate and delte recipe cards ---------
 
     def generate_recipe_cards(recipe_list, build=False):
-        """Generates a VBox with a list of recipe cards in it."""
-
+        """Generate a VBox with a list of recipe cards in it."""
         widget_list = []
         for i in recipe_list:
             recipe_card = View.recipe_card(
@@ -425,8 +435,7 @@ class Controller:
             )
 
     def delete_recipe_cards():
-        """Clears scroll_area and removes the scroll_area from the
-        right_panel."""
+        """Clear scroll_area and remove it from the right_panel."""
         for i in reversed(
             range(b_rpanel["scroll_area"].widget().layout().count())
         ):
@@ -445,25 +454,38 @@ class Controller:
     # Section management ---------
 
     def update_section_header(text):
+        """Update section title."""
+        Controller.pos = text
         t_rpanel["win_text"].setText(text)
 
     def show_all_recipes():
         """Show all recipes."""
+<<<<<<< HEAD
         Controller.clear_tags()
         Controller.delete_recipe_cards()
         recipes = logic.Logic.name_search(None, lpanel["time_slider"].value())
         Controller.generate_recipe_cards(recipes)
         Controller.update_section_header("All Recipes")
+=======
+        if Controller.pos != "All Recipes":
+            Controller.clear_tags()
+            Controller.delete_recipe_cards()
+            recipes = logic.Logic.name_search(
+                None, lpanel["time_slider"].value()
+            )
+            Controller.generate_recipe_cards(recipes)
+            Controller.update_section_header("All Recipes")
+>>>>>>> development
 
     def clear_tags():
+        """Clear selected ingredient."""
         logic.selected_ingredients = []
         Controller.update_selected()
 
     # Different search methods -------
 
     def update_ingredient_search_results():
-        """Takes care of everything to do with updating
-        ingredient_search results."""
+        """Update ingredient_search results."""
         Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search(
             lpanel["time_slider"].value()
@@ -474,13 +496,11 @@ class Controller:
         )
 
     def update_name_search_results(search):
-        """Takes recipes matching with selected ingr and
-        searches in the names."""
+        """Search recipes by name and selected ingr."""
         return_list = logic.Logic.name_search(
             search, lpanel["time_slider"].value()
         )
         if return_list is None:
-
             pass
         else:
             Controller.generate_recipe_cards(return_list)
@@ -489,6 +509,7 @@ class Controller:
             )
 
     def update_slider():
+        """Update search results when slider released."""
         if t_rpanel["win_text"].text() == "Trending Recipes":
             pass
         elif t_rpanel["win_text"].text() == "All Recipes":
@@ -497,4 +518,5 @@ class Controller:
             Controller.update_name_search_results(lpanel["search_bar"].text())
 
     def update_label():
+        """Update slider label."""
         lpanel["time_label"].setText(str(lpanel["time_slider"].value()))

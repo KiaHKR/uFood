@@ -4,7 +4,6 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 
 from src.interface.styling import qss
-import src.bin.logic as logic
 import src.bin.query as query
 
 search_object = query.Search()
@@ -198,8 +197,7 @@ class Components:
         return list
 
     def __time_slider(self):
-        """Slider to filter recipes based on cooking time"""
-
+        """Slider to filter recipes based on cooking time."""
         sl = qtw.QSlider(qtc.Qt.Horizontal)
         max_time = self.max_cook_time()
         sl.setRange(0, max_time)

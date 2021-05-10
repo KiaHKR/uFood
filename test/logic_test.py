@@ -1,4 +1,5 @@
 """Logic unittest file."""
+<<<<<<< HEAD
 
 import unittest
 
@@ -88,3 +89,5 @@ class TestLogicClass(unittest.TestCase):
             ),
             logic.Pdf,
         )
+=======
+>>>>>>> development
