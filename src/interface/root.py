@@ -195,7 +195,11 @@ class View(qtw.QWidget):
         save.setLayout(qtw.QHBoxLayout())
         save.layout().addWidget(comp().save_btn(id))
         save.setFixedSize(50, 50)
-        save.clicked.connect(lambda: Controller.save(id))
+        save.clicked.connect(
+            lambda: Controller.save(id),
+            # lambda: Controller.update_favorites(),
+            )
+        # save.clicked.connect()
         return save
 
     def __donate_build(self):
@@ -318,6 +322,9 @@ class Controller:
         """For saving recipe id to pickle file."""
         s = logic.Logic()
         s.add_fav(id)
+        win_text = t_rpanel["win_text"].text()
+        if win_text == "Favorite Recipes":
+            Controller.build_favorites()
 
     def export(id):
         """Export recipe as pdf."""
@@ -399,6 +406,11 @@ class Controller:
         Controller.update_section_header("Favorite Recipes")
         favorite_list = logic.Logic.get_favorites()
         Controller.generate_recipe_cards(favorite_list)
+
+    def update_favorites():
+        win_text = t_rpanel["win_text"]
+        if win_text == "Favorite Recipes":
+            Controller.build_favorites()
 
         # Generate and delte recipe cards ---------
 
