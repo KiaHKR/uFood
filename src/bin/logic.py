@@ -42,31 +42,59 @@ class Logic:
         Logic.max_cook_time()
         return reversed(search_object.trending()[-5:])
 
-    def get_ingredient_search():
+    def get_ingredient_search(time_value):
         """Returns list of recipes matching ingredients."""
-        return search_object.ingredient_name_search(selected_ingredients)
+        result_list = []
+        return_list = search_object.ingredient_name_search(
+            selected_ingredients
+        )
 
-    def name_search(search):
+        for i in return_list:
+            time = int(str(i[1]).split(":")[0]) * 60 + int(
+                str(i[1]).split(":")[1]
+            )
+            if time <= time_value:
+                result_list.append(i)
+
+        return result_list
+
+    def name_search(search, time_value):
         return_list = []
+        result_list = []
+
         if len(selected_ingredients) > 0:
             root.Controller.delete_recipe_cards()
-            result_list = Logic.get_ingredient_search()
-            for i in result_list:
-                if search.lower() in i[0].lower():
-                    return_list.append(i)
+            result_list = Logic.get_ingredient_search(time_value)
+        elif search == "" or search == " ":
+            return None
+        elif search is None:
+            root.Controller.delete_recipe_cards()
+            result_list = query.Search().recipe_name_search("")
         else:
             root.Controller.delete_recipe_cards()
-            recipes = query.Search().recipe_name_search("")
-            for i in recipes:
-                if search.lower() in i[0].lower():
+            result_list = query.Search().recipe_name_search("")
+
+        for i in result_list:
+            time = int(str(i[1]).split(":")[0]) * 60 + int(
+                str(i[1]).split(":")[1]
+            )
+
+            if search is not None:
+                if search.lower() in i[0].lower() and time <= time_value:
                     return_list.append(i)
+            elif search is None and time <= time_value:
+                return_list.append(i)
+
         return return_list
-    
+
     def max_cook_time():
         unformated_time = str(search_object.get_max_cooking_time())
-        split_list = unformated_time.split(":")
-        time_minutes = int(split_list[0])*60 + int(split_list[1])
+        time_minutes = int(unformated_time.split(":")[0]) * 60 + int(
+            unformated_time.split(":")[1]
+        )
         return time_minutes
+
+
 class Sync:
     """Dynchronization for objects when writing to/reading from."""
 
