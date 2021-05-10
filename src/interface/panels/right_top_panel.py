@@ -2,8 +2,7 @@
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
-
-from src.interface.styling import qss
+import src.interface.root as root
 
 
 class Compontents:
@@ -52,6 +51,7 @@ class Compontents:
         fav_btn.setStyleSheet("border: none;")
         fav_btn.setFixedWidth(35)
         fav_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
+        fav_btn.clicked.connect(lambda: root.Controller.build_favorites())
         return fav_btn
 
     def __recipes_btn(self):

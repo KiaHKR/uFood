@@ -232,6 +232,18 @@ class Search:
             instr = x[0]
         return instr.replace("$", "\n")
 
+    def search_for_fav(self, srch):
+        """For searching recipe names."""
+        return_list = []
+        self.mycursor.execute(
+            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time',GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets',GROUP_CONCAT(ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID' ,recipes.img_link as 'Image URL' FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE recipes.id ="
+            + srch
+            + " Group by name"
+        )
+        for x in self.mycursor:
+            return_list.append(x)
+        return return_list
+
     def get_ingredient(self, ingredient):
         """For getting the ingredients of a recipe."""
         return_list = []
@@ -256,7 +268,8 @@ class Search:
             "SELECT recipes.name, GROUP_CONCAT(CONCAT_WS(' '"
             ", ingredients_has_recipes.amount, "
             + "ingredients_has_recipes.measurements_name, "
-            + "ingredients_has_recipes.ingredients_name) SEPARATOR '@') as 'Ingredients', "  #
+            + "ingredients_has_recipes.ingredients_name) SEPARATOR '@')"
+            + "as 'Ingredients', "  #
             + "recipes.instructions, "
             + "recipes.source "
             + "FROM recipes "
@@ -279,6 +292,7 @@ class Search:
         )
 
     def get_max_cooking_time(self):
+        """Return the highest cook time of all recipes."""
         self.mycursor.execute("SELECT MAX(cooking_time) FROM ufood.recipes;")
         for x in self.mycursor:
             time = x[0]
