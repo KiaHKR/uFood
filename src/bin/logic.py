@@ -88,7 +88,13 @@ class Logic:
 
         return return_list
 
-    
+    def max_cook_time():
+        """Return the highest cook time of all recipes."""
+        unformated_time = str(search_object.get_max_cooking_time())
+        time_minutes = int(unformated_time.split(":")[0]) * 60 + int(
+            unformated_time.split(":")[1]
+        )
+        return time_minutes
 
 
 class Sync:
