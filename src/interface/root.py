@@ -291,6 +291,8 @@ class View(qtw.QWidget):
 class Controller:
     """Controller class."""
 
+    pos = "Trending"
+
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
         lpanel["logo"].setPixmap(
@@ -443,17 +445,20 @@ class Controller:
     # Section management ---------
 
     def update_section_header(text):
-        """Update section header."""
+        """Update section title."""
+        Controller.pos = text
         t_rpanel["win_text"].setText(text)
 
     def show_all_recipes():
         """Show all recipes."""
-        Controller.clear_tags()
-        Controller.delete_recipe_cards()
-        lpanel["time_slider"].setValue(logic.Logic.max_cook_time())
-        recipes = logic.Logic.name_search(None, lpanel["time_slider"].value())
-        Controller.generate_recipe_cards(recipes)
-        Controller.update_section_header("All Recipes")
+        if Controller.pos != "All Recipes":
+            Controller.clear_tags()
+            Controller.delete_recipe_cards()
+            recipes = logic.Logic.name_search(
+                None, lpanel["time_slider"].value()
+            )
+            Controller.generate_recipe_cards(recipes)
+            Controller.update_section_header("All Recipes")
 
     def clear_tags():
         """Clear selected ingredient."""
