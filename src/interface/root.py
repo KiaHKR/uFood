@@ -390,6 +390,12 @@ class Controller:
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
 
+    def build_favorites():
+        Controller.delete_recipe_cards()
+        Controller.update_section_header("Favorite Recipes")
+        favorite_list = logic.Logic.get_favorites()
+        Controller.generate_recipe_cards(favorite_list)
+
         # Generate and delte recipe cards ---------
 
     def generate_recipe_cards(recipe_list, build=False):
