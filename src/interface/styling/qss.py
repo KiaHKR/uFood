@@ -1,4 +1,8 @@
+"""QSS styling constants."""
+
+
 def scrollbar():
+    """Return style for scrollbars."""
     return """QScrollBar{
                 border: none;
                 background:white;
@@ -7,7 +11,7 @@ def scrollbar():
             }
             QScrollBar::handle{
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                    stop: 0 #202f82, 
+                    stop: 0 #202f82,
                     stop: 0.5 #202f82,
                     stop: 1 #202f82
                 );

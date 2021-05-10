@@ -59,7 +59,7 @@ class TestQueryClass(unittest.TestCase):
         """Test to get ingredients with part of ingredient name."""
         connection = query.Search()
         res = len(connection.get_ingredient("egg"))
-        exp = 1 
+        exp = 1
         self.assertEqual(res, exp)
 
     def test_get_export_info(self):
@@ -71,9 +71,7 @@ class TestQueryClass(unittest.TestCase):
         self.assertEqual(res, exp)
 
     def test_recipe_id_search(self):
-        """Test recipe search by ID"""
+        """Test recipe search by ID."""
         connection = query.Search()
         res = len(connection.recipe_id_search("1"))
         self.assertEqual(1, res)
-
-        

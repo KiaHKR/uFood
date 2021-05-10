@@ -1,5 +1,4 @@
 """Right_bottom_panel for containing components class."""
-from types import FrameType
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
@@ -75,7 +74,6 @@ class Components:
 
     def thumbnail_img(self, path_thumbnail):
         """For label that hold the recipe thumbnail."""
-
         if path_thumbnail is None:
             img = qtw.QLabel(
                 pixmap=qtg.QPixmap(self.path + "img_placeholder.png").scaled(

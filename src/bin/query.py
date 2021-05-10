@@ -256,7 +256,8 @@ class Search:
             "SELECT recipes.name, GROUP_CONCAT(CONCAT_WS(' '"
             ", ingredients_has_recipes.amount, "
             + "ingredients_has_recipes.measurements_name, "
-            + "ingredients_has_recipes.ingredients_name) SEPARATOR '@') as 'Ingredients', "  #
+            + "ingredients_has_recipes.ingredients_name) SEPARATOR '@')"
+            + "as 'Ingredients', "  #
             + "recipes.instructions, "
             + "recipes.source "
             + "FROM recipes "
@@ -279,6 +280,7 @@ class Search:
         )
 
     def get_max_cooking_time(self):
+        """Return the highest cook time of all recipes."""
         self.mycursor.execute("SELECT MAX(cooking_time) FROM ufood.recipes;")
         for x in self.mycursor:
             time = x[0]
