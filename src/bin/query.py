@@ -71,7 +71,7 @@ class Search:
                     + x
                     + "') "
                 )
-                ingred = ingred + " GROUP BY ID"
+            ingred = ingred + " GROUP BY ID"
         self.mycursor.execute(ingred)
         for id in self.mycursor:
             id_list.append(str(id[0]))
