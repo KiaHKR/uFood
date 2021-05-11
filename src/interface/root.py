@@ -8,6 +8,7 @@ from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 import src.bin.logic as logic
+from src.interface.panels.right_bottom_panel import Components as comp
 
 # import bottom rpanel
 from src.bin import query
@@ -151,6 +152,20 @@ class View(qtw.QWidget):
             lambda: Controller.update_slider()
         )
 
+        # Update diet filter_dropdown menu on selection
+        keto = lpanel["search_filter_menu"].findChild(qtw.QAction, "Keto")
+        paleo = lpanel["search_filter_menu"].findChild(qtw.QAction, "Paleo")
+        vegan = lpanel["search_filter_menu"].findChild(qtw.QAction, "Vegan")
+        vegetarian = lpanel["search_filter_menu"].findChild(
+            qtw.QAction, "Vegetarian"
+        )
+        keto.triggered.connect(lambda: Controller.update_diet_filter(keto))
+        paleo.triggered.connect(lambda: Controller.update_diet_filter(paleo))
+        vegan.triggered.connect(lambda: Controller.update_diet_filter(vegan))
+        vegetarian.triggered.connect(
+            lambda: Controller.update_diet_filter(vegetarian)
+        )
+
         slider_hbox = qtw.QHBoxLayout()
         slider_hbox.addWidget(lpanel["time_slider"])
         slider_hbox.addSpacing(15)
@@ -179,15 +194,6 @@ class View(qtw.QWidget):
 
         return search_widget
 
-    def __save_build(id):
-        """Build save feature."""
-        save = qtw.QPushButton()
-        save.setLayout(qtw.QHBoxLayout())
-        save.layout().addWidget(b_rpanel["save_btn"])
-        save.setFixedSize(50, 50)
-        save.clicked.connect(lambda: Controller.save(id))
-        return save
-
     def __export_build(id):
         """Build export feature."""
         export = qtw.QPushButton()
@@ -196,6 +202,19 @@ class View(qtw.QWidget):
         export.layout().addWidget(b_rpanel["export_btn"])
         export.clicked.connect(lambda: Controller.export(id))
         return export
+
+    def __save_build(id):
+        """Build save feature."""
+        save = qtw.QPushButton()
+        save.setLayout(qtw.QHBoxLayout())
+        save.layout().addWidget(comp().save_btn(id))
+        save.setFixedSize(50, 50)
+        save.clicked.connect(
+            lambda: Controller.save(id),
+            # lambda: Controller.update_favorites(),
+        )
+        # save.clicked.connect()
+        return save
 
     def __donate_build(self):
         """Build donate feature."""
@@ -213,13 +232,18 @@ class View(qtw.QWidget):
         """For building right top panel."""
         top_layout = qtw.QHBoxLayout()
 
-        top_layout.addWidget(t_rpanel["back_btn"])
         top_layout.addWidget(t_rpanel["win_text"])
+        top_layout.addWidget(t_rpanel["trending_btn"])
         top_layout.addWidget(t_rpanel["fav_btn"])
         top_layout.addWidget(t_rpanel["recipes_btn"])
+        top_layout.addWidget(t_rpanel["settings_btn"])
 
         t_rpanel["recipes_btn"].clicked.connect(
             lambda: Controller.show_all_recipes()
+        )
+
+        t_rpanel["trending_btn"].clicked.connect(
+            lambda: Controller.update_trending()
         )
 
         widget = qtw.QWidget()
@@ -295,6 +319,7 @@ class Controller:
     """Controller class."""
 
     pos = "Trending"
+    recipes_cards_showing = []
 
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
@@ -315,8 +340,17 @@ class Controller:
 
     def save(id):
         """For saving recipe id to pickle file."""
-        s = logic.Sync()
+        s = logic.Logic()
         s.add_fav(id)
+        win_text = t_rpanel["win_text"].text()
+        if win_text == "Trending Recipes":
+            Controller.update_trending()
+        elif win_text == "Favorite Recipes":
+            Controller.build_favorites()
+        elif "Search Results" in win_text:
+            Controller.update_name_search_results(lpanel["search_bar"].text())
+        elif win_text == "All Recipes":
+            Controller.show_all_recipes()
 
     def export(id):
         """Export recipe as pdf."""
@@ -399,6 +433,11 @@ class Controller:
         favorite_list = logic.Logic.get_favorites()
         Controller.generate_recipe_cards(favorite_list)
 
+    def update_favorites():
+        win_text = t_rpanel["win_text"]
+        if win_text == "Favorite Recipes":
+            Controller.build_favorites()
+
         # Generate and delte recipe cards ---------
 
     def generate_recipe_cards(recipe_list, build=False):
@@ -414,18 +453,18 @@ class Controller:
                 i[5],  # URL
             )
             widget_list.append(recipe_card)
+        Controller.build_recipe_cards(widget_list, build)
 
+    def build_recipe_cards(widget_list, build=False):
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
 
-        if len(widget_list) != 0:
+        if len(widget_list) > 0:
             for i in range(len(widget_list)):
-
                 b_rpanel["scroll_area"].widget().layout().addWidget(
                     widget_list[i]
                 )
-
         else:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
 
@@ -433,6 +472,8 @@ class Controller:
             root_view.children()[2].children()[0].layout().addWidget(
                 b_rpanel["scroll_area"]
             )
+            print(b_rpanel["scroll_area"].widget().children())
+        Controller.recipes_cards_showing = widget_list
 
     def delete_recipe_cards():
         """Clear scroll_area and remove it from the right_panel."""
@@ -492,9 +533,7 @@ class Controller:
         return_list = logic.Logic.name_search(
             search, lpanel["time_slider"].value()
         )
-        if return_list is None:
-            pass
-        else:
+        if return_list is not None:
             Controller.generate_recipe_cards(return_list)
             Controller.update_section_header(
                 str(len(return_list)) + " Search Results"
@@ -512,3 +551,32 @@ class Controller:
     def update_label():
         """Update slider label."""
         lpanel["time_label"].setText(str(lpanel["time_slider"].value()))
+
+    def update_diet_filter(diet_type):
+        """Update the search result by dietary filter."""
+        if diet_type is not None and diet_type.isChecked():
+            diet_type = diet_type.text()
+            recipes_to_filter = Controller.recipes_cards_showing
+            filtered = list(
+                filter(
+                    lambda x: diet_type
+                    in str(x.findChild(qtw.QLabel, "diet_type").text()),
+                    recipes_to_filter,
+                )
+            )
+            recipes_to_hide = [
+                r for r in recipes_to_filter if r not in filtered
+            ]
+            Controller.hide_remaining_cards(recipes_to_hide)
+        elif diet_type is not None and diet_type.isChecked() is False:
+            Controller.restore_cards()
+
+    def hide_remaining_cards(list_to_hide):
+        """Hide all recipes from the filtered list"""
+        for recipe in list_to_hide:
+            recipe.hide()
+
+    def restore_cards():
+        """Restore all the cards per the class variable."""
+        for recipe in Controller.recipes_cards_showing:
+            recipe.show()

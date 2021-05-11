@@ -5,6 +5,7 @@ from fpdf import FPDF
 from src.bin import query
 import src.interface.root as root
 from pathlib import Path
+from PyQt5 import QtWidgets as qtw
 
 selected_ingredients = []
 search_object = query.Search()
@@ -15,7 +16,9 @@ class Logic:
 
     def add_fav(self, id):
         """For adding a favorite to pickle."""
-        Sync.add_fav(id)
+        s = Sync()
+        s.add_favo(id)
+        return True
 
     def get_matching_ingredients(search):
         """For getting matching ingredients to search."""
@@ -39,8 +42,7 @@ class Logic:
 
     def get_trending():
         """Return list of top 5 trending from query."""
-        Logic.max_cook_time()
-        return reversed(search_object.trending()[-5:])
+        return list(reversed(search_object.trending()[-5:]))
 
     def get_favorites():
         """Returns the recipes saved to favorites."""
@@ -48,7 +50,7 @@ class Logic:
         recipe_list = []
         for i in fave_id_list:
             result = query.Search().search_for_fav(i)
-            recipe_list.append(result[0]) 
+            recipe_list.append(result[0])
         return recipe_list
 
     def get_ingredient_search(time_value):
@@ -107,7 +109,7 @@ class Logic:
 
 
 class Sync:
-    """Dynchronization for objects when writing to/reading from."""
+    """Synchronization for objects when writing to/reading from."""
 
     def __init__(self):
         """Read the current pickle in a list."""
@@ -118,7 +120,7 @@ class Sync:
         except FileNotFoundError:
             self.pickle_write()
 
-    def add_fav(self, id):
+    def add_favo(self, id):
         """Add new item to a list and renew pickle."""
         if id in self.fav_list:
             self.fav_list.remove(id)
@@ -140,13 +142,6 @@ class Sync:
                 return self.fav_list
         except FileNotFoundError as error:
             raise FileNotFoundError from error
-
-        # """Read and initiates from bin."""
-        # with open(self.file, "rb") as file:
-        #     self.fav_list = pickle.load(file)
-        #     return (
-        #         self.fav_list
-        #     )  # send the list of fav id's to some class ehhee
 
 
 class Pdf:
@@ -188,4 +183,10 @@ class Pdf:
 
         # save the pdf with name .pdf
         home = str(Path.home())
-        pdf.output(home + "/Downloads/" + name + ".pdf")  # or name + ".pdf"
+        pdf.output(home + "/Downloads/" + name + ".pdf")
+        msg = qtw.QMessageBox()
+        msg.setWindowTitle("Info")
+        msg.setText(
+            "A pdf has successfully been downloaded to your downloads folder."
+        )
+        msg.exec_()

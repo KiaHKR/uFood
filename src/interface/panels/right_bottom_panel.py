@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 import urllib.request as request
+from src.bin import logic
 
 from src.interface.styling import qss
 
@@ -30,7 +31,7 @@ class Components:
         self.widgets[self.__object_names[0]] = self.__search_count()
         self.widgets[self.__object_names[5]] = self.__total_time_icon()
         self.widgets[self.__object_names[7]] = self.__scroll_area()
-        self.widgets[self.__object_names[8]] = self.__save_btn()
+        # self.widgets[self.__object_names[8]] = self.__save_btn()
         self.widgets[self.__object_names[9]] = self.__export_btn()
 
     def __export_btn(self):
@@ -44,8 +45,16 @@ class Components:
         export_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return export_btn
 
-    def __save_btn(self, saved=False):
+    def save_btn(self, id):
         """For the save button label."""
+
+        id_list = logic.Sync().fav_list
+        saved = False
+
+        for i in id_list:
+            if i == id:
+                saved = True
+
         if saved is False:
             save_btn = qtw.QLabel(
                 pixmap=qtg.QPixmap(self.path + "fav_icon_empty.png").scaled(
@@ -117,8 +126,6 @@ class Components:
             diet_colour = "#32a852"
         elif diet == "Vegetarian":
             diet_colour = "#137d2c"
-        elif diet == "Pescatarian":
-            diet_colour = "#2a75a3"
         elif diet == "Keto":
             diet_colour = "#d18436"
         elif diet == "Paleo":

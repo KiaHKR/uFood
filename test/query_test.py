@@ -75,3 +75,10 @@ class TestQueryClass(unittest.TestCase):
         connection = query.Search()
         res = len(connection.recipe_id_search("1"))
         self.assertEqual(1, res)
+
+    def test_search_for_fav(self):
+        """Test search for favorites."""
+        connection = query.Search()
+        res = connection.search_for_fav(1)[0][0]
+        exp = "Easy chocolate molten cakes"
+        self.assertEqual(res, exp)
