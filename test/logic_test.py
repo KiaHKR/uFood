@@ -2,15 +2,13 @@
 
 import unittest
 
-from PyQt5.QtGui import QTextItem
-from PyQt5.QtWidgets import QLabel, QWidgetItem
+from PyQt5.QtWidgets import QLabel
 from pathlib import Path
 import os
 
 from src.bin import logic
 
-# ctrl c-k
-# ctsl k-u
+
 class TestLogicClass(unittest.TestCase):
     """Tests Logic class."""
 
@@ -21,14 +19,14 @@ class TestLogicClass(unittest.TestCase):
         self.assertEqual(res, exp)
 
     def test_ingr_selected(self):
-        """Test adding and removing ingredients from the selected_ingredients list."""
-        l = logic.Logic
+        """Test adding/removing ingredients from the selected_ingredients."""
+        log = logic.Logic
         item = QLabel()
         item.setText("potatoes")
-        l.add_ingr_selected(item)
+        log.add_ingr_selected(item)
         res = len(logic.selected_ingredients)
         self.assertEqual(res, 1)
-        l.remove_ingr_selected(item)
+        log.remove_ingr_selected(item)
         res2 = len(logic.selected_ingredients)
         self.assertEqual(res2, 0)
 
@@ -39,13 +37,13 @@ class TestLogicClass(unittest.TestCase):
 
     def test_get_ingredient_search(self):
         """Test getting ingredients from search."""
-        l = logic.Logic
+        log = logic.Logic
         item = QLabel()
         item.setText("potatoes")
-        l.add_ingr_selected(item)
-        res = len(l.get_ingredient_search(300))
+        log.add_ingr_selected(item)
+        res = len(log.get_ingredient_search(300))
         self.assertEqual(res, 3)
-        l.remove_ingr_selected(item)
+        log.remove_ingr_selected(item)
 
     # def test_name_search(self):
     #     """Test searching recipe by name."""
