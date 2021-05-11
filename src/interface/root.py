@@ -9,8 +9,6 @@ from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 import src.bin.logic as logic
 from src.interface.panels.right_bottom_panel import Components as comp
-
-# import bottom rpanel
 from src.bin import query
 
 

@@ -33,7 +33,7 @@ unittest:
 coverage:
 	coverage run -m unittest discover . "*_test.py"
 	coverage html
-	coverage report -m
+	coverage report --include="src/bin/*" -m
 
 pylint:
 	pylint *.py
