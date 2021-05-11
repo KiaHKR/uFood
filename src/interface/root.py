@@ -553,7 +553,7 @@ class Controller:
 
     def update_label():
         """Update slider label."""
-        lpanel["time_label"].setText(str(lpanel["time_slider"].value()))
+        lpanel["time_label"].setText("Cook time: " + str(lpanel["time_slider"].value()) + "min")
 
     def update_diet_filter(diet_type):
         """Update the search result by dietary filter."""
