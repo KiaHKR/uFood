@@ -159,11 +159,25 @@ class View(qtw.QWidget):
         vegetarian = lpanel["search_filter_menu"].findChild(
             qtw.QAction, "Vegetarian"
         )
-        keto.triggered.connect(lambda: Controller.update_diet_filter(keto))
-        paleo.triggered.connect(lambda: Controller.update_diet_filter(paleo))
-        vegan.triggered.connect(lambda: Controller.update_diet_filter(vegan))
+        keto.triggered.connect(
+            lambda: Controller.update_diet_filter(
+                [keto, paleo, vegan, vegetarian]
+            )
+        )
+        paleo.triggered.connect(
+            lambda: Controller.update_diet_filter(
+                [keto, paleo, vegan, vegetarian]
+            )
+        )
+        vegan.triggered.connect(
+            lambda: Controller.update_diet_filter(
+                [keto, paleo, vegan, vegetarian]
+            )
+        )
         vegetarian.triggered.connect(
-            lambda: Controller.update_diet_filter(vegetarian)
+            lambda: Controller.update_diet_filter(
+                [keto, paleo, vegan, vegetarian]
+            )
         )
 
         slider_hbox = qtw.QHBoxLayout()
@@ -282,8 +296,6 @@ class View(qtw.QWidget):
 
         time = qtw.QWidget()
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
-        recipe_card.layout().addWidget(info, 9)
         recipe_card.setObjectName(pk_id)
         recipe_card.setFixedHeight(150)
 
@@ -297,7 +309,9 @@ class View(qtw.QWidget):
         )
         buttons.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(buttons, 1)
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(info, 20)
+        recipe_card.layout().addWidget(buttons, 0)
 
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(b_rpanel["total_time_icon"])
@@ -553,33 +567,41 @@ class Controller:
 
     def update_label():
         """Update slider label."""
-        lpanel["time_label"].setText("Cook time: " + str(lpanel["time_slider"].value()) + "min")
+        lpanel["time_label"].setText(
+            "Cook time: " + str(lpanel["time_slider"].value()) + "min"
+        )
 
-    def update_diet_filter(diet_type):
+    def update_diet_filter(diet_type_list):
         """Update the search result by dietary filter."""
-        if diet_type is not None and diet_type.isChecked():
-            diet_type = diet_type.text()
-            recipes_to_filter = Controller.recipes_cards_showing
-            filtered = list(
-                filter(
-                    lambda x: diet_type
-                    in str(x.findChild(qtw.QLabel, "diet_type").text()),
-                    recipes_to_filter,
+        final_list = Controller.recipes_cards_showing
+        Controller.hide_remaining_cards(Controller.recipes_cards_showing)
+        Not_selected = 0
+        for diet_type in diet_type_list:
+            if diet_type is not None and diet_type.isChecked():
+                diet_type = diet_type.text()
+                recipes_to_filter = final_list
+                filtered = list(
+                    filter(
+                        lambda x: diet_type
+                        in str(x.findChild(qtw.QLabel, "diet_type").text()),
+                        recipes_to_filter,
+                    )
                 )
-            )
-            recipes_to_hide = [
-                r for r in recipes_to_filter if r not in filtered
-            ]
-            Controller.hide_remaining_cards(recipes_to_hide)
-        elif diet_type is not None and diet_type.isChecked() is False:
-            Controller.restore_cards()
+                final_list = filtered
+            elif diet_type is not None and not diet_type.isChecked():
+                Not_selected += 1
+
+        if Not_selected == 4:
+            final_list = Controller.recipes_cards_showing
+
+        Controller.restore_cards(final_list)
 
     def hide_remaining_cards(list_to_hide):
         """Hide all recipes from the filtered list."""
         for recipe in list_to_hide:
             recipe.hide()
 
-    def restore_cards():
+    def restore_cards(restore_list):
         """Restore all the cards per the class variable."""
-        for recipe in Controller.recipes_cards_showing:
+        for recipe in restore_list:
             recipe.show()
