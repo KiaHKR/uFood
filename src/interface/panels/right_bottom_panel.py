@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 import urllib.request as request
-from src.bin.logic import Sync
+from src.bin import logic
 
 from src.interface.styling import qss
 
@@ -48,7 +48,7 @@ class Components:
     def save_btn(self, id):
         """For the save button label."""
 
-        id_list = Sync().fav_list
+        id_list = logic.Sync().fav_list
         saved = False
 
         for i in id_list:
