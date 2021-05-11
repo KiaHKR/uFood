@@ -428,12 +428,14 @@ class Controller:
         Controller.update_section_header("Trending Recipes")
 
     def build_favorites():
+        """Build favorite recipe cards."""
         Controller.delete_recipe_cards()
         Controller.update_section_header("Favorite Recipes")
         favorite_list = logic.Logic.get_favorites()
         Controller.generate_recipe_cards(favorite_list)
 
     def update_favorites():
+        """Update title to favorites."""
         win_text = t_rpanel["win_text"]
         if win_text == "Favorite Recipes":
             Controller.build_favorites()
@@ -456,6 +458,7 @@ class Controller:
         Controller.build_recipe_cards(widget_list, build)
 
     def build_recipe_cards(widget_list, build=False):
+        """Add recipe cards from widget_list to scroll_area."""
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
@@ -572,7 +575,7 @@ class Controller:
             Controller.restore_cards()
 
     def hide_remaining_cards(list_to_hide):
-        """Hide all recipes from the filtered list"""
+        """Hide all recipes from the filtered list."""
         for recipe in list_to_hide:
             recipe.hide()
 
