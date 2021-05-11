@@ -347,10 +347,10 @@ class Controller:
             Controller.update_trending()
         elif win_text == "Favorite Recipes":
             Controller.build_favorites()
+        elif win_text == "All Recipes":
+            Controller.show_all_recipes(force=True)
         elif "Search Results" in win_text:
             Controller.update_name_search_results(lpanel["search_bar"].text())
-        elif win_text == "All Recipes":
-            Controller.show_all_recipes()
 
     def export(id):
         """Export recipe as pdf."""
@@ -499,9 +499,9 @@ class Controller:
         Controller.pos = text
         t_rpanel["win_text"].setText(text)
 
-    def show_all_recipes():
+    def show_all_recipes(force=False):
         """Show all recipes."""
-        if Controller.pos != "All Recipes":
+        if Controller.pos != "All Recipes" or force:
             Controller.clear_tags()
             Controller.delete_recipe_cards()
             recipes = logic.Logic.name_search(
