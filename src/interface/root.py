@@ -324,7 +324,7 @@ class Controller:
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
         lpanel["logo"].setPixmap(
-            qtg.QPixmap(lcomp.path + "logo_placeholder.png").scaled(
+            qtg.QPixmap(lcomp.path + "ufood_logo.png").scaled(
                 left_panel_widget.width() // 1.9,
                 left_panel_widget.height() // 2.5,
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,
