@@ -232,13 +232,18 @@ class View(qtw.QWidget):
         """For building right top panel."""
         top_layout = qtw.QHBoxLayout()
 
-        top_layout.addWidget(t_rpanel["back_btn"])
         top_layout.addWidget(t_rpanel["win_text"])
+        top_layout.addWidget(t_rpanel["trending_btn"])
         top_layout.addWidget(t_rpanel["fav_btn"])
         top_layout.addWidget(t_rpanel["recipes_btn"])
+        top_layout.addWidget(t_rpanel["settings_btn"])
 
         t_rpanel["recipes_btn"].clicked.connect(
             lambda: Controller.show_all_recipes()
+        )
+
+        t_rpanel["trending_btn"].clicked.connect(
+            lambda: Controller.update_trending()
         )
 
         widget = qtw.QWidget()
