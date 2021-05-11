@@ -38,15 +38,15 @@ class Compontents:
 
     def __settings_btn(self):
         """Back botton of the top panel."""
-        back_btn = qtw.QPushButton(
+        settings_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.__path + "settings_icon.png"))
         )
-        back_btn.setIconSize(qtc.QSize(30, 30))
-        back_btn.setObjectName(self.__object_names[0])
-        back_btn.setStyleSheet("border: none;")
-        back_btn.setFixedWidth(35)
-        back_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
-        return back_btn
+        settings_btn.setIconSize(qtc.QSize(30, 30))
+        settings_btn.setObjectName(self.__object_names[0])
+        settings_btn.setStyleSheet("border: none;")
+        settings_btn.setFixedWidth(35)
+        settings_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
+        return settings_btn
 
     def __fav_btn(self):
         """Push button for favorites."""
@@ -75,12 +75,12 @@ class Compontents:
 
     def __trending_btn(self):
         """Back botton of the top panel."""
-        back_btn = qtw.QPushButton(
+        trending_btn = qtw.QPushButton(
             icon=qtg.QIcon(qtg.QPixmap(self.__path + "trending_icon2.png"))
         )
-        back_btn.setIconSize(qtc.QSize(30, 30))
-        back_btn.setObjectName(self.__object_names[0])
-        back_btn.setStyleSheet("border: none;")
-        back_btn.setFixedWidth(35)
-        back_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
-        return back_btn
+        trending_btn.setIconSize(qtc.QSize(30, 30))
+        trending_btn.setObjectName(self.__object_names[0])
+        trending_btn.setStyleSheet("border: none;")
+        trending_btn.setFixedWidth(35)
+        trending_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
+        return trending_btn
