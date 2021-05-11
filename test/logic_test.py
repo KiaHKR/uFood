@@ -4,6 +4,8 @@ import unittest
 
 from PyQt5.QtGui import QTextItem
 from PyQt5.QtWidgets import QLabel, QWidgetItem
+from pathlib import Path
+import os
 
 from src.bin import logic
 
@@ -87,3 +89,5 @@ class TestLogicClass(unittest.TestCase):
             ),
             logic.Pdf,
         )
+        home = str(Path.home())
+        os.remove(home + "/Downloads/recipe.pdf")
