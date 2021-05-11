@@ -6,7 +6,6 @@ from PyQt5.QtGui import QTextItem
 from PyQt5.QtWidgets import QLabel, QWidgetItem
 
 from src.bin import logic
-from src.interface import root
 
 # ctrl c-k
 # ctsl k-u
