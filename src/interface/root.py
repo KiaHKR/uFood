@@ -152,6 +152,20 @@ class View(qtw.QWidget):
             lambda: Controller.update_slider()
         )
 
+        # Update diet filter_dropdown menu on selection
+        keto = lpanel["search_filter_menu"].findChild(qtw.QAction, "Keto")
+        paleo = lpanel["search_filter_menu"].findChild(qtw.QAction, "Paleo")
+        vegan = lpanel["search_filter_menu"].findChild(qtw.QAction, "Vegan")
+        vegetarian = lpanel["search_filter_menu"].findChild(
+            qtw.QAction, "Vegetarian"
+        )
+        keto.triggered.connect(lambda: Controller.update_diet_filter(keto))
+        paleo.triggered.connect(lambda: Controller.update_diet_filter(paleo))
+        vegan.triggered.connect(lambda: Controller.update_diet_filter(vegan))
+        vegetarian.triggered.connect(
+            lambda: Controller.update_diet_filter(vegetarian)
+        )
+
         slider_hbox = qtw.QHBoxLayout()
         slider_hbox.addWidget(lpanel["time_slider"])
         slider_hbox.addSpacing(15)
@@ -300,6 +314,7 @@ class Controller:
     """Controller class."""
 
     pos = "Trending"
+    recipes_cards_showing = []
 
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
@@ -433,18 +448,18 @@ class Controller:
                 i[5],  # URL
             )
             widget_list.append(recipe_card)
+        Controller.build_recipe_cards(widget_list, build)
 
+    def build_recipe_cards(widget_list, build=False):
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
 
-        if len(widget_list) != 0:
+        if len(widget_list) > 0:
             for i in range(len(widget_list)):
-
                 b_rpanel["scroll_area"].widget().layout().addWidget(
                     widget_list[i]
                 )
-
         else:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
 
@@ -452,6 +467,8 @@ class Controller:
             root_view.children()[2].children()[0].layout().addWidget(
                 b_rpanel["scroll_area"]
             )
+            print(b_rpanel["scroll_area"].widget().children())
+        Controller.recipes_cards_showing = widget_list
 
     def delete_recipe_cards():
         """Clear scroll_area and remove it from the right_panel."""
@@ -511,9 +528,7 @@ class Controller:
         return_list = logic.Logic.name_search(
             search, lpanel["time_slider"].value()
         )
-        if return_list is None:
-            pass
-        else:
+        if return_list is not None:
             Controller.generate_recipe_cards(return_list)
             Controller.update_section_header(
                 str(len(return_list)) + " Search Results"
@@ -531,3 +546,32 @@ class Controller:
     def update_label():
         """Update slider label."""
         lpanel["time_label"].setText(str(lpanel["time_slider"].value()))
+
+    def update_diet_filter(diet_type):
+        """Update the search result by dietary filter."""
+        if diet_type is not None and diet_type.isChecked():
+            diet_type = diet_type.text()
+            recipes_to_filter = Controller.recipes_cards_showing
+            filtered = list(
+                filter(
+                    lambda x: diet_type
+                    in str(x.findChild(qtw.QLabel, "diet_type").text()),
+                    recipes_to_filter,
+                )
+            )
+            recipes_to_hide = [
+                r for r in recipes_to_filter if r not in filtered
+            ]
+            Controller.hide_remaining_cards(recipes_to_hide)
+        elif diet_type is not None and diet_type.isChecked() is False:
+            Controller.restore_cards()
+
+    def hide_remaining_cards(list_to_hide):
+        """Hide all recipes from the filtered list"""
+        for recipe in list_to_hide:
+            recipe.hide()
+
+    def restore_cards():
+        """Restore all the cards per the class variable."""
+        for recipe in Controller.recipes_cards_showing:
+            recipe.show()

@@ -109,7 +109,7 @@ class Logic:
 
 
 class Sync:
-    """Dynchronization for objects when writing to/reading from."""
+    """Synchronization for objects when writing to/reading from."""
 
     def __init__(self):
         """Read the current pickle in a list."""
