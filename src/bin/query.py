@@ -298,7 +298,3 @@ class Search:
             time = x[0]
         return time
 
-pi = Search()
-y = pi.ingredient_name_search(["milk", "flour","eggs"])
-for x in y:
-    print(x)
