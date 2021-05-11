@@ -45,7 +45,7 @@ class Logic:
         return list(reversed(search_object.trending()[-5:]))
 
     def get_favorites():
-        """Returns the recipes saved to favorites."""
+        """Return the recipes saved to favorites."""
         fave_id_list = Sync().pickle_read()
         recipe_list = []
         for i in fave_id_list:

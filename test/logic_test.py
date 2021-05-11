@@ -19,7 +19,7 @@ class TestLogicClass(unittest.TestCase):
         self.assertEqual(res, exp)
 
     def test_ingr_selected(self):
-        """Test adding/removing ingredients from the selected_ingredients."""
+        """Test adding/removing ingredients from selected_ingredients list."""
         log = logic.Logic
         item = QLabel()
         item.setText("potatoes")
