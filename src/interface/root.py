@@ -426,6 +426,7 @@ class Controller:
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
+        Controller.clear_tags()
 
     def build_favorites():
         Controller.delete_recipe_cards()
@@ -472,7 +473,6 @@ class Controller:
             root_view.children()[2].children()[0].layout().addWidget(
                 b_rpanel["scroll_area"]
             )
-            print(b_rpanel["scroll_area"].widget().children())
         Controller.recipes_cards_showing = widget_list
 
     def delete_recipe_cards():
