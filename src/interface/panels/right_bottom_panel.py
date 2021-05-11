@@ -126,8 +126,6 @@ class Components:
             diet_colour = "#32a852"
         elif diet == "Vegetarian":
             diet_colour = "#137d2c"
-        elif diet == "Pescatarian":
-            diet_colour = "#2a75a3"
         elif diet == "Keto":
             diet_colour = "#d18436"
         elif diet == "Paleo":

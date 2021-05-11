@@ -109,9 +109,6 @@ class Components:
         act2 = qtw.QAction("Vegetarian", menu)
         act2.setCheckable(True)
         act2.setObjectName("Vegetarian")
-        act3 = qtw.QAction("Pescatarian", menu)
-        act3.setCheckable(True)
-        act3.setObjectName("Pescatarian")
         act4 = qtw.QAction("Keto", menu)
         act4.setCheckable(True)
         act4.setObjectName("Keto")
@@ -121,7 +118,6 @@ class Components:
 
         menu.addAction(act1)
         menu.addAction(act2)
-        menu.addAction(act3)
         menu.addAction(act4)
         menu.addAction(act5)
         menu.setObjectName(self.__object_names[4])
