@@ -47,7 +47,6 @@ class Components:
 
     def save_btn(self, id):
         """For the save button label."""
-
         id_list = logic.Sync().fav_list
         saved = False
 
