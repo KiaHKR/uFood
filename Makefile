@@ -46,7 +46,6 @@ pydoc:
 	pydoc -w $(PWD)
 	mv *.html doc/pydoc
 	
-
 pdoc:
 	rm -rf "doc/pdoc"
 	pdoc --html -o doc/pdoc .
