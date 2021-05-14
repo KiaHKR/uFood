@@ -3,7 +3,6 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 import urllib.request as request
-import ssl
 from src.bin import logic
 
 from src.interface.styling import qss
@@ -90,7 +89,6 @@ class Components:
                 )
             )
         else:
-            ssl._create_default_https_context = ssl._create_unverified_context
             req = request.Request(
                 path_thumbnail, headers={"User-Agent": "Mozilla/5.0"}
             )

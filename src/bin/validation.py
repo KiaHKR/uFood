@@ -2,7 +2,7 @@
 import platform
 
 
-suppOS = ["Windows", "Linux"]
+suppOS = ["Windows"]
 
 
 def checkOS(os):
