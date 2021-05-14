@@ -1,5 +1,4 @@
 """Main file for launching application."""
-import platform
 from src.interface.root import View
 import src.bin.validation as validation
 
