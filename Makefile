@@ -53,8 +53,8 @@ pdoc:
 doc: pdoc #pydoc sphinx
 
 pyreverse:
-	install -d doc/pyreverse
-	pyreverse $(PWD)
+	mkdir doc/pyreverse
+	pyreverse src/*
 	dot -Tpng classes.dot -o doc/pyreverse/classes.png
 	dot -Tpng packages.dot -o doc/pyreverse/packages.png
 	rm -f classes.dot packages.dot
