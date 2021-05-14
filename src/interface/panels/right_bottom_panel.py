@@ -13,16 +13,21 @@ class Components:
 
     widgets = {}
     __object_names = (
-        "search_count",
-        "thumbnail_img",
-        "recipe_title",
-        "diet_type",
-        "total_time",
-        "total_time_icon",
-        "ingredients",
-        "scroll_area",
-        "save_btn",
-        "export_btn",
+        "search_count",  # 0
+        "thumbnail_img",  # 1
+        "recipe_title",  # 2
+        "diet_type",  # 3
+        "total_time",  # 4
+        "total_time_icon",  # 5
+        "ingredients",  # 6
+        "scroll_area",  # 7
+        "save_btn",  # 8
+        "export_btn",  # 9
+        "recipe_view_img",  # 10
+        "recipe_view_title",  # 11
+        "recipe_view_ingredients",  # 12
+        "recipe_view_steps",  # 13
+        "recipe_view_exit"  # 14
     )
     path = "src/interface/assets/"
 
@@ -33,6 +38,13 @@ class Components:
         self.widgets[self.__object_names[7]] = self.__scroll_area()
         # self.widgets[self.__object_names[8]] = self.__save_btn()
         self.widgets[self.__object_names[9]] = self.__export_btn()
+        self.widgets[self.__object_names[10]] = self.__recipe_view_img()
+        self.widgets[self.__object_names[11]] = self.__recipe_view_title()
+        self.widgets[self.__object_names[12]] = (
+            self.__recipe_view_ingredients()
+        )
+        self.widgets[self.__object_names[13]] = self.__recipe_view_steps()
+        self.widgets[self.__object_names[14]] = self.__recipe_view_exit()
 
     def __export_btn(self):
         """For the export button label."""
@@ -103,7 +115,6 @@ class Components:
         img.setObjectName(self.__object_names[1])
         img.setFixedSize(132, 132)
         img.setStyleSheet("background-color: transparent;")
-        # img.setStyleSheet("border: none;")
         img.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
         return img
 
@@ -185,3 +196,57 @@ class Components:
         scroll_area.setWidget(result_box)
 
         return scroll_area
+
+    def __recipe_view_img(self):
+        """Recipe view img."""
+        img = qtw.QLabel(
+            pixmap=qtg.QPixmap(self.path + "img_placeholder.png").scaled(
+                120, 120
+            )
+        )
+        img.setObjectName(self.__object_names[10])
+        img.setFixedSize(132, 132)
+        img.setStyleSheet("background-color: transparent;")
+        img.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
+        return img
+
+    def __recipe_view_title(self):
+        """Recipe view title."""
+        title = qtw.QLabel("PLACEHOLDER TITLE")
+        title.setStyleSheet(
+            "color: white; font-size: 48px; font-weight: bold;"
+        )
+        title.setObjectName(self.__object_names[11])
+        return title
+
+    def __recipe_view_ingredients(self):
+        """Recipe view ingredients."""
+        ingredients = qtw.QLabel()
+        ingredients.setText("Cake \n Cookies")
+        ingredients.setStyleSheet(
+            "color: white; font-size: 14px; font-style: italic;"
+        )
+        ingredients.setObjectName(self.__object_names[12])
+        return ingredients
+
+    def __recipe_view_steps(self):
+        """Recipe view steps."""
+        steps = qtw.QLabel()
+        steps.setText("STEP 1 \n STEP 2")
+        steps.setStyleSheet(
+            "color: white; font-size: 14px; font-style: italic;"
+        )
+        steps.setObjectName(self.__object_names[13])
+        return steps
+
+    def __recipe_view_exit(self):
+        """Push button for exiting recipe view."""
+        fav_btn = qtw.QPushButton(
+            icon=qtg.QIcon(qtg.QPixmap(self.path + "back_icon.png"))
+        )
+        fav_btn.setIconSize(qtc.QSize(15, 15))
+        fav_btn.setObjectName(self.__object_names[14])
+        fav_btn.setStyleSheet("border: none;")
+        fav_btn.setFixedWidth(35)
+        fav_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
+        return fav_btn

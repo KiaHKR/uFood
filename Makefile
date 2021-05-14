@@ -1,6 +1,6 @@
 #!/usr/bin/env make
 
-PYTHON = python
+PYTHON = py
 .PHONY: pydoc
 
 all:
@@ -47,18 +47,22 @@ pydoc:
 	mv *.html doc/pydoc
 	
 pdoc:
-	rm -rf "doc/pdoc"
+	del doc\pdoc
 	pdoc --html -o doc/pdoc .
 
 doc: pdoc #pydoc sphinx
 
 pyreverse:
-	mkdir doc/pyreverse
-	pyreverse src/*
-	dot -Tpng classes.dot -o doc/pyreverse/classes.png
-	dot -Tpng packages.dot -o doc/pyreverse/packages.png
-	rm -f classes.dot packages.dot
-	ls -l doc/pyreverse
+	del doc\uml
+	rmdir doc\uml
+	md doc\uml
+	xcopy index.html doc\uml
+	pyreverse src/
+	dot -Tpng classes.dot -o doc/uml/class_diagram.png
+	dot -Tpng packages.dot -o doc/uml/packages_war.png
+	del classes.dot
+	del packages.dot
+	ls -l doc/uml
 
 radon-cc:
 	radon cc . -a
