@@ -4,6 +4,7 @@
 import unittest
 import src.bin.validation as validation
 
+
 class TestValidation(unittest.TestCase):
     """Test OS validation."""
 
