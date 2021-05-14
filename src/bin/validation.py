@@ -2,11 +2,10 @@
 import platform
 
 
-suppOS = ["Windows"]
-val = True
+suppOS = ["Windows", "Linux"]
 
 
-def checkOS():
+def checkOS(os):
     """Check that OS is Supported."""
     os = platform.system()
     if os not in suppOS:
@@ -17,4 +16,4 @@ def checkOS():
         raise SystemExit(msg1.format(os) + msg2.format(x))
 
 
-checkOS()
+checkOS(platform.system())
