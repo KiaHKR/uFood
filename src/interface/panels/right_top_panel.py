@@ -76,7 +76,7 @@ class Compontents:
     def __trending_btn(self):
         """Back botton of the top panel."""
         trending_btn = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap(self.__path + "trending_icon2.png"))
+            icon=qtg.QIcon(qtg.QPixmap(self.__path + "trending_icon4.png"))
         )
         trending_btn.setIconSize(qtc.QSize(30, 30))
         trending_btn.setObjectName(self.__object_names[0])

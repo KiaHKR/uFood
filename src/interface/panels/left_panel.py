@@ -205,7 +205,7 @@ class Components:
 
     def __time_label(self):
         max_time = self.max_cook_time()
-        label = qtw.QLabel(str(max_time))
+        label = qtw.QLabel("Cook time: " + str(max_time) + "min")
         label.setAlignment(qtc.Qt.AlignCenter | qtc.Qt.AlignVCenter)
         label.setMinimumWidth(80)
         label.setStyleSheet("color: white;")

@@ -3,11 +3,10 @@
 import unittest
 
 from PyQt5.QtWidgets import QLabel
+from pathlib import Path
+import os
 
 from src.bin import logic
-
-# ctrl c-k
-# ctsl k-u
 
 
 class TestLogicClass(unittest.TestCase):

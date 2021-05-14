@@ -33,7 +33,7 @@ unittest:
 coverage:
 	coverage run -m unittest discover . "*_test.py"
 	coverage html
-	coverage report -m
+	coverage report --include="src/bin/*" -m
 
 pylint:
 	pylint *.py
@@ -45,9 +45,9 @@ pydoc:
 	install -d doc/pydoc
 	pydoc -w $(PWD)
 	mv *.html doc/pydoc
-
+	
 pdoc:
-	rm -rf doc/pdoc
+	rm -rf "doc/pdoc"
 	pdoc --html -o doc/pdoc .
 
 doc: pdoc #pydoc sphinx
