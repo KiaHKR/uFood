@@ -267,8 +267,16 @@ class View(qtw.QWidget):
         """Widget of right bottom panel."""
         Controller.build_trending()
 
+    def __build_recipe_view(self):
+        pass
+
     def __right_bottom_refresh(self):
-        self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
+        stacked_widget = qtw.QWidget()
+        stacked_widget.setLayout(qtw.QStackedLayout())
+        # recipe_widget = self.__build_recipe_view()
+        stacked_widget.layout().addWidget(b_rpanel["scroll_area"])
+        # stacked_widget.layout().addWidget(recipe_widget)
+        self.right_panel_widget.layout().addWidget(stacked_widget)
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -485,9 +493,8 @@ class Controller:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
 
         if not build:
-            root_view.children()[2].children()[0].layout().addWidget(
-                b_rpanel["scroll_area"]
-            )
+            stack_layout = root_view.children()[2].children()[2].children()[0]
+            stack_layout.layout().addWidget(b_rpanel["scroll_area"])
         Controller.recipes_cards_showing = widget_list
 
     def delete_recipe_cards():
@@ -503,7 +510,8 @@ class Controller:
             )
             remove_widget.deleteLater()
 
-        root_view.children()[2].children()[0].removeWidget(
+        print(root_view.children()[2].children()[2].children())
+        root_view.children()[2].children()[2].children()[0].removeWidget(
             b_rpanel["scroll_area"]
         )
 
