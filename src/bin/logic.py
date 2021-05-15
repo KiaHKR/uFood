@@ -1,6 +1,8 @@
 """File for Logic and sync class."""
 import os
 import pickle
+from PyQt5 import QtCore as qtc
+from PyQt5.QtGui import QIcon, QPixmap
 from fpdf import FPDF
 
 from src.bin import query
@@ -191,6 +193,15 @@ class Sync:
                 recipe_obj = query.Search().recipe_id_search(recipe)
                 recipe_name = recipe_obj[0][0]
                 f.write(recipe_name + "\n")
+        msg = qtw.QMessageBox()
+        msg.setWindowTitle("Success!")
+        icon = QIcon("src/interface/assets/validation.png")
+
+        msg.setWindowIcon(icon)
+        msg.setText(
+            f"Export successful to your '{Sync._export_path[:-1]}/My Exports' folder."
+        )
+        msg.exec_()
 
     def sync_to_fav(filepath):
         """Takes the import filepath and calculate the ids, then store to favs."""
@@ -247,6 +258,7 @@ class Pdf:
         # informative box
         msg = qtw.QMessageBox()
         msg.setWindowTitle("Info")
+        msg.setWindowIcon(QIcon("src/interface/assets/validation.png"))
         msg.setText(
             f"A pdf has successfully been downloaded to your {Sync._export_path[:-1]} folder."
         )
