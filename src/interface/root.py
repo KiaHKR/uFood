@@ -460,7 +460,13 @@ class Controller:
 
     def build_settings(self):
         """Build the settings feature."""
-
+        if Controller.pos == "Settings":
+            rmwidget = root_view.children()[2].findChild(
+                qtw.QWidget, "settings"
+            )
+            root_view.children()[2].children()[0].layout().removeWidget(
+                rmwidget
+            )
         settings = Controller.settings_panel()
         for i in reversed(
             range(b_rpanel["scroll_area"].widget().layout().count())
