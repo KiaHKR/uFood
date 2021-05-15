@@ -1,4 +1,5 @@
 """File for Logic and sync class."""
+import os
 import pickle
 from fpdf import FPDF
 
@@ -9,6 +10,7 @@ from PyQt5 import QtWidgets as qtw
 
 selected_ingredients = []
 search_object = query.Search()
+dl_path = None
 
 
 class Logic:
@@ -111,6 +113,8 @@ class Logic:
 class Sync:
     """Synchronization for objects when writing to/reading from."""
 
+    export_path = "uFridge/"
+
     def __init__(self):
         """Read the current pickle in a list."""
         self.file = "src/interface/assets/pickle.pickle"
@@ -142,6 +146,24 @@ class Sync:
                 return self.fav_list
         except FileNotFoundError as error:
             raise FileNotFoundError from error
+
+    def pickle_setDownloadPath():
+        if os.path.exists(Sync.export_path) is False:
+            os.mkdir(Sync.export_path)
+        if os.path.exists(Sync.export_path + "My Exports") is False:
+            os.mkdir(Sync.export_path + "My Exports")
+        with open(Sync.export_path + "config.pickle", "wb") as f:
+            pickle.dump(Sync.export_path, f)
+
+    def pickle_getDownloadPath():
+        try:
+            with open(Sync.export_path + "config.pickle", "rb") as f:
+                content = pickle.load(f)
+            return content
+        except FileNotFoundError:
+            print("file not found. Attempting to generate paths...")
+            Sync.pickle_setDownloadPath()
+            Sync.pickle_getDownloadPath()  # recursion
 
 
 class Pdf:

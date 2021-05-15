@@ -258,6 +258,10 @@ class View(qtw.QWidget):
             lambda: Controller.update_trending()
         )
 
+        t_rpanel["settings_btn"].clicked.connect(
+            lambda: Controller.build_settings(self)
+        )
+
         widget = qtw.QWidget()
         widget.setLayout(top_layout)
         return widget
@@ -268,6 +272,7 @@ class View(qtw.QWidget):
         Controller.build_trending()
 
     def __right_bottom_refresh(self):
+        """Refresh the right bottom panel"""
         self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
 
     def recipe_card(
@@ -453,7 +458,70 @@ class Controller:
         if win_text == "Favorite Recipes":
             Controller.build_favorites()
 
-        # Generate and delte recipe cards ---------
+    def build_settings(self):
+        """Build the settings feature."""
+
+        settings = Controller.settings_panel()
+        for i in reversed(
+            range(b_rpanel["scroll_area"].widget().layout().count())
+        ):
+            remove_widget = (
+                b_rpanel["scroll_area"].widget().layout().takeAt(i).widget()
+            )
+            b_rpanel["scroll_area"].widget().layout().removeWidget(
+                remove_widget
+            )
+            remove_widget.deleteLater()
+        Controller.update_section_header("Settings")
+        settings.setObjectName("settings")
+        settings.setFixedHeight(root_view.children()[2].height() * 0.8)
+        panel_box = root_view.children()[2].children()[0].layout()
+        panel_box.addWidget(settings, 10000)  # some ridiculous stretch margin
+
+    def settings_panel():
+        """Build the widgets associated with the settings feature."""
+        settings = qtw.QWidget()
+        settings.setLayout(qtw.QVBoxLayout())
+        import_export = qtw.QWidget()
+        import_export.setLayout(qtw.QHBoxLayout())
+        import_btn = qtw.QPushButton("Import Favorites")
+        export_btn = qtw.QPushButton("Export Favorites")
+        import_export.layout().addWidget(import_btn)
+        import_export.layout().addWidget(export_btn)
+        install_location = qtw.QLineEdit()
+        install_location.setPlaceholderText(
+            logic.Sync.pickle_getDownloadPath()
+        )
+        install_location.setFixedHeight(30)
+        options = qtw.QWidget()
+        options.setLayout(qtw.QHBoxLayout())
+        submit_btn = qtw.QPushButton("Submit")
+        clear_btn = qtw.QPushButton("Clear")
+
+        # styling buttons
+        background = "white"
+        install_location.setStyleSheet(f"background: {background}")
+        import_btn.setStyleSheet(
+            f"background: {background}; font-size: 14px; font-weight: bold;"
+        )
+        export_btn.setStyleSheet(
+            f"background: {background}; font-size: 14px; font-weight: bold;"
+        )
+        clear_btn.setStyleSheet(f"background: {background};")
+        submit_btn.setStyleSheet(f"background: {background};")
+
+        options.layout().addWidget(clear_btn)
+        options.layout().addWidget(submit_btn)
+        empty_space = qtw.QWidget()
+
+        # add widgets to settings
+
+        settings.layout().addWidget(import_export, 1)
+        settings.layout().addWidget(empty_space, 1)
+        settings.layout().addWidget(install_location, 1)
+        settings.layout().addWidget(options, 1)
+        settings.show()
+        return settings
 
     def generate_recipe_cards(recipe_list, build=False):
         """Generate a VBox with a list of recipe cards in it."""
@@ -492,6 +560,14 @@ class Controller:
 
     def delete_recipe_cards():
         """Clear scroll_area and remove it from the right_panel."""
+        if Controller.pos == "Settings":
+            rmwidget = root_view.children()[2].findChild(
+                qtw.QWidget, "settings"
+            )
+            root_view.children()[2].children()[0].layout().removeWidget(
+                rmwidget
+            )
+
         for i in reversed(
             range(b_rpanel["scroll_area"].widget().layout().count())
         ):
