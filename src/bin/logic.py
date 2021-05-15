@@ -136,6 +136,8 @@ class Sync:
 
     def pickle_write(self):
         """Write to bin."""
+        if os.path.exists(self._export_path) is False:
+            Sync.__pickle_setDownloadPath()
         with open(self.file, "wb") as file:
             pickle.dump(self.fav_list, file)
 
