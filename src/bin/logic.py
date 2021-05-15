@@ -240,13 +240,14 @@ class Pdf:
         pdf.cell(200, 20, txt="Source", ln=1, align="C", link=source)
 
         # save the pdf with name .pdf
-        home = str(Path.home())
-        pdf.output(home + "/Downloads/recipe.pdf")
+        if os.path.exists(Sync._export_path + "Recipes/") is False:
+            os.mkdir(Sync._export_path + "Recipes/")
+        pdf.output(Sync._export_path + "Recipes/" f"{name}.pdf")
 
         # informative box
         msg = qtw.QMessageBox()
         msg.setWindowTitle("Info")
         msg.setText(
-            "A pdf has successfully been downloaded to your downloads folder."
+            f"A pdf has successfully been downloaded to your {Sync._export_path[:-1]} folder."
         )
         msg.exec_()
