@@ -207,8 +207,8 @@ class Sync:
         """Takes the import filepath and calculate the ids, then store to favs."""
         with open(filepath, "r") as import_file:
             content = import_file.read().split("\n")
-            content = content[:-1]
             if content[0] != "":
+                content = content[:-1]
                 for i in range(0, len(content)):
                     recipe_tuple = query.Search().recipe_name_search(
                         content[i]
