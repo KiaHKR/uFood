@@ -18,7 +18,8 @@ class Logic:
     def add_fav(self, id):
         """For adding a favorite to pickle."""
         s = Sync()
-        s.add_favo(id)
+        if id not in Sync.fav_list:
+            s.add_favo(id)
         return True
 
     def get_matching_ingredients(search):
@@ -113,11 +114,12 @@ class Sync:
     """Synchronization for objects when writing to/reading from."""
 
     _export_path = "uFridge/"
+    fav_list = []
 
     def __init__(self):
         """Read the current pickle in a list."""
         self.file = Sync._export_path + "favorites.pickle"
-        self.fav_list = []
+
         try:
             self.pickle_read()
         except FileNotFoundError:
@@ -196,7 +198,7 @@ class Sync:
             content = import_file.read().split("\n")
             for i in range(len(content)):
                 recipe_tuple = query.Search().recipe_name_search(content[i])
-                id = recipe_tuple[0][4]
+                id = str(recipe_tuple[0][4])
                 Sync().add_favo(id)
 
 
