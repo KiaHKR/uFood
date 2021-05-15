@@ -229,7 +229,7 @@ class Sync:
 
 
 class Pdf:
-    """Creating a pdf od a recipe."""
+    """Creating a pdf of a recipe."""
 
     # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
     def __init__(self, name, ingred, instructions, source):
