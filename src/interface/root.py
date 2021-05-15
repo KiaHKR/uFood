@@ -490,29 +490,16 @@ class Controller:
         import_export.layout().addWidget(export_btn)
         import_export.layout().setSpacing(150)
 
-        install = qtw.QWidget()
-        install.setLayout(qtw.QVBoxLayout())
-        install.layout().setSpacing(0)
-        install_location = qtw.QLineEdit()
-        install_location.setPlaceholderText(
-            logic.Sync.pickle_getDownloadPath()
-        )
-        install_location.setFixedHeight(30)
-
         options = qtw.QWidget()
         options.setLayout(qtw.QHBoxLayout())
         submit_btn = qtw.QPushButton("Submit")
         clear_btn = qtw.QPushButton("Clear")
         empty_space = qtw.QWidget()
-        install.layout().addWidget(empty_space, 3)
-        install.layout().addWidget(install_location, 1)
-        install.layout().addWidget(options, 1)
         # styling buttons
         background = "white"
         styling = (
             f"background: {background}; font-size: 14px; font-weight: bold;"
         )
-        install_location.setStyleSheet(f"background: {background};")
 
         import_btn.setFixedWidth(root_view.children()[2].width() // 3)
         export_btn.setFixedWidth(root_view.children()[2].width() // 3)
@@ -528,8 +515,7 @@ class Controller:
         # add widgets to settings
         settings.layout().setSpacing(20)
         settings.layout().addWidget(import_export, 1)
-        # settings.layout().addWidget(empty_space, 1)
-        settings.layout().addWidget(install, 5)
+        settings.layout().addWidget(empty_space, 8)
         settings.show()
 
         # --- [SIGNALS]
