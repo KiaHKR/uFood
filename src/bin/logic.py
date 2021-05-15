@@ -1,13 +1,11 @@
 """File for Logic and sync class."""
 import os
 import pickle
-from PyQt5 import QtCore as qtc
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 from fpdf import FPDF
 
 from src.bin import query
 import src.interface.root as root
-from pathlib import Path
 from PyQt5 import QtWidgets as qtw
 
 selected_ingredients = []
