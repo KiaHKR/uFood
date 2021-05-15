@@ -207,10 +207,25 @@ class Sync:
         """Takes the import filepath and calculate the ids, then store to favs."""
         with open(filepath, "r") as import_file:
             content = import_file.read().split("\n")
-            for i in range(len(content)):
-                recipe_tuple = query.Search().recipe_name_search(content[i])
-                id = str(recipe_tuple[0][4])
-                Sync().add_favo(id)
+            content = content[:-1]
+            if content[0] != "":
+                for i in range(0, len(content)):
+                    recipe_tuple = query.Search().recipe_name_search(
+                        content[i]
+                    )
+                    id = str(recipe_tuple[0][4])
+                    Sync().add_unique_to_fav(id)
+            msg = qtw.QMessageBox()
+            msg.setWindowTitle("Success!")
+            icon = QIcon("src/interface/assets/validation.png")
+            msg.setWindowIcon(icon)
+            msg.setText(f"Favorites successfully imported!")
+            msg.exec_()
+
+    def add_unique_to_fav(self, id):
+        if id not in self.fav_list:
+            self.fav_list.append(id)
+            self.pickle_write()
 
 
 class Pdf:
