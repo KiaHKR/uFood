@@ -148,6 +148,7 @@ class Sync:
             raise FileNotFoundError from error
 
     def pickle_setDownloadPath():
+        """Set a download path for recipes/exports."""
         if os.path.exists(Sync.export_path) is False:
             os.mkdir(Sync.export_path)
         if os.path.exists(Sync.export_path + "My Exports") is False:
@@ -156,6 +157,7 @@ class Sync:
             pickle.dump(Sync.export_path, f)
 
     def pickle_getDownloadPath():
+        """Retreive download path"""
         try:
             with open(Sync.export_path + "config.pickle", "rb") as f:
                 content = pickle.load(f)
