@@ -1,13 +1,11 @@
 """File for Logic and sync class."""
 import os
 import pickle
-from PyQt5 import QtCore as qtc
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 from fpdf import FPDF
 
 from src.bin import query
 import src.interface.root as root
-from pathlib import Path
 from PyQt5 import QtWidgets as qtw
 
 selected_ingredients = []
@@ -138,6 +136,8 @@ class Sync:
 
     def pickle_write(self):
         """Write to bin."""
+        if os.path.exists(self._export_path) is False:
+            Sync.__pickle_setDownloadPath()
         with open(self.file, "wb") as file:
             pickle.dump(self.fav_list, file)
 
@@ -229,7 +229,7 @@ class Sync:
 
 
 class Pdf:
-    """Creating a pdf od a recipe."""
+    """Creating a pdf of a recipe."""
 
     # https://www.geeksforgeeks.org/convert-text-and-text-file-to-pdf-using-python/
     def __init__(self, name, ingred, instructions, source):
