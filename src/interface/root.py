@@ -534,8 +534,21 @@ class Controller:
 
         # --- [SIGNALS]
         export_btn.clicked.connect(lambda: logic.Sync.export_favorites())
+        import_btn.clicked.connect(
+            lambda: Controller.import_btn_slot(import_btn)
+        )
 
         return settings
+
+    def import_btn_slot(parent_widget_object):
+        filename = qtw.QFileDialog.getOpenFileName(
+            parent_widget_object,
+            "Open File",
+            "uFridge",
+            "Text Document (*.txt)",
+        )
+        if os.path.exists(filename[0]):
+            logic.Sync.sync_to_fav(filename[0])
 
     def generate_recipe_cards(recipe_list, build=False):
         """Generate a VBox with a list of recipe cards in it."""
