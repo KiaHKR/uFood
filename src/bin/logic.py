@@ -1,5 +1,8 @@
 """File for Logic and sync class."""
+import os
 import pickle
+from PyQt5 import QtCore as qtc
+from PyQt5.QtGui import QIcon, QPixmap
 from fpdf import FPDF
 
 from src.bin import query
@@ -17,7 +20,8 @@ class Logic:
     def add_fav(self, id):
         """For adding a favorite to pickle."""
         s = Sync()
-        s.add_favo(id)
+        if id not in Sync.fav_list:
+            s.add_favo(id)
         return True
 
     def get_matching_ingredients(search):
@@ -111,10 +115,13 @@ class Logic:
 class Sync:
     """Synchronization for objects when writing to/reading from."""
 
+    _export_path = "uFridge/"
+    fav_list = []
+
     def __init__(self):
         """Read the current pickle in a list."""
-        self.file = "src/interface/assets/pickle.pickle"
-        self.fav_list = []
+        self.file = Sync._export_path + "favorites.pickle"
+
         try:
             self.pickle_read()
         except FileNotFoundError:
@@ -142,6 +149,83 @@ class Sync:
                 return self.fav_list
         except FileNotFoundError as error:
             raise FileNotFoundError from error
+
+    def __pickle_setDownloadPath():
+        """Set a download path for recipes/exports."""
+        if os.path.exists(Sync._export_path) is False:
+            os.mkdir(Sync._export_path)
+        if os.path.exists(Sync._export_path + "My Exports") is False:
+            os.mkdir(Sync._export_path + "My Exports")
+        with open(Sync._export_path + "config.pickle", "wb") as f:
+            pickle.dump(Sync._export_path, f)
+
+    def pickle_getDownloadPath():
+        """Retreive download path"""
+        try:
+            with open(Sync._export_path + "config.pickle", "rb") as f:
+                content = pickle.load(f)
+            return content
+        except FileNotFoundError:
+            Sync.__pickle_setDownloadPath()
+            Sync.pickle_getDownloadPath()  # recursion
+
+    def __rm_config():
+        """Remove the existing config file."""
+        if os.path.exists(Sync._export_path):
+            os.remove("config.pickle")
+
+    def adjust_downloadPath(path):
+        """Adjust the download path."""
+        Sync.__rm_config()
+        Sync._export_path = path
+        Sync.__pickle_setDownloadPath()
+
+    def export_favorites():
+        """Export favorites currently in list."""
+        path = Sync.pickle_getDownloadPath()
+        recipes_to_write = []
+        with open(path + "favorites.pickle", "rb") as fav:
+            contents = pickle.load(fav)
+            for r in contents:
+                recipes_to_write.append(r)
+        with open(path + "My Exports/favorites_export.txt", "w") as f:
+            for recipe in recipes_to_write:
+                recipe_obj = query.Search().recipe_id_search(recipe)
+                recipe_name = recipe_obj[0][0]
+                f.write(recipe_name + "\n")
+        msg = qtw.QMessageBox()
+        msg.setWindowTitle("Success!")
+        icon = QIcon("src/interface/assets/validation.png")
+
+        msg.setWindowIcon(icon)
+        msg.setText(
+            f"Export successful to your '{Sync._export_path[:-1]}/My Exports' folder."
+        )
+        msg.exec_()
+
+    def sync_to_fav(filepath):
+        """Takes the import filepath and calculate the ids, then store to favs."""
+        with open(filepath, "r") as import_file:
+            content = import_file.read().split("\n")
+            content = content[:-1]
+            if content[0] != "":
+                for i in range(0, len(content)):
+                    recipe_tuple = query.Search().recipe_name_search(
+                        content[i]
+                    )
+                    id = str(recipe_tuple[0][4])
+                    Sync().add_unique_to_fav(id)
+            msg = qtw.QMessageBox()
+            msg.setWindowTitle("Success!")
+            icon = QIcon("src/interface/assets/validation.png")
+            msg.setWindowIcon(icon)
+            msg.setText(f"Favorites successfully imported!")
+            msg.exec_()
+
+    def add_unique_to_fav(self, id):
+        if id not in self.fav_list:
+            self.fav_list.append(id)
+            self.pickle_write()
 
 
 class Pdf:
@@ -182,13 +266,15 @@ class Pdf:
         pdf.cell(200, 20, txt="Source", ln=1, align="C", link=source)
 
         # save the pdf with name .pdf
-        home = str(Path.home())
-        pdf.output(home + "/Downloads/recipe.pdf")
+        if os.path.exists(Sync._export_path + "Recipes/") is False:
+            os.mkdir(Sync._export_path + "Recipes/")
+        pdf.output(Sync._export_path + "Recipes/" f"{name}.pdf")
 
         # informative box
         msg = qtw.QMessageBox()
         msg.setWindowTitle("Info")
+        msg.setWindowIcon(QIcon("src/interface/assets/validation.png"))
         msg.setText(
-            "A pdf has successfully been downloaded to your downloads folder."
+            f"A pdf has successfully been downloaded to your {Sync._export_path[:-1]} folder."
         )
         msg.exec_()
