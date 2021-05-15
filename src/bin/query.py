@@ -192,3 +192,19 @@ class Search:
         for x in self.mycursor:
             time = x[0]
         return time
+
+    def card_result_search(self, r_id):
+        """Returns the details for a card."""
+        return_list = []
+        self.mycursor.execute(
+            "SELECT recipes.name as 'Recipe name', recipes.cooking_time as 'Cooking time', GROUP_CONCAT(DISTINCT recipes_has_diets.diets_name) as 'Diets', GROUP_CONCAT(ingredients_has_recipes.amount,' ', ingredients_has_recipes.measurements_name,' ', ingredients_has_recipes.ingredients_name) as 'Ingredients', id as 'Recipe ID', recipes.img_link as 'Image URL'  FROM recipes INNER JOIN recipes_has_diets ON recipes.id = recipes_has_diets.recipes_id INNER JOIN ingredients_has_recipes ON recipes.id = ingredients_has_recipes.recipes_id WHERE recipes.id ="  # noqa: E501
+            "" + r_id + " Group by name"
+        )
+        for x in self.mycursor:
+            return_list.append(x)
+        return return_list
+
+pi = Search()
+ee = pi.card_result_search("1")
+for x in ee:
+    print(x)

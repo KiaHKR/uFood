@@ -82,3 +82,9 @@ class TestQueryClass(unittest.TestCase):
         res = connection.search_for_fav(1)[0][0]
         exp = "Easy chocolate molten cakes"
         self.assertEqual(res, exp)
+
+    def test_card_result_search(self):
+        connection = query.Search()
+        res = connection.search_for_fav(1)[0][0]
+        exp = "Easy chocolate molten cakes"
+        self.assertEqual(res, exp)
