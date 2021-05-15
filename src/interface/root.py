@@ -498,6 +498,7 @@ class Controller:
             logic.Sync.pickle_getDownloadPath()
         )
         install_location.setFixedHeight(30)
+
         options = qtw.QWidget()
         options.setLayout(qtw.QHBoxLayout())
         submit_btn = qtw.QPushButton("Submit")
@@ -530,6 +531,10 @@ class Controller:
         # settings.layout().addWidget(empty_space, 1)
         settings.layout().addWidget(install, 5)
         settings.show()
+
+        # --- [SIGNALS]
+        # export_btn.clicked.connect(lambda: )
+
         return settings
 
     def generate_recipe_cards(recipe_list, build=False):

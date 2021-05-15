@@ -113,11 +113,11 @@ class Logic:
 class Sync:
     """Synchronization for objects when writing to/reading from."""
 
-    export_path = "uFridge/"
+    _export_path = "uFridge/"
 
     def __init__(self):
         """Read the current pickle in a list."""
-        self.file = "src/interface/assets/pickle.pickle"
+        self.file = Sync._export_path + "favorites.pickle"
         self.fav_list = []
         try:
             self.pickle_read()
@@ -147,25 +147,34 @@ class Sync:
         except FileNotFoundError as error:
             raise FileNotFoundError from error
 
-    def pickle_setDownloadPath():
+    def __pickle_setDownloadPath():
         """Set a download path for recipes/exports."""
-        if os.path.exists(Sync.export_path) is False:
-            os.mkdir(Sync.export_path)
-        if os.path.exists(Sync.export_path + "My Exports") is False:
-            os.mkdir(Sync.export_path + "My Exports")
-        with open(Sync.export_path + "config.pickle", "wb") as f:
-            pickle.dump(Sync.export_path, f)
+        if os.path.exists(Sync._export_path) is False:
+            os.mkdir(Sync._export_path)
+        if os.path.exists(Sync._export_path + "My Exports") is False:
+            os.mkdir(Sync._export_path + "My Exports")
+        with open(Sync._export_path + "config.pickle", "wb") as f:
+            pickle.dump(Sync._export_path, f)
 
     def pickle_getDownloadPath():
         """Retreive download path"""
         try:
-            with open(Sync.export_path + "config.pickle", "rb") as f:
+            with open(Sync._export_path + "config.pickle", "rb") as f:
                 content = pickle.load(f)
             return content
         except FileNotFoundError:
-            print("file not found. Attempting to generate paths...")
-            Sync.pickle_setDownloadPath()
+            Sync.__pickle_setDownloadPath()
             Sync.pickle_getDownloadPath()  # recursion
+
+    def __rm_config():
+        """Remove the existing config file."""
+        if os.path.exists(Sync._export_path):
+            os.remove("config.pickle")
+
+    def adjust_downloadPath(path):
+        Sync.__rm_config()
+        Sync._export_path = path
+        Sync.__pickle_setDownloadPath()
 
 
 class Pdf:
