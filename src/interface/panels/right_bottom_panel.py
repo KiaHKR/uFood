@@ -27,7 +27,7 @@ class Components:
         "recipe_view_title",  # 11
         "recipe_view_ingredients",  # 12
         "recipe_view_steps",  # 13
-        "recipe_view_exit"  # 14
+        "recipe_view_exit",  # 14
     )
     path = "src/interface/assets/"
 
@@ -40,9 +40,9 @@ class Components:
         self.widgets[self.__object_names[9]] = self.__export_btn()
         self.widgets[self.__object_names[10]] = self.__recipe_view_img()
         self.widgets[self.__object_names[11]] = self.__recipe_view_title()
-        self.widgets[self.__object_names[12]] = (
-            self.__recipe_view_ingredients()
-        )
+        self.widgets[
+            self.__object_names[12]
+        ] = self.__recipe_view_ingredients()
         self.widgets[self.__object_names[13]] = self.__recipe_view_steps()
         self.widgets[self.__object_names[14]] = self.__recipe_view_exit()
 
@@ -222,7 +222,7 @@ class Components:
     def __recipe_view_ingredients(self):
         """Recipe view ingredients."""
         ingredients = qtw.QLabel()
-        ingredients.setText("Cake \n Cookies")
+        ingredients.setText("Cake \nCookies")
         ingredients.setStyleSheet(
             "color: white; font-size: 14px; font-style: italic;"
         )
@@ -232,7 +232,7 @@ class Components:
     def __recipe_view_steps(self):
         """Recipe view steps."""
         steps = qtw.QLabel()
-        steps.setText("STEP 1 \n STEP 2")
+        steps.setText("STEP 1 \nSTEP 2")
         steps.setStyleSheet(
             "color: white; font-size: 14px; font-style: italic;"
         )

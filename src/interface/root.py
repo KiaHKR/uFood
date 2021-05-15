@@ -8,7 +8,6 @@ from src.interface.panels.left_panel import Components as lcomp
 from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 import src.bin.logic as logic
-from src.interface.panels.right_bottom_panel import Components as comp
 from src.bin import query
 
 
@@ -16,6 +15,7 @@ app = qtw.QApplication(os.sys.argv)
 lpanel = lcomp().widgets
 t_rpanel = rtcomp().widgets
 b_rpanel = rbcomp().widgets
+stacked_widget = None
 
 
 class Root(qtw.QWidget):
@@ -62,7 +62,9 @@ class View(qtw.QWidget):
         self.__right_bottom_build()
         self.right_panel_widget.layout().addWidget(rtop_panel)
 
-        self.right_panel_widget.layout().addWidget(b_rpanel["scroll_area"])
+        stacked_widget = self.__right_bottom_refresh()
+
+        self.right_panel_widget.layout().addWidget(stacked_widget)
         self.right_panel_widget.setMinimumWidth(750)
 
         root_view.layout().addWidget(self.right_panel_widget, 7)
@@ -75,7 +77,6 @@ class View(qtw.QWidget):
         self.qTimer.start()
 
         root_view.show()
-        self.__right_bottom_refresh()
 
         os.sys.exit(app.exec_())
 
@@ -97,8 +98,6 @@ class View(qtw.QWidget):
         """Build parent search widget."""
         search_widget = qtw.QWidget()
         search_widget.setLayout(qtw.QGridLayout())
-
-        # Logo goes to trending connection
 
         # filter_dropdown on select connection
         lpanel["filter_dropdown"].itemClicked.connect(
@@ -219,7 +218,7 @@ class View(qtw.QWidget):
         """Build save feature."""
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
-        save.layout().addWidget(comp().save_btn(id))
+        save.layout().addWidget(rbcomp().save_btn(id))
         save.setFixedSize(50, 50)
         save.clicked.connect(
             lambda: Controller.save(id),
@@ -268,15 +267,57 @@ class View(qtw.QWidget):
         Controller.build_trending()
 
     def __build_recipe_view(self):
-        pass
+        img = b_rpanel["recipe_view_img"]
+        title = b_rpanel["recipe_view_title"]
+        ingredients = b_rpanel["recipe_view_ingredients"]
+        steps = b_rpanel["recipe_view_steps"]
+        exit = b_rpanel["recipe_view_exit"]
+
+        recipe_view_widget = qtw.QWidget()
+        recipe_view_widget.setLayout(qtw.QVBoxLayout())
+        recipe_view_widget.setStyleSheet("background-color: transparent;")
+
+        recipe_scroll_widget = qtw.QWidget()
+        recipe_scroll_widget.setLayout(qtw.QVBoxLayout())
+
+        recipe_view_scroll = qtw.QScrollArea()
+        recipe_view_scroll.setWidget(recipe_scroll_widget)
+        recipe_view_scroll.setWidgetResizable(True)
+
+        top_widget = qtw.QWidget()
+        top_widget.setLayout(qtw.QHBoxLayout())
+
+        top_widget.layout().addWidget(title, 5)
+        top_widget.layout().addWidget(exit, 0)
+
+        mid_widget = qtw.QWidget()
+        mid_widget.setLayout(qtw.QHBoxLayout())
+
+        mid_widget.layout().addWidget(img)
+        mid_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+
+        bot_widget = qtw.QWidget()
+        bot_widget.setLayout(qtw.QHBoxLayout())
+
+        bot_widget.layout().addWidget(ingredients, 1)
+        bot_widget.layout().addWidget(steps, 2)
+
+        recipe_scroll_widget.layout().addWidget(mid_widget, 0)
+        recipe_scroll_widget.layout().addWidget(bot_widget, 4)
+
+        recipe_view_widget.layout().addWidget(top_widget, 1)
+        recipe_view_widget.layout().addWidget(recipe_scroll_widget, 4)
+        return recipe_view_widget
 
     def __right_bottom_refresh(self):
         stacked_widget = qtw.QWidget()
         stacked_widget.setLayout(qtw.QStackedLayout())
-        # recipe_widget = self.__build_recipe_view()
+
+        recipe_view = self.__build_recipe_view()
+
+        stacked_widget.layout().addWidget(recipe_view)
         stacked_widget.layout().addWidget(b_rpanel["scroll_area"])
-        # stacked_widget.layout().addWidget(recipe_widget)
-        self.right_panel_widget.layout().addWidget(stacked_widget)
+        return stacked_widget
 
     def recipe_card(
         name="[RECIPE NAME]",
@@ -330,7 +371,7 @@ class View(qtw.QWidget):
         info.layout().setSpacing(0)
         # recipe_card.setCursor(qtg.QCursor(qtc.Qt.OpenHandCursor))
         recipe_card.clicked.connect(
-            lambda: Controller.export(recipe_card.objectName())
+            lambda: Controller.recipe_clicked(recipe_card.objectName())
         )
         return recipe_card
 
@@ -377,7 +418,7 @@ class Controller:
         name, ingred, instructions, source = query.Search().get_export_info(id)
         logic.Pdf(name, ingred, instructions, source)
 
-    # Dropdown from search bar update -----
+    # --------------------- Dropdown from search bar update --------------------- #
 
     def update_dropdown():
         """Update results of dropdown."""
@@ -401,7 +442,7 @@ class Controller:
 
         lpanel["filter_dropdown"].addItems(result_list)
 
-    # Select and remove selected ingredients -----
+    # ------------------ Select and remove selected ingredients ----------------- #
 
     def select_ingredient(ingr):
         """For selecting ingredients."""
@@ -421,7 +462,7 @@ class Controller:
         else:
             Controller.update_trending()
 
-    # Update the list of selected ingredients ------
+    # ----------------- Update the list of selected ingredients ----------------- #
 
     def update_selected():
         """Update visibility of selected ingr."""
@@ -432,7 +473,7 @@ class Controller:
         lpanel["selected_items"].clear()
         lpanel["selected_items"].addItems(logic.selected_ingredients)
 
-    # Trending build and update --------
+    # ------------------------ Trending build and update ------------------------ #
 
     def build_trending():
         """Update_trending(), but only used on initial build."""
@@ -448,6 +489,8 @@ class Controller:
         Controller.update_section_header("Trending Recipes")
         Controller.clear_tags()
 
+    # ------------------------ Favorites build and update ----------------------- #
+
     def build_favorites():
         """Build favorite recipe cards."""
         Controller.delete_recipe_cards()
@@ -461,7 +504,7 @@ class Controller:
         if win_text == "Favorite Recipes":
             Controller.build_favorites()
 
-        # Generate and delte recipe cards ---------
+    # --------------------- Generate and delte recipe cards --------------------- #
 
     def generate_recipe_cards(recipe_list, build=False):
         """Generate a VBox with a list of recipe cards in it."""
@@ -493,7 +536,7 @@ class Controller:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
 
         if not build:
-            stack_layout = root_view.children()[2].children()[2].children()[0]
+            stack_layout = root_view.children()[2].children()[2]
             stack_layout.layout().addWidget(b_rpanel["scroll_area"])
         Controller.recipes_cards_showing = widget_list
 
@@ -510,12 +553,11 @@ class Controller:
             )
             remove_widget.deleteLater()
 
-        print(root_view.children()[2].children()[2].children())
-        root_view.children()[2].children()[2].children()[0].removeWidget(
+        root_view.children()[2].children()[2].layout().removeWidget(
             b_rpanel["scroll_area"]
         )
 
-    # Section management ---------
+    # ---------------------------- Section management --------------------------- #
 
     def update_section_header(text):
         """Update section title."""
@@ -538,8 +580,9 @@ class Controller:
         logic.selected_ingredients = []
         Controller.update_selected()
 
-    # Different search methods -------
+    # ------------------------- Different search methods ------------------------ #
 
+    # Search by ingredients
     def update_ingredient_search_results():
         """Update ingredient_search results."""
         Controller.delete_recipe_cards()
@@ -551,6 +594,7 @@ class Controller:
             str(len(result_list)) + " Search Results"
         )
 
+    # Search by name
     def update_name_search_results(search):
         """Search recipes by name and selected ingr."""
         return_list = logic.Logic.name_search(
@@ -562,6 +606,7 @@ class Controller:
                 str(len(return_list)) + " Search Results"
             )
 
+    # Search by time
     def update_slider():
         """Update search results when slider released."""
         if t_rpanel["win_text"].text() == "Trending Recipes":
@@ -571,12 +616,14 @@ class Controller:
         else:
             Controller.update_name_search_results(lpanel["search_bar"].text())
 
+    # Update time label
     def update_label():
         """Update slider label."""
         lpanel["time_label"].setText(
             "Cook time: " + str(lpanel["time_slider"].value()) + "min"
         )
 
+    # Search by diets
     def update_diet_filter(diet_type_list):
         """Update the search result by dietary filter."""
         final_list = Controller.recipes_cards_showing
@@ -602,12 +649,25 @@ class Controller:
 
         Controller.restore_cards(final_list)
 
+    # Hide cards passed in list
     def hide_remaining_cards(list_to_hide):
         """Hide all recipes from the filtered list."""
         for recipe in list_to_hide:
             recipe.hide()
 
+    # Show cards passed in list
     def restore_cards(restore_list):
         """Restore all the cards per the class variable."""
         for recipe in restore_list:
             recipe.show()
+
+    # ------------------------------- Recipe view ------------------------------- #
+
+    # Switch recipe view on/off
+    def switch_recipe_view():
+        stacked_widget.setCurrentIndex(
+            1 if stacked_widget.currentIndex() == 0 else 0
+        )
+
+    def recipe_clicked(id):
+        pass
