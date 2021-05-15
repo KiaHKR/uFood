@@ -533,7 +533,7 @@ class Controller:
         settings.show()
 
         # --- [SIGNALS]
-        # export_btn.clicked.connect(lambda: )
+        export_btn.clicked.connect(lambda: logic.Sync.export_favorites())
 
         return settings
 

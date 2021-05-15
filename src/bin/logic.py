@@ -10,7 +10,6 @@ from PyQt5 import QtWidgets as qtw
 
 selected_ingredients = []
 search_object = query.Search()
-dl_path = None
 
 
 class Logic:
@@ -175,6 +174,21 @@ class Sync:
         Sync.__rm_config()
         Sync._export_path = path
         Sync.__pickle_setDownloadPath()
+
+    def export_favorites():
+        path = Sync.pickle_getDownloadPath()
+        recipes_to_write = []
+        with open(path + "favorites.pickle", "rb") as fav:
+            contents = pickle.load(fav)
+            for r in contents:
+                recipes_to_write.append(r)
+        print(recipes_to_write)
+        with open(path + "My Exports/favorites_export.txt", "w") as f:
+            for recipe in recipes_to_write:
+                recipe_obj = query.Search().recipe_id_search(recipe)
+                recipe_name = recipe_obj[0][0]
+                print(recipe_name)
+                f.write(recipe_name + "\n")
 
 
 class Pdf:
