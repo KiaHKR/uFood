@@ -275,38 +275,6 @@ class View(qtw.QWidget):
 
     def build_recipe_view():
         """Build recipe view."""
-        # recipe_view_widget = qtw.QWidget()
-        # recipe_view_widget.setLayout(qtw.QVBoxLayout())
-        # recipe_view_widget.setStyleSheet("border: 1px solid red")
-
-        # recipe_scroll_widget = qtw.QWidget()
-        # recipe_scroll_widget.setLayout(qtw.QVBoxLayout())
-        # recipe_scroll_widget.layout().setAlignment(
-        #     qtc.Qt.AlignmentFlag.AlignTop
-        # )
-        # recipe_scroll_widget.setMinimumWidth(730)
-
-        # recipe_view_scroll = qtw.QScrollArea()
-        # recipe_view_scroll.setWidgetResizable(True)
-        # recipe_view_scroll.setStyleSheet(qss.scrollbar())
-        # recipe_view_scroll.setFrameShape(qtw.QFrame.Shape.NoFrame)
-
-        # recipe_view_scroll.setWidget(recipe_scroll_widget)
-
-        # bot_widget = qtw.QWidget()
-        # bot_widget.setLayout(qtw.QHBoxLayout())
-        # bot_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
-
-        # bot_widget.layout().addWidget(b_rpanel["recipe_view_ingredients"], 1)
-        # bot_widget.layout().addWidget(b_rpanel["recipe_view_steps"], 4)
-
-        # recipe_scroll_widget.layout().addWidget(b_rpanel["recipe_view_img"])
-        # recipe_scroll_widget.layout().addWidget(bot_widget)
-
-        # recipe_view_widget.layout().addWidget(top_widget)
-        # recipe_view_widget.layout().addWidget(recipe_view_scroll)
-
-        # START
         recipe_view_widget_box = qtw.QWidget()
         recipe_view_widget_box.setLayout(qtw.QVBoxLayout())
 
@@ -351,7 +319,7 @@ class View(qtw.QWidget):
         return recipe_view_widget_box
 
     def stacked_layout_build():
-        """Initial refresh of right_bottom"""
+        """Refresh of right_bottom."""
         global recipe_view
         stacked_widget = qtw.QWidget()
         stacked_widget.setLayout(qtw.QStackedLayout())
@@ -462,7 +430,7 @@ class Controller:
         name, ingred, instructions, source = query.Search().get_export_info(id)
         logic.Pdf(name, ingred, instructions, source)
 
-    # --------------------- Dropdown from search bar update --------------------- #
+    # ------------------- Dropdown from search bar update ------------------- #
 
     def update_dropdown():
         """Update results of dropdown."""
@@ -486,7 +454,7 @@ class Controller:
 
         lpanel["filter_dropdown"].addItems(result_list)
 
-    # ------------------ Select and remove selected ingredients ----------------- #
+    # ---------------- Select and remove selected ingredients --------------- #
 
     def select_ingredient(ingr):
         """For selecting ingredients."""
@@ -506,7 +474,7 @@ class Controller:
         else:
             Controller.update_trending()
 
-    # ----------------- Update the list of selected ingredients ----------------- #
+    # --------------- Update the list of selected ingredients --------------- #
 
     def update_selected():
         """Update visibility of selected ingr."""
@@ -517,7 +485,7 @@ class Controller:
         lpanel["selected_items"].clear()
         lpanel["selected_items"].addItems(logic.selected_ingredients)
 
-    # ------------------------ Trending build and update ------------------------ #
+    # ---------------------- Trending build and update ---------------------- #
 
     def build_trending():
         """Update_trending(), but only used on initial build."""
@@ -533,7 +501,7 @@ class Controller:
         Controller.update_section_header("Trending Recipes")
         Controller.clear_tags()
 
-    # ------------------------ Favorites build and update ----------------------- #
+    # ---------------------- Favorites build and update --------------------- #
 
     def build_favorites():
         """Build favorite recipe cards."""
@@ -623,6 +591,7 @@ class Controller:
         return settings
 
     def import_btn_slot(parent_widget_object):
+        """Import button slot."""
         filename = qtw.QFileDialog.getOpenFileName(
             parent_widget_object,
             "Open File",
@@ -632,7 +601,7 @@ class Controller:
         if os.path.exists(filename[0]):
             logic.Sync.sync_to_fav(filename[0])
 
-    # --------------------- Generate and delte recipe cards --------------------- #
+    # ------------------- Generate and delte recipe cards ------------------- #
 
     def generate_recipe_cards(recipe_list, build=False):
         """Generate a VBox with a list of recipe cards in it."""
@@ -692,7 +661,7 @@ class Controller:
 
         stacked_widget.layout().removeWidget(b_rpanel["scroll_area"])
 
-    # ---------------------------- Section management --------------------------- #
+    # -------------------------- Section management ------------------------- #
 
     def update_section_header(text):
         """Update section title."""
@@ -715,7 +684,7 @@ class Controller:
         logic.selected_ingredients = []
         Controller.update_selected()
 
-    # ------------------------- Different search methods ------------------------ #
+    # ----------------------- Different search methods ---------------------- #
 
     # Search by ingredients
     def update_ingredient_search_results():
@@ -796,15 +765,16 @@ class Controller:
         for recipe in restore_list:
             recipe.show()
 
-    # ------------------------------- Recipe view ------------------------------- #
+    # ----------------------------- Recipe view ----------------------------- #
 
     # Run when recipe clicked
     def recipe_clicked(id):
-        """Run when recipe card has been clicked"""
+        """Run when recipe card has been clicked."""
         Controller.update_recipe_view(id)
         Controller.set_recipe_view_vis(True)
 
     def set_recipe_view_vis(view: bool):
+        """Set recipe view visibility."""
         if not view:
             b_rpanel["scroll_area"] = Controller.saved_scroll_area
             stacked_widget.layout().setCurrentWidget(b_rpanel["scroll_area"])
@@ -816,7 +786,7 @@ class Controller:
 
     # Update data in recipe view
     def update_recipe_view(id):
-        """Update data in recipe view"""
+        """Update data in recipe view."""
         global recipe_view
         stacked_widget.layout().removeWidget(recipe_view)
 

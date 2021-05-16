@@ -216,7 +216,7 @@ class Sync:
             pickle.dump(Sync._export_path, f)
 
     def pickle_getDownloadPath():
-        """Retreive download path"""
+        """Retreive download path."""
         try:
             with open(Sync._export_path + "config.pickle", "rb") as f:
                 content = pickle.load(f)
@@ -255,12 +255,13 @@ class Sync:
 
         msg.setWindowIcon(icon)
         msg.setText(
-            f"Export successful to your '{Sync._export_path[:-1]}/My Exports' folder."
+            "Export successful to your"
+            + f"'{Sync._export_path[:-1]} +/My Exports' folder."
         )
         msg.exec_()
 
     def sync_to_fav(filepath):
-        """Takes the import filepath and calculate the ids, then store to favs."""
+        """Import filepath and calculate the ids, then store to favs."""
         with open(filepath, "r") as import_file:
             content = import_file.read().split("\n")
             if content[0] != "":
@@ -275,10 +276,11 @@ class Sync:
             msg.setWindowTitle("Success!")
             icon = QIcon("src/interface/assets/validation.png")
             msg.setWindowIcon(icon)
-            msg.setText(f"Favorites successfully imported!")
+            msg.setText("Favorites successfully imported!")
             msg.exec_()
 
     def add_unique_to_fav(self, id):
+        """Add unique recipe to favorites."""
         if id not in self.fav_list:
             self.fav_list.append(id)
             self.pickle_write()
@@ -331,6 +333,7 @@ class Pdf:
         msg.setWindowTitle("Info")
         msg.setWindowIcon(QIcon("src/interface/assets/validation.png"))
         msg.setText(
-            f"A pdf has successfully been downloaded to your {Sync._export_path[:-1]} folder."
+            "A pdf has successfully been downloaded to your"
+            + f"{Sync._export_path[:-1]} folder."
         )
         msg.exec_()

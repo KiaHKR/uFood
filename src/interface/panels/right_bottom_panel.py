@@ -240,7 +240,9 @@ class Components:
         steps = qtw.QLabel()
         steps.setText("STEP 1 \nSTEP 2")
         steps.setStyleSheet(
-            "color: white; font-size: 14px; border-left: 1px solid #363636; padding-left: 10px; margin-top: 20px;"
+            """color: white; font-size: 14px;
+            border-left: 1px solid #363636;
+            padding-left: 10px; margin-top: 20px;"""
         )
         steps.setWordWrap(True)
         steps.setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
