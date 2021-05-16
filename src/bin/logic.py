@@ -1,6 +1,7 @@
 """File for Logic and sync class."""
 import os
 import pickle
+import re
 from PyQt5.QtGui import QIcon
 from fpdf import FPDF
 
@@ -109,6 +110,38 @@ class Logic:
         )
         return time_minutes
 
+    def get_recipe_info(id):
+        """Return the details for card that was clicked."""
+        list = search_object.card_result_search(id)[0]
+        # Returns info in following order
+        # Name of recipe 0
+        # img linke 1
+        # ingredients 2
+        # steps 3
+        re.Pattern
+        parsed_info = []
+        parsed_info.append(list[0])
+        parsed_info.append(list[6])
+
+        ingr = list[3].split(",")
+        ingr.reverse()
+
+        steps_string = "<table>"
+        steps = re.sub("[$]+", "$", list[4])
+        step_list = steps.split("$")
+        for i in step_list:
+            if "STEP" in i.upper():
+                steps_string += "</tr><tr><td><h4>" + i + "</h4></td>"
+            else:
+                steps_string += "<td>" + i + "<br></td>"
+
+        steps_string += "</table>"
+
+        parsed_info.append("\n".join(ingr))
+        parsed_info.append(steps_string)
+
+        return parsed_info
+
 
 class Sync:
     """Synchronization for objects when writing to/reading from."""
@@ -207,8 +240,8 @@ class Sync:
         """Takes the import filepath and calculate the ids, then store to favs."""
         with open(filepath, "r") as import_file:
             content = import_file.read().split("\n")
-            content = content[:-1]
             if content[0] != "":
+                content = content[:-1]
                 for i in range(0, len(content)):
                     recipe_tuple = query.Search().recipe_name_search(
                         content[i]
