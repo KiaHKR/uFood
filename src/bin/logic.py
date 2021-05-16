@@ -118,9 +118,25 @@ class Logic:
         # img linke 1
         # ingredients 2
         # steps 3
+        # diet cooktime 4
         re.Pattern
         parsed_info = []
         parsed_info.append(list[0])
+
+        diet = list[2].replace(",", ", ")
+        time = str(list[1])[:-3]
+
+        if diet != "None":
+            combined = (
+                "Diet: "
+                + diet
+                + "\nCook time: "
+                + time.replace(":", "h ")
+                + "m"
+            )
+        else:
+            combined = "Cook time: " + time.replace(":", "h ") + "m"
+
         parsed_info.append(list[6])
 
         ingr = list[3].split(",")
@@ -131,7 +147,13 @@ class Logic:
         step_list = steps.split("$")
         for i in step_list:
             if "STEP" in i.upper():
-                steps_string += "</tr><tr><td><h4>" + i + "</h4></td>"
+                i += ":"
+                steps_string += (
+                    "</tr><tr><td><h4>"
+                    + i
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;"
+                    + "</h4></td>"
+                )
             else:
                 steps_string += "<td>" + i + "<br></td>"
 
@@ -139,6 +161,7 @@ class Logic:
 
         parsed_info.append("\n".join(ingr))
         parsed_info.append(steps_string)
+        parsed_info.append(combined)
 
         return parsed_info
 

@@ -275,22 +275,40 @@ class View(qtw.QWidget):
 
     def build_recipe_view():
         """Build recipe view."""
-        recipe_view_widget = qtw.QWidget()
-        recipe_view_widget.setLayout(qtw.QVBoxLayout())
+        # recipe_view_widget = qtw.QWidget()
+        # recipe_view_widget.setLayout(qtw.QVBoxLayout())
+        # recipe_view_widget.setStyleSheet("border: 1px solid red")
 
-        recipe_scroll_widget = qtw.QWidget()
-        recipe_scroll_widget.setLayout(qtw.QVBoxLayout())
-        recipe_scroll_widget.layout().setAlignment(
-            qtc.Qt.AlignmentFlag.AlignTop
-        )
-        recipe_scroll_widget.setMinimumWidth(730)
+        # recipe_scroll_widget = qtw.QWidget()
+        # recipe_scroll_widget.setLayout(qtw.QVBoxLayout())
+        # recipe_scroll_widget.layout().setAlignment(
+        #     qtc.Qt.AlignmentFlag.AlignTop
+        # )
+        # recipe_scroll_widget.setMinimumWidth(730)
 
-        recipe_view_scroll = qtw.QScrollArea()
-        recipe_view_scroll.setWidgetResizable(True)
-        recipe_view_scroll.setStyleSheet(qss.scrollbar())
-        recipe_view_scroll.setFrameShape(qtw.QFrame.Shape.NoFrame)
+        # recipe_view_scroll = qtw.QScrollArea()
+        # recipe_view_scroll.setWidgetResizable(True)
+        # recipe_view_scroll.setStyleSheet(qss.scrollbar())
+        # recipe_view_scroll.setFrameShape(qtw.QFrame.Shape.NoFrame)
 
-        recipe_view_scroll.setWidget(recipe_scroll_widget)
+        # recipe_view_scroll.setWidget(recipe_scroll_widget)
+
+        # bot_widget = qtw.QWidget()
+        # bot_widget.setLayout(qtw.QHBoxLayout())
+        # bot_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+
+        # bot_widget.layout().addWidget(b_rpanel["recipe_view_ingredients"], 1)
+        # bot_widget.layout().addWidget(b_rpanel["recipe_view_steps"], 4)
+
+        # recipe_scroll_widget.layout().addWidget(b_rpanel["recipe_view_img"])
+        # recipe_scroll_widget.layout().addWidget(bot_widget)
+
+        # recipe_view_widget.layout().addWidget(top_widget)
+        # recipe_view_widget.layout().addWidget(recipe_view_scroll)
+
+        # START
+        recipe_view_widget_box = qtw.QWidget()
+        recipe_view_widget_box.setLayout(qtw.QVBoxLayout())
 
         top_widget = qtw.QWidget()
         top_widget.setLayout(qtw.QHBoxLayout())
@@ -298,26 +316,42 @@ class View(qtw.QWidget):
         top_widget.layout().addWidget(b_rpanel["recipe_view_title"], 1)
         top_widget.layout().addWidget(b_rpanel["recipe_view_exit"], 0)
 
-        bot_widget = qtw.QWidget()
-        bot_widget.setLayout(qtw.QHBoxLayout())
-        bot_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        bottom_widget = qtw.QScrollArea()  # scrollarea
+        bottom_widget.setStyleSheet(qss.scrollbar())
+        bottom_widget.setFrameShape(qtw.QFrame.Shape.NoFrame)
 
-        bot_widget.layout().addWidget(b_rpanel["recipe_view_ingredients"], 1)
-        bot_widget.layout().addWidget(b_rpanel["recipe_view_steps"], 4)
+        bottom_widget_container = qtw.QWidget()
+        bottom_widget_container.setLayout(qtw.QHBoxLayout())
 
-        recipe_scroll_widget.layout().addWidget(b_rpanel["recipe_view_img"])
-        recipe_scroll_widget.layout().addWidget(bot_widget)
+        bottom_widget_left = qtw.QWidget()  # vbox
+        bottom_widget_left.setLayout(qtw.QVBoxLayout())
 
-        recipe_view_widget.layout().addWidget(top_widget)
-        recipe_view_widget.layout().addWidget(recipe_view_scroll)
+        bottom_widget_container.layout().addWidget(bottom_widget_left)  # hbox
+        bottom_widget_container.layout().addWidget(
+            b_rpanel["recipe_view_steps"]
+        )
+
+        bottom_widget_left.layout().addWidget((b_rpanel["recipe_view_img"]))
+        bottom_widget_left.layout().addWidget(
+            (b_rpanel["recipe_view_cook_diet_label"])
+        )
+        bottom_widget_left.layout().addWidget(
+            (b_rpanel["recipe_view_ingredients"])
+        )
+
+        bottom_widget.setWidget(bottom_widget_container)
+
+        recipe_view_widget_box.layout().addWidget(top_widget)
+        recipe_view_widget_box.layout().addWidget(bottom_widget)
 
         b_rpanel["recipe_view_exit"].clicked.connect(
             lambda: Controller.set_recipe_view_vis(False)
         )
-        return recipe_view_widget
+
+        return recipe_view_widget_box
 
     def stacked_layout_build():
-        """Initial refresh of right_bottom """
+        """Initial refresh of right_bottom"""
         global recipe_view
         stacked_widget = qtw.QWidget()
         stacked_widget.setLayout(qtw.QStackedLayout())
@@ -792,6 +826,7 @@ class Controller:
         b_rpanel["recipe_view_title"].setText(result[0])
         b_rpanel["recipe_view_ingredients"].setText(result[2])
         b_rpanel["recipe_view_steps"].setText(result[3])
+        b_rpanel["recipe_view_cook_diet_label"].setText(result[4])
 
         recipe_view = View.build_recipe_view()
 

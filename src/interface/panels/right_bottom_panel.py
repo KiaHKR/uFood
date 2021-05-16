@@ -28,6 +28,7 @@ class Components:
         "recipe_view_ingredients",  # 12
         "recipe_view_steps",  # 13
         "recipe_view_exit",  # 14
+        "recipe_view_cook_diet_label",  # 15
     )
     path = "src/interface/assets/"
 
@@ -45,6 +46,9 @@ class Components:
         ] = self.__recipe_view_ingredients()
         self.widgets[self.__object_names[13]] = self.__recipe_view_steps()
         self.widgets[self.__object_names[14]] = self.__recipe_view_exit()
+        self.widgets[
+            self.__object_names[15]
+        ] = self.__recipe_view_cook_diet_label()
 
     def __export_btn(self):
         """For the export button label."""
@@ -224,7 +228,9 @@ class Components:
         """Recipe view ingredients."""
         ingredients = qtw.QLabel()
         ingredients.setText("Cake\nCookies")
-        ingredients.setStyleSheet("color: white; font-size: 14px;")
+        ingredients.setStyleSheet(
+            "color: white; font-size: 14px; margin-top: 5px;"
+        )
         ingredients.setObjectName(self.__object_names[12])
         ingredients.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
         return ingredients
@@ -233,7 +239,9 @@ class Components:
         """Recipe view steps."""
         steps = qtw.QLabel()
         steps.setText("STEP 1 \nSTEP 2")
-        steps.setStyleSheet("color: white; font-size: 14px;")
+        steps.setStyleSheet(
+            "color: white; font-size: 14px; border-left: 1px solid #363636; padding-left: 10px; margin-top: 20px;"
+        )
         steps.setWordWrap(True)
         steps.setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
         steps.setObjectName(self.__object_names[13])
@@ -242,7 +250,7 @@ class Components:
     def __recipe_view_exit(self):
         """Push button for exiting recipe view."""
         fav_btn = qtw.QPushButton(
-            icon=qtg.QIcon(qtg.QPixmap(self.path + "back_icon.png"))
+            icon=qtg.QIcon(qtg.QPixmap(self.path + "cross_icon.png"))
         )
         fav_btn.setIconSize(qtc.QSize(15, 15))
         fav_btn.setObjectName(self.__object_names[14])
@@ -250,3 +258,11 @@ class Components:
         fav_btn.setFixedWidth(35)
         fav_btn.setCursor(qtg.QCursor(qtc.Qt.PointingHandCursor))
         return fav_btn
+
+    def __recipe_view_cook_diet_label(self):
+        label = qtw.QLabel()
+        label.setText("Cook time: 1 \nDiet: Paleo ")
+        label.setStyleSheet("color: white; font-size: 15px; font-weight: 800")
+        label.setObjectName("recipe_view_cook_diet_label")
+
+        return label
