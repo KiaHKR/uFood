@@ -9,6 +9,7 @@ from src.interface.panels.right_top_panel import Compontents as rtcomp
 from src.interface.panels.right_bottom_panel import Components as rbcomp
 import src.bin.logic as logic
 from src.bin import query
+from src.interface.styling import qss
 
 
 app = qtw.QApplication(os.sys.argv)
@@ -16,6 +17,7 @@ lpanel = lcomp().widgets
 t_rpanel = rtcomp().widgets
 b_rpanel = rbcomp().widgets
 stacked_widget = None
+recipe_view = None
 
 
 class Root(qtw.QWidget):
@@ -62,7 +64,8 @@ class View(qtw.QWidget):
         self.__right_bottom_build()
         self.right_panel_widget.layout().addWidget(rtop_panel)
 
-        stacked_widget = self.__right_bottom_refresh()
+        global stacked_widget
+        stacked_widget = View.stacked_layout_build()
 
         self.right_panel_widget.layout().addWidget(stacked_widget)
         self.right_panel_widget.setMinimumWidth(750)
@@ -266,57 +269,59 @@ class View(qtw.QWidget):
         """Widget of right bottom panel."""
         Controller.build_trending()
 
-    def __build_recipe_view(self):
-        img = b_rpanel["recipe_view_img"]
-        title = b_rpanel["recipe_view_title"]
-        ingredients = b_rpanel["recipe_view_ingredients"]
-        steps = b_rpanel["recipe_view_steps"]
-        exit = b_rpanel["recipe_view_exit"]
-
+    def build_recipe_view():
+        """Build recipe view."""
         recipe_view_widget = qtw.QWidget()
         recipe_view_widget.setLayout(qtw.QVBoxLayout())
-        recipe_view_widget.setStyleSheet("background-color: transparent;")
 
         recipe_scroll_widget = qtw.QWidget()
         recipe_scroll_widget.setLayout(qtw.QVBoxLayout())
+        recipe_scroll_widget.layout().setAlignment(
+            qtc.Qt.AlignmentFlag.AlignTop
+        )
+        recipe_scroll_widget.setMinimumWidth(730)
 
         recipe_view_scroll = qtw.QScrollArea()
-        recipe_view_scroll.setWidget(recipe_scroll_widget)
         recipe_view_scroll.setWidgetResizable(True)
+        recipe_view_scroll.setStyleSheet(qss.scrollbar())
+        recipe_view_scroll.setFrameShape(qtw.QFrame.Shape.NoFrame)
+
+        recipe_view_scroll.setWidget(recipe_scroll_widget)
 
         top_widget = qtw.QWidget()
         top_widget.setLayout(qtw.QHBoxLayout())
 
-        top_widget.layout().addWidget(title, 5)
-        top_widget.layout().addWidget(exit, 0)
-
-        mid_widget = qtw.QWidget()
-        mid_widget.setLayout(qtw.QHBoxLayout())
-
-        mid_widget.layout().addWidget(img)
-        mid_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        top_widget.layout().addWidget(b_rpanel["recipe_view_title"], 1)
+        top_widget.layout().addWidget(b_rpanel["recipe_view_exit"], 0)
 
         bot_widget = qtw.QWidget()
         bot_widget.setLayout(qtw.QHBoxLayout())
+        bot_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
 
-        bot_widget.layout().addWidget(ingredients, 1)
-        bot_widget.layout().addWidget(steps, 2)
+        bot_widget.layout().addWidget(b_rpanel["recipe_view_ingredients"], 1)
+        bot_widget.layout().addWidget(b_rpanel["recipe_view_steps"], 4)
 
-        recipe_scroll_widget.layout().addWidget(mid_widget, 0)
-        recipe_scroll_widget.layout().addWidget(bot_widget, 4)
+        recipe_scroll_widget.layout().addWidget(b_rpanel["recipe_view_img"])
+        recipe_scroll_widget.layout().addWidget(bot_widget)
 
-        recipe_view_widget.layout().addWidget(top_widget, 1)
-        recipe_view_widget.layout().addWidget(recipe_scroll_widget, 4)
+        recipe_view_widget.layout().addWidget(top_widget)
+        recipe_view_widget.layout().addWidget(recipe_view_scroll)
+
+        b_rpanel["recipe_view_exit"].clicked.connect(
+            lambda: Controller.set_recipe_view_vis(False)
+        )
         return recipe_view_widget
 
-    def __right_bottom_refresh(self):
+    def stacked_layout_build():
+        """Initial refresh of right_bottom """
+        global recipe_view
         stacked_widget = qtw.QWidget()
         stacked_widget.setLayout(qtw.QStackedLayout())
 
-        recipe_view = self.__build_recipe_view()
+        recipe_view = View.build_recipe_view()
 
-        stacked_widget.layout().addWidget(recipe_view)
         stacked_widget.layout().addWidget(b_rpanel["scroll_area"])
+        stacked_widget.layout().addWidget(recipe_view)
         return stacked_widget
 
     def recipe_card(
@@ -381,6 +386,7 @@ class Controller:
 
     pos = "Trending"
     recipes_cards_showing = []
+    saved_scroll_area = b_rpanel["scroll_area"]
 
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
@@ -536,8 +542,9 @@ class Controller:
             b_rpanel["scroll_area"].widget().layout().addWidget(no_recipes)
 
         if not build:
-            stack_layout = root_view.children()[2].children()[2]
-            stack_layout.layout().addWidget(b_rpanel["scroll_area"])
+            stacked_widget.layout().addWidget(b_rpanel["scroll_area"])
+            stacked_widget.layout().setCurrentWidget(b_rpanel["scroll_area"])
+
         Controller.recipes_cards_showing = widget_list
 
     def delete_recipe_cards():
@@ -553,9 +560,7 @@ class Controller:
             )
             remove_widget.deleteLater()
 
-        root_view.children()[2].children()[2].layout().removeWidget(
-            b_rpanel["scroll_area"]
-        )
+        stacked_widget.layout().removeWidget(b_rpanel["scroll_area"])
 
     # ---------------------------- Section management --------------------------- #
 
@@ -663,11 +668,46 @@ class Controller:
 
     # ------------------------------- Recipe view ------------------------------- #
 
-    # Switch recipe view on/off
-    def switch_recipe_view():
-        stacked_widget.setCurrentIndex(
-            1 if stacked_widget.currentIndex() == 0 else 0
-        )
-
+    # Run when recipe clicked
     def recipe_clicked(id):
-        pass
+        """Run when recipe card has been clicked"""
+        Controller.update_recipe_view(id)
+        Controller.set_recipe_view_vis(True)
+
+    def set_recipe_view_vis(view: bool):
+        if not view:
+            b_rpanel["scroll_area"] = Controller.saved_scroll_area
+            stacked_widget.layout().setCurrentWidget(b_rpanel["scroll_area"])
+        elif view:
+            Controller.saved_scroll_area = (
+                stacked_widget.layout().currentWidget()
+            )
+            stacked_widget.layout().setCurrentWidget(recipe_view)
+
+    # Update data in recipe view
+    def update_recipe_view(id):
+        """Update data in recipe view"""
+        global recipe_view
+        stacked_widget.layout().removeWidget(recipe_view)
+
+        result = logic.Logic.get_recipe_info(id)
+
+        b_rpanel["recipe_view_img"] = rbcomp().thumbnail_img(result[1])
+        b_rpanel["recipe_view_title"].setText(result[0])
+        b_rpanel["recipe_view_ingredients"].setText(result[2])
+        b_rpanel["recipe_view_steps"].setText(result[3])
+
+        recipe_view = View.build_recipe_view()
+
+        stacked_widget.layout().addWidget(recipe_view)
+
+        # print(
+        #     str(b_rpanel["recipe_view_img"])
+        #     + "\n"
+        #     + str(b_rpanel["recipe_view_title"])
+        #     + "\n"
+        #     + str(b_rpanel["recipe_view_ingredients"])
+        #     + "\n"
+        #     + str(b_rpanel["recipe_view_steps"])
+
+        # )

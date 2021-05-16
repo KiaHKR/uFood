@@ -1,5 +1,6 @@
 """File for Logic and sync class."""
 import pickle
+import re
 from fpdf import FPDF
 
 from src.bin import query
@@ -106,6 +107,40 @@ class Logic:
             unformated_time.split(":")[1]
         )
         return time_minutes
+
+    def get_recipe_info(id):
+        """Return the details for card that was clicked."""
+        list = search_object.card_result_search(id)[0]
+        # Returns info in following order
+        # Name of recipe 0
+        # img linke 1
+        # ingredients 2
+        # steps 3
+        re.Pattern
+        parsed_info = []
+        parsed_info.append(list[0])
+        parsed_info.append(list[6])
+
+        ingr = list[3].split(",")
+        ingr.reverse()
+
+        steps_string = "<table>"
+        print(list[4])
+        steps = re.sub("[$]+", "$", list[4])
+        print(steps)
+        step_list = steps.split("$")
+        for i in step_list:
+            if "STEP" in i.upper():
+                steps_string += "</tr><tr><td><h4>" + i + "</h4></td>"
+            else:
+                steps_string += "<td>" + i + "<br></td>"
+
+        steps_string += "</table>"
+
+        parsed_info.append("\n".join(ingr))
+        parsed_info.append(steps_string)
+
+        return parsed_info
 
 
 class Sync:

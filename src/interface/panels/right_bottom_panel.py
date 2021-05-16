@@ -216,26 +216,26 @@ class Components:
         title.setStyleSheet(
             "color: white; font-size: 48px; font-weight: bold;"
         )
+        title.setWordWrap(True)
         title.setObjectName(self.__object_names[11])
         return title
 
     def __recipe_view_ingredients(self):
         """Recipe view ingredients."""
         ingredients = qtw.QLabel()
-        ingredients.setText("Cake \nCookies")
-        ingredients.setStyleSheet(
-            "color: white; font-size: 14px; font-style: italic;"
-        )
+        ingredients.setText("Cake\nCookies")
+        ingredients.setStyleSheet("color: white; font-size: 14px;")
         ingredients.setObjectName(self.__object_names[12])
+        ingredients.setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
         return ingredients
 
     def __recipe_view_steps(self):
         """Recipe view steps."""
         steps = qtw.QLabel()
         steps.setText("STEP 1 \nSTEP 2")
-        steps.setStyleSheet(
-            "color: white; font-size: 14px; font-style: italic;"
-        )
+        steps.setStyleSheet("color: white; font-size: 14px;")
+        steps.setWordWrap(True)
+        steps.setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
         steps.setObjectName(self.__object_names[13])
         return steps
 
