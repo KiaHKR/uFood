@@ -3,7 +3,6 @@
 import unittest
 
 from PyQt5.QtWidgets import QLabel
-from pathlib import Path
 import os
 
 from src.bin import logic
@@ -45,15 +44,6 @@ class TestLogicClass(unittest.TestCase):
         self.assertEqual(res, 3)
         log.remove_ingr_selected(item)
 
-    # def test_name_search(self):
-    #     """Test searching recipe by name."""
-    #     l = logic.Logic
-    #     item = QLabel()
-    #     item.setText("pancakes")
-    #     l.add_ingr_selected(item)
-    #     res = len(l.name_search(item, 6000))
-    #     self.assertEqual(res, 1)
-
     def test_max_cook_time(self):
         """Test get highest cook time."""
         res = logic.Logic.max_cook_time()
@@ -67,7 +57,7 @@ class TestLogicClass(unittest.TestCase):
         res = s.pickle_read()
         self.assertEqual(type(res), list)
         with self.assertRaises(FileNotFoundError):
-            s.file = "shitttt"
+            s.file = "test123"
             s.pickle_read()
 
     def test_add_fav(self):
@@ -76,16 +66,16 @@ class TestLogicClass(unittest.TestCase):
 
     def test_pdf(self):
         """Test the pdf feature."""
+        r_name = "test_file"
         self.assertEqual(
             type(
                 logic.Pdf(
-                    "chicken masala",
-                    "chicken, tomato",
-                    "instruction",
-                    "google.com",
+                    name=r_name,
+                    ingred="test_ingred, test_ingred2",
+                    instructions="test_instruction",
+                    source="test_source.com",
                 )
             ),
             logic.Pdf,
         )
-        home = str(Path.home())
-        os.remove(home + "/Downloads/recipe.pdf")
+        os.remove(logic.Sync._export_path + f"Recipes/{r_name}.pdf")

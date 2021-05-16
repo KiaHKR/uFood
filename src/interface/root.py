@@ -260,6 +260,10 @@ class View(qtw.QWidget):
             lambda: Controller.update_trending()
         )
 
+        t_rpanel["settings_btn"].clicked.connect(
+            lambda: Controller.build_settings(self)
+        )
+
         widget = qtw.QWidget()
         widget.setLayout(top_layout)
         return widget
@@ -510,6 +514,90 @@ class Controller:
         if win_text == "Favorite Recipes":
             Controller.build_favorites()
 
+    def build_settings(self):
+        """Build the settings feature."""
+        if Controller.pos == "Settings":
+            rmwidget = root_view.children()[2].findChild(
+                qtw.QWidget, "settings"
+            )
+            root_view.children()[2].children()[0].layout().removeWidget(
+                rmwidget
+            )
+        settings = Controller.settings_panel()
+        for i in reversed(
+            range(b_rpanel["scroll_area"].widget().layout().count())
+        ):
+            remove_widget = (
+                b_rpanel["scroll_area"].widget().layout().takeAt(i).widget()
+            )
+            b_rpanel["scroll_area"].widget().layout().removeWidget(
+                remove_widget
+            )
+            remove_widget.deleteLater()
+        Controller.update_section_header("Settings")
+        settings.setObjectName("settings")
+        settings.setFixedHeight(root_view.children()[2].height() * 0.8)
+        panel_box = root_view.children()[2].children()[0].layout()
+        panel_box.addWidget(settings, 10000)  # some ridiculous stretch margin
+
+    def settings_panel():
+        """Build the widgets associated with the settings feature."""
+        settings = qtw.QWidget()
+        settings.setLayout(qtw.QVBoxLayout())
+        import_export = qtw.QWidget()
+        import_export.setLayout(qtw.QHBoxLayout())
+        import_btn = qtw.QPushButton("Import Favorites")
+        export_btn = qtw.QPushButton("Export Favorites")
+        import_export.layout().addWidget(import_btn)
+        import_export.layout().addWidget(export_btn)
+        import_export.layout().setSpacing(150)
+
+        options = qtw.QWidget()
+        options.setLayout(qtw.QHBoxLayout())
+        submit_btn = qtw.QPushButton("Submit")
+        clear_btn = qtw.QPushButton("Clear")
+        empty_space = qtw.QWidget()
+        # styling buttons
+        background = "white"
+        styling = (
+            f"background: {background}; font-size: 14px; font-weight: bold;"
+        )
+
+        import_btn.setFixedWidth(root_view.children()[2].width() // 3)
+        export_btn.setFixedWidth(root_view.children()[2].width() // 3)
+        import_btn.setStyleSheet(styling)
+
+        export_btn.setStyleSheet(styling)
+        clear_btn.setStyleSheet(styling)
+        submit_btn.setStyleSheet(styling)
+
+        options.layout().addWidget(clear_btn)
+        options.layout().addWidget(submit_btn)
+
+        # add widgets to settings
+        settings.layout().setSpacing(20)
+        settings.layout().addWidget(import_export, 1)
+        settings.layout().addWidget(empty_space, 8)
+        settings.show()
+
+        # --- [SIGNALS]
+        export_btn.clicked.connect(lambda: logic.Sync.export_favorites())
+        import_btn.clicked.connect(
+            lambda: Controller.import_btn_slot(import_btn)
+        )
+
+        return settings
+
+    def import_btn_slot(parent_widget_object):
+        filename = qtw.QFileDialog.getOpenFileName(
+            parent_widget_object,
+            "Open File",
+            "uFridge",
+            "Text Document (*.txt)",
+        )
+        if os.path.exists(filename[0]):
+            logic.Sync.sync_to_fav(filename[0])
+
     # --------------------- Generate and delte recipe cards --------------------- #
 
     def generate_recipe_cards(recipe_list, build=False):
@@ -549,6 +637,14 @@ class Controller:
 
     def delete_recipe_cards():
         """Clear scroll_area and remove it from the right_panel."""
+        if Controller.pos == "Settings":
+            rmwidget = root_view.children()[2].findChild(
+                qtw.QWidget, "settings"
+            )
+            root_view.children()[2].children()[0].layout().removeWidget(
+                rmwidget
+            )
+
         for i in reversed(
             range(b_rpanel["scroll_area"].widget().layout().count())
         ):
