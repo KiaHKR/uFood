@@ -127,9 +127,7 @@ class Logic:
         ingr.reverse()
 
         steps_string = "<table>"
-        print(list[4])
         steps = re.sub("[$]+", "$", list[4])
-        print(steps)
         step_list = steps.split("$")
         for i in step_list:
             if "STEP" in i.upper():

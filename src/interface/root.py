@@ -796,14 +796,3 @@ class Controller:
         recipe_view = View.build_recipe_view()
 
         stacked_widget.layout().addWidget(recipe_view)
-
-        # print(
-        #     str(b_rpanel["recipe_view_img"])
-        #     + "\n"
-        #     + str(b_rpanel["recipe_view_title"])
-        #     + "\n"
-        #     + str(b_rpanel["recipe_view_ingredients"])
-        #     + "\n"
-        #     + str(b_rpanel["recipe_view_steps"])
-
-        # )
