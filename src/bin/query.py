@@ -210,3 +210,16 @@ class Search:
         for x in self.mycursor:
             return_list.append(x)
         return return_list
+
+    def add_view(self, id):
+        prep_cursor = self.mydb.cursor(prepared=True)
+
+        self.mycursor.execute("SELECT times_accessed FROM recipes WHERE id=1")
+        temp_list = []
+        for i in self.mycursor:
+            temp_list.append(i)
+        count = temp_list[0][0] + 1
+
+        stmt = "UPDATE ufood.recipes SET recipes.times_accessed = %s WHERE recipes.id = %s"
+
+        prep_cursor.execute(stmt, (count, id))

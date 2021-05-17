@@ -165,6 +165,10 @@ class Logic:
 
         return parsed_info
 
+    def add_view(id):
+        """Adds one to visited count."""
+        search_object.add_view(id)
+
 
 class Sync:
     """Synchronization for objects when writing to/reading from."""

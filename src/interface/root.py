@@ -772,6 +772,7 @@ class Controller:
         """Run when recipe card has been clicked."""
         Controller.update_recipe_view(id)
         Controller.set_recipe_view_vis(True)
+        logic.Logic.add_view(id)
 
     def set_recipe_view_vis(view: bool):
         """Set recipe view visibility."""
