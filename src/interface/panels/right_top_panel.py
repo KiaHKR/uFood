@@ -5,7 +5,7 @@ from PyQt5 import QtGui as qtg
 import src.interface.root as root
 
 
-class Compontents:
+class Components:
     """Components class holds all widgets for right top panel."""
 
     widgets = {}

@@ -1,5 +1,5 @@
 """Main file for launching application."""
-from src.interface.root import View
+from src.interface.view import View
 import src.bin.validation as validation
 
 # pylint: disable=pointless-statement
