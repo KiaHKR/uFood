@@ -2,10 +2,10 @@ import os
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 
-from src.interface.panels.right_bottom_panel import Components as rbcomp
 import src.interface.controller as controller
 import src.interface.view_builder as view_builder
 import src.interface.globals as globals
+import src.interface.panels.right_bottom_panel as rbcomp
 
 
 class View(qtw.QWidget):
@@ -199,7 +199,7 @@ class View(qtw.QWidget):
         """Build save feature."""
         save = qtw.QPushButton()
         save.setLayout(qtw.QHBoxLayout())
-        save.layout().addWidget(rbcomp().save_btn(id))
+        save.layout().addWidget(rbcomp.Components().save_btn(id))
         save.setFixedSize(50, 50)
         save.clicked.connect(
             lambda: controller.Controller.save(id),

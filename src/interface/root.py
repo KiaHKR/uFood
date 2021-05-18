@@ -2,7 +2,7 @@
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 
-from src.interface.panels.left_panel import Components as lcomp
+import src.interface.panels.left_panel as lcomp
 
 
 class Root(qtw.QWidget):
@@ -19,5 +19,5 @@ class Root(qtw.QWidget):
         self.setLayout(layout)
         self.setWindowTitle("uFood")
         self.setWindowIcon(
-            qtg.QIcon(qtg.QPixmap(lcomp.path + "carrot_icon.png"))
+            qtg.QIcon(qtg.QPixmap(lcomp.Components.path + "carrot_icon.png"))
         )

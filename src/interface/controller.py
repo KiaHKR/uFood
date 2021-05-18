@@ -6,9 +6,11 @@ from PyQt5 import QtCore as qtc
 import src.bin.logic as logic
 import src.interface.globals as globals
 import src.bin.query as query
-from src.interface.panels.left_panel import Components as lcomp
-from src.interface.panels.right_bottom_panel import Components as rbcomp
+import src.interface.panels.left_panel as lcomp
+import src.interface.panels.right_bottom_panel as rbcomp
 import src.interface.view_builder as view_builder
+
+import src.bin.timeit as timeit
 
 
 class Controller:
@@ -21,7 +23,7 @@ class Controller:
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
         globals.lpanel["logo"].setPixmap(
-            qtg.QPixmap(lcomp.path + "ufood_logo.png").scaled(
+            qtg.QPixmap(lcomp.Components.path + "ufood_logo.png").scaled(
                 left_panel_widget.width() // 1.9,
                 left_panel_widget.height() // 2.5,
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,
@@ -66,9 +68,7 @@ class Controller:
             globals.lpanel["filter_dropdown"].setVisible(True)
         else:
             globals.lpanel["filter_dropdown"].setVisible(False)
-            if len(logic.selected_ingredients) > 0:
-                Controller.update_ingredient_search_results()
-            elif globals.t_rpanel["win_text"].text() != "Trending Recipes":
+            if globals.t_rpanel["win_text"].text() != "Trending Recipes":
                 Controller.update_trending()
 
         globals.lpanel["filter_dropdown"].clear()
@@ -88,6 +88,7 @@ class Controller:
 
     def select_ingredient(ingr):
         """For selecting ingredients."""
+        print(ingr)
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         Controller.update_selected()
@@ -97,9 +98,8 @@ class Controller:
     def remove_ingredient(ingr):
         """For removing ingredients."""
         logic.Logic.remove_ingr_selected(ingr)
-        Controller.update_dropdown()
         Controller.update_selected()
-        if len(logic.selected_ingredients) > 0:
+        if len(globals.selected_ingredients) > 0:
             Controller.update_ingredient_search_results()
         else:
             Controller.update_trending()
@@ -108,12 +108,12 @@ class Controller:
 
     def update_selected():
         """Update visibility of selected ingr."""
-        if len(logic.selected_ingredients) != 0:
+        if len(globals.selected_ingredients) != 0:
             globals.lpanel["selected_items"].setVisible(True)
         else:
             globals.lpanel["selected_items"].setVisible(False)
         globals.lpanel["selected_items"].clear()
-        globals.lpanel["selected_items"].addItems(logic.selected_ingredients)
+        globals.lpanel["selected_items"].addItems(globals.selected_ingredients)
 
     # ---------------------- Trending build and update ---------------------- #
 
@@ -125,7 +125,7 @@ class Controller:
 
     def update_trending():
         """Generate the VBox widget with the list of trending recipes."""
-        Controller.delete_recipe_cards()
+        # Controller.delete_recipe_cards()
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
         Controller.update_section_header("Trending Recipes")
@@ -237,8 +237,10 @@ class Controller:
 
     # ------------------- Generate and delte recipe cards ------------------- #
 
+    # @timeit.timeit
     def generate_recipe_cards(recipe_list, build=False):
         """Generate a VBox with a list of recipe cards in it."""
+        print("ass")
         widget_list = []
         for i in recipe_list:
             recipe_card = view_builder.ViewBuilder.recipe_card(
@@ -255,6 +257,7 @@ class Controller:
             widget_list.append(recipe_card)
         Controller.build_recipe_cards(widget_list, build)
 
+    @timeit.timeit
     def build_recipe_cards(widget_list, build=False):
         """Add recipe cards from widget_list to scroll_area."""
         no_recipes = qtw.QLabel("No recipes found!")
@@ -321,7 +324,7 @@ class Controller:
         """Show all recipes."""
         if Controller.pos != "All Recipes" or force:
             Controller.clear_tags()
-            Controller.delete_recipe_cards()
+            # Controller.delete_recipe_cards()
             recipes = logic.Logic.name_search(
                 None, globals.lpanel["time_slider"].value()
             )
@@ -330,7 +333,7 @@ class Controller:
 
     def clear_tags():
         """Clear selected ingredient."""
-        logic.selected_ingredients = []
+        globals.selected_ingredients = []
         Controller.update_selected()
 
     # ----------------------- Different search methods ---------------------- #
@@ -338,7 +341,7 @@ class Controller:
     # Search by ingredients
     def update_ingredient_search_results():
         """Update ingredient_search results."""
-        Controller.delete_recipe_cards()
+        # Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search(
             globals.lpanel["time_slider"].value()
         )
@@ -447,7 +450,9 @@ class Controller:
 
         result = logic.Logic.get_recipe_info(id)
 
-        globals.b_rpanel["recipe_view_img"] = rbcomp().thumbnail_img(result[1])
+        globals.b_rpanel[
+            "recipe_view_img"
+        ] = rbcomp.Components().thumbnail_img(result[1])
         globals.b_rpanel["recipe_view_title"].setText(result[0])
         globals.b_rpanel["recipe_view_ingredients"].setText(result[2])
         globals.b_rpanel["recipe_view_steps"].setText(result[3])

@@ -1,13 +1,17 @@
 from PyQt5 import QtWidgets as qtw
 
-from src.interface.panels.right_bottom_panel import Components as rbcomp
+
 import src.interface.view as view
 import src.interface.globals as globals
 import src.interface.styling.qss as qss
 import src.interface.controller as controller
+import src.interface.panels.right_bottom_panel as rbcomp
+
+import src.bin.timeit as timeit
 
 
 class ViewBuilder:
+    @timeit.timeit
     def recipe_card(
         name="[RECIPE NAME]",
         diet_type="[DIET TYPE]",
@@ -27,8 +31,8 @@ class ViewBuilder:
         info.setLayout(qtw.QVBoxLayout())
         info.setStyleSheet("background-color: transparent;")
         # info.setStyleSheet("border: none;")
-        info.layout().addWidget(rbcomp().recipe_title(name))
-        info.layout().addWidget(rbcomp().diet_type(diet_type))
+        info.layout().addWidget(rbcomp.Components().recipe_title(name))
+        info.layout().addWidget(rbcomp.Components().diet_type(diet_type))
 
         time = qtw.QWidget()
 
@@ -47,17 +51,19 @@ class ViewBuilder:
         )
         buttons.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(
+            rbcomp.Components().thumbnail_img(thumbnail), 1
+        )
         recipe_card.layout().addWidget(info, 20)
         recipe_card.layout().addWidget(buttons, 0)
 
         time.setLayout(qtw.QHBoxLayout())
         time.layout().addWidget(globals.b_rpanel["total_time_icon"])
-        time.layout().addWidget(rbcomp().total_time(total_time))
+        time.layout().addWidget(rbcomp.Components().total_time(total_time))
         time.layout().setContentsMargins(0, 0, 0, 0)
         time.layout().setSpacing(0)
         info.layout().addWidget(time)
-        info.layout().addWidget(rbcomp().ingredients(ingr))
+        info.layout().addWidget(rbcomp.Components().ingredients(ingr))
         info.layout().setContentsMargins(0, 0, 0, 0)
         info.layout().setSpacing(0)
         # recipe_card.setCursor(qtg.QCursor(qtc.Qt.OpenHandCursor))
