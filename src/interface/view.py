@@ -18,7 +18,7 @@ class View(qtw.QWidget):
         # left panel
         self.left_panel_widget = self.__left_panel_build()
         self.left_panel_widget.setMinimumWidth(300)
-        globals.root_view.layout().addWidget(self.left_panel_widget, 3)
+        globals.Globals.root_view.layout().addWidget(self.left_panel_widget, 3)
 
         # right panel
         self.right_panel_widget = qtw.QWidget()
@@ -31,12 +31,16 @@ class View(qtw.QWidget):
         self.__right_bottom_build()
         self.right_panel_widget.layout().addWidget(rtop_panel)
 
-        globals.stacked_widget = View.stacked_layout_build()
+        globals.Globals.stacked_widget = View.stacked_layout_build()
 
-        self.right_panel_widget.layout().addWidget(globals.stacked_widget)
+        self.right_panel_widget.layout().addWidget(
+            globals.Globals.stacked_widget
+        )
         self.right_panel_widget.setMinimumWidth(750)
 
-        globals.root_view.layout().addWidget(self.right_panel_widget, 7)
+        globals.Globals.root_view.layout().addWidget(
+            self.right_panel_widget, 7
+        )
 
         self.qTimer = qtc.QTimer()
         self.qTimer.setInterval(1)
@@ -47,9 +51,9 @@ class View(qtw.QWidget):
         )
         self.qTimer.start()
 
-        globals.root_view.show()
+        globals.Globals.root_view.show()
 
-        os.sys.exit(globals.app.exec_())
+        os.sys.exit(globals.Globals.app.exec_())
 
     # !-- Left Panel
 
@@ -60,7 +64,7 @@ class View(qtw.QWidget):
         controller.Controller.update_logo_size(
             left_panel_widget
         )  # Grabbing logo size from window size
-        left_panel_widget.layout().addWidget(globals.lpanel["logo"])
+        left_panel_widget.layout().addWidget(globals.Globals.lpanel["logo"])
         left_panel_widget.layout().addWidget(self.__search_widget_build())
         left_panel_widget.layout().addWidget(self.__donate_build())
         return left_panel_widget
@@ -71,9 +75,9 @@ class View(qtw.QWidget):
         search_widget.setLayout(qtw.QGridLayout())
 
         # filter_dropdown on select connection
-        globals.lpanel["filter_dropdown"].itemClicked.connect(
+        globals.Globals.lpanel["filter_dropdown"].itemClicked.connect(
             lambda: controller.Controller.select_ingredient(
-                globals.lpanel["filter_dropdown"].currentItem()
+                globals.Globals.lpanel["filter_dropdown"].currentItem()
             )
         )
 
@@ -82,57 +86,57 @@ class View(qtw.QWidget):
         search_icon_widget.setLayout(qtw.QStackedLayout())
 
         # Connect filter btn to filter menu
-        globals.lpanel["search_filter_btn"].setMenu(
-            globals.lpanel["search_filter_menu"]
+        globals.Globals.lpanel["search_filter_btn"].setMenu(
+            globals.Globals.lpanel["search_filter_menu"]
         )
 
         # Search bar on change connection
-        globals.lpanel["search_bar"].textChanged.connect(
+        globals.Globals.lpanel["search_bar"].textEdited.connect(
             lambda: controller.Controller.update_dropdown()
         )
 
         # Search bar on return pressed connection
-        globals.lpanel["search_bar"].returnPressed.connect(
+        globals.Globals.lpanel["search_bar"].returnPressed.connect(
             lambda: controller.Controller.update_name_search_results(
-                globals.lpanel["search_bar"].text()
+                globals.Globals.lpanel["search_bar"].text()
             )
         )
 
         # Search button connection
-        globals.lpanel["search_btn"].pressed.connect(
+        globals.Globals.lpanel["search_btn"].pressed.connect(
             lambda: controller.Controller.update_name_search_results(
-                globals.lpanel["search_bar"].text()
+                globals.Globals.lpanel["search_bar"].text()
             )
         )
 
         # Selected ingredients on item clicked connection
-        globals.lpanel["selected_items"].itemClicked.connect(
+        globals.Globals.lpanel["selected_items"].itemClicked.connect(
             lambda: controller.Controller.remove_ingredient(
-                globals.lpanel["selected_items"].currentItem()
+                globals.Globals.lpanel["selected_items"].currentItem()
             )
         )
 
         # Update slider time connector
-        globals.lpanel["time_slider"].valueChanged.connect(
+        globals.Globals.lpanel["time_slider"].valueChanged.connect(
             lambda: controller.Controller.update_label()
         )
 
         # Update on slider released
-        globals.lpanel["time_slider"].sliderReleased.connect(
+        globals.Globals.lpanel["time_slider"].sliderReleased.connect(
             lambda: controller.Controller.update_slider()
         )
 
         # Update diet filter_dropdown menu on selection
-        keto = globals.lpanel["search_filter_menu"].findChild(
+        keto = globals.Globals.lpanel["search_filter_menu"].findChild(
             qtw.QAction, "Keto"
         )
-        paleo = globals.lpanel["search_filter_menu"].findChild(
+        paleo = globals.Globals.lpanel["search_filter_menu"].findChild(
             qtw.QAction, "Paleo"
         )
-        vegan = globals.lpanel["search_filter_menu"].findChild(
+        vegan = globals.Globals.lpanel["search_filter_menu"].findChild(
             qtw.QAction, "Vegan"
         )
-        vegetarian = globals.lpanel["search_filter_menu"].findChild(
+        vegetarian = globals.Globals.lpanel["search_filter_menu"].findChild(
             qtw.QAction, "Vegetarian"
         )
         keto.triggered.connect(
@@ -157,9 +161,9 @@ class View(qtw.QWidget):
         )
 
         slider_hbox = qtw.QHBoxLayout()
-        slider_hbox.addWidget(globals.lpanel["time_slider"])
+        slider_hbox.addWidget(globals.Globals.lpanel["time_slider"])
         slider_hbox.addSpacing(15)
-        slider_hbox.addWidget(globals.lpanel["time_label"])
+        slider_hbox.addWidget(globals.Globals.lpanel["time_label"])
 
         slider_widget = qtw.QWidget()
         slider_widget.setLayout(slider_hbox)
@@ -170,16 +174,26 @@ class View(qtw.QWidget):
         search_stack = qtw.QWidget()
         search_stack.setLayout(qtw.QStackedLayout())
 
-        search_stack.layout().addWidget(globals.lpanel["filter_dropdown"])
-        search_stack.layout().addWidget(globals.lpanel["selected_items"])
+        search_stack.layout().addWidget(
+            globals.Globals.lpanel["filter_dropdown"]
+        )
+        search_stack.layout().addWidget(
+            globals.Globals.lpanel["selected_items"]
+        )
         # Add widgets to parent search layout
         search_widget.layout().addWidget(slider_widget, 0, 0)
-        search_widget.layout().addWidget(globals.lpanel["search_bar"], 1, 0)
-        search_widget.layout().addWidget(search_stack, 2, 0)
-        search_widget.layout().addWidget(globals.lpanel["search_btn_bg"], 1, 2)
-        search_widget.layout().addWidget(globals.lpanel["search_btn"], 1, 2)
         search_widget.layout().addWidget(
-            globals.lpanel["search_filter_btn"], 1, 3
+            globals.Globals.lpanel["search_bar"], 1, 0
+        )
+        search_widget.layout().addWidget(search_stack, 2, 0)
+        search_widget.layout().addWidget(
+            globals.Globals.lpanel["search_btn_bg"], 1, 2
+        )
+        search_widget.layout().addWidget(
+            globals.Globals.lpanel["search_btn"], 1, 2
+        )
+        search_widget.layout().addWidget(
+            globals.Globals.lpanel["search_filter_btn"], 1, 3
         )
         search_widget.layout().setAlignment(qtc.Qt.AlignmentFlag.AlignTop)
         search_widget.layout().setSpacing(0)
@@ -191,29 +205,18 @@ class View(qtw.QWidget):
         export = qtw.QPushButton()
         export.setLayout(qtw.QHBoxLayout())
         export.setFixedSize(50, 50)
-        export.layout().addWidget(globals.b_rpanel["export_btn"])
+        export.layout().addWidget(globals.Globals.b_rpanel["export_btn"])
         export.clicked.connect(lambda: controller.Controller.export(id))
         return export
 
-    def save_build(id):
-        """Build save feature."""
-        save = qtw.QPushButton()
-        save.setLayout(qtw.QHBoxLayout())
-        save.layout().addWidget(rbcomp.Components().save_btn(id))
-        save.setFixedSize(50, 50)
-        save.clicked.connect(
-            lambda: controller.Controller.save(id),
-            # lambda: controller.Controller.update_favorites(),
-        )
-        # save.clicked.connect()
-        return save
+    
 
     def __donate_build(self):
         """Build donate feature."""
         donate = qtw.QPushButton()
         donate.setLayout(qtw.QHBoxLayout())
-        donate.layout().addWidget(globals.lpanel["donate_btn"], 0)
-        donate.layout().addWidget(globals.lpanel["donate_text"], 8)
+        donate.layout().addWidget(globals.Globals.lpanel["donate_btn"], 0)
+        donate.layout().addWidget(globals.Globals.lpanel["donate_text"], 8)
         donate.setFixedSize(200, 50)
         donate.setStyleSheet("border: none;")
         donate.clicked.connect(lambda: controller.Controller.donate_url())
@@ -224,21 +227,21 @@ class View(qtw.QWidget):
         """For building right top panel."""
         top_layout = qtw.QHBoxLayout()
 
-        top_layout.addWidget(globals.t_rpanel["win_text"])
-        top_layout.addWidget(globals.t_rpanel["trending_btn"])
-        top_layout.addWidget(globals.t_rpanel["fav_btn"])
-        top_layout.addWidget(globals.t_rpanel["recipes_btn"])
-        top_layout.addWidget(globals.t_rpanel["settings_btn"])
+        top_layout.addWidget(globals.Globals.t_rpanel["win_text"])
+        top_layout.addWidget(globals.Globals.t_rpanel["trending_btn"])
+        top_layout.addWidget(globals.Globals.t_rpanel["fav_btn"])
+        top_layout.addWidget(globals.Globals.t_rpanel["recipes_btn"])
+        top_layout.addWidget(globals.Globals.t_rpanel["settings_btn"])
 
-        globals.t_rpanel["recipes_btn"].clicked.connect(
+        globals.Globals.t_rpanel["recipes_btn"].clicked.connect(
             lambda: controller.Controller.show_all_recipes()
         )
 
-        globals.t_rpanel["trending_btn"].clicked.connect(
+        globals.Globals.t_rpanel["trending_btn"].clicked.connect(
             lambda: controller.Controller.update_trending()
         )
 
-        globals.t_rpanel["settings_btn"].clicked.connect(
+        globals.Globals.t_rpanel["settings_btn"].clicked.connect(
             lambda: controller.Controller.build_settings(self)
         )
 
@@ -253,13 +256,17 @@ class View(qtw.QWidget):
 
     def stacked_layout_build():
         """Refresh of right_bottom."""
-        globals.stacked_widget = qtw.QWidget()
-        globals.stacked_widget.setLayout(qtw.QStackedLayout())
+        globals.Globals.stacked_widget = qtw.QWidget()
+        globals.Globals.stacked_widget.setLayout(qtw.QStackedLayout())
 
-        globals.recipe_view = view_builder.ViewBuilder.build_recipe_view()
-
-        globals.stacked_widget.layout().addWidget(
-            globals.b_rpanel["scroll_area"]
+        globals.Globals.recipe_view = (
+            view_builder.ViewBuilder.build_recipe_view()
         )
-        globals.stacked_widget.layout().addWidget(globals.recipe_view)
-        return globals.stacked_widget
+
+        globals.Globals.stacked_widget.layout().addWidget(
+            globals.Globals.b_rpanel["scroll_area"]
+        )
+        globals.Globals.stacked_widget.layout().addWidget(
+            globals.Globals.recipe_view
+        )
+        return globals.Globals.stacked_widget

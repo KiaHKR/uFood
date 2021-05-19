@@ -3,8 +3,8 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 
-import src.bin.logic as logic
 import src.interface.globals as globals
+import src.bin.logic as logic
 import src.bin.query as query
 import src.interface.panels.left_panel as lcomp
 import src.interface.panels.right_bottom_panel as rbcomp
@@ -18,18 +18,21 @@ class Controller:
 
     pos = "Trending"
     recipes_cards_showing = []
-    saved_scroll_area = globals.b_rpanel["scroll_area"]
+    saved_scroll_area = globals.Globals.b_rpanel["scroll_area"]
+    widget_list = []
+    delete_list = []
+    raw_list = []
 
     def update_logo_size(left_panel_widget):
         """For changing size of logo pixmap, based on parent panel size."""
-        globals.lpanel["logo"].setPixmap(
+        globals.Globals.lpanel["logo"].setPixmap(
             qtg.QPixmap(lcomp.Components.path + "ufood_logo.png").scaled(
                 left_panel_widget.width() // 1.9,
                 left_panel_widget.height() // 2.5,
                 qtc.Qt.AspectRatioMode.KeepAspectRatio,
             )
         )
-        globals.lpanel["logo"].setFixedHeight(
+        globals.Globals.lpanel["logo"].setFixedHeight(
             left_panel_widget.height() // 2.5
         )
 
@@ -43,7 +46,8 @@ class Controller:
         """For saving recipe id to pickle file."""
         s = logic.Logic()
         s.add_fav(id)
-        win_text = globals.t_rpanel["win_text"].text()
+        Controller.update_fav(id)
+        win_text = globals.Globals.t_rpanel["win_text"].text()
         if win_text == "Trending Recipes":
             Controller.update_trending()
         elif win_text == "Favorite Recipes":
@@ -52,8 +56,21 @@ class Controller:
             Controller.show_all_recipes(force=True)
         elif "Search Results" in win_text:
             Controller.update_name_search_results(
-                globals.lpanel["search_bar"].text()
+                globals.Globals.lpanel["search_bar"].text()
             )
+
+    def update_fav(id):
+        scroll_pos = (
+            globals.Globals.stacked_widget.findChild(
+                qtw.QScrollArea, "scroll_area"
+            )
+            .verticalScrollBar()
+            .value()
+        )
+        Controller.generate_recipe_cards(Controller.raw_list, force_update=id)
+        globals.Globals.b_rpanel["scroll_area"].verticalScrollBar().setValue(
+            scroll_pos
+        )
 
     def export(id):
         """Export recipe as pdf."""
@@ -64,42 +81,44 @@ class Controller:
 
     def update_dropdown():
         """Update results of dropdown."""
-        if globals.lpanel["search_bar"].text():
-            globals.lpanel["filter_dropdown"].setVisible(True)
-        else:
-            globals.lpanel["filter_dropdown"].setVisible(False)
-            if globals.t_rpanel["win_text"].text() != "Trending Recipes":
-                Controller.update_trending()
+        if globals.Globals.lpanel["search_bar"].text():
+            globals.Globals.lpanel["filter_dropdown"].setVisible(True)
 
-        globals.lpanel["filter_dropdown"].clear()
-        result_list = logic.Logic.get_matching_ingredients(
-            globals.lpanel["search_bar"].text()
-        )
-        if len(result_list) <= 8:
-            globals.lpanel["filter_dropdown"].setMaximumHeight(
-                len(result_list) * 30
+            globals.Globals.lpanel["filter_dropdown"].clear()
+            result_list = logic.Logic.get_matching_ingredients(
+                globals.Globals.lpanel["search_bar"].text()
             )
-        else:
-            globals.lpanel["filter_dropdown"].setMaximumHeight(200)
+            if len(result_list) <= 8:
+                globals.Globals.lpanel["filter_dropdown"].setMaximumHeight(
+                    len(result_list) * 30
+                )
+            else:
+                globals.Globals.lpanel["filter_dropdown"].setMaximumHeight(200)
 
-        globals.lpanel["filter_dropdown"].addItems(result_list)
+            globals.Globals.lpanel["filter_dropdown"].addItems(result_list)
+        else:
+            globals.Globals.lpanel["filter_dropdown"].setVisible(False)
+            if len(logic.selected_ingredients) > 0:
+                Controller.update_name_search_results("")
+            else:
+                Controller.update_trending()
 
     # ---------------- Select and remove selected ingredients --------------- #
 
     def select_ingredient(ingr):
         """For selecting ingredients."""
-        print(ingr)
         logic.Logic.add_ingr_selected(ingr)
         Controller.update_dropdown()
         Controller.update_selected()
-        globals.lpanel["search_bar"].clear()
         Controller.update_ingredient_search_results()
+        globals.Globals.lpanel["search_bar"].clear()
+        globals.Globals.lpanel["filter_dropdown"].setVisible(False)
 
     def remove_ingredient(ingr):
         """For removing ingredients."""
         logic.Logic.remove_ingr_selected(ingr)
         Controller.update_selected()
-        if len(globals.selected_ingredients) > 0:
+        if len(logic.selected_ingredients) > 0:
             Controller.update_ingredient_search_results()
         else:
             Controller.update_trending()
@@ -108,12 +127,14 @@ class Controller:
 
     def update_selected():
         """Update visibility of selected ingr."""
-        if len(globals.selected_ingredients) != 0:
-            globals.lpanel["selected_items"].setVisible(True)
+        if len(logic.selected_ingredients) != 0:
+            globals.Globals.lpanel["selected_items"].setVisible(True)
         else:
-            globals.lpanel["selected_items"].setVisible(False)
-        globals.lpanel["selected_items"].clear()
-        globals.lpanel["selected_items"].addItems(globals.selected_ingredients)
+            globals.Globals.lpanel["selected_items"].setVisible(False)
+        globals.Globals.lpanel["selected_items"].clear()
+        globals.Globals.lpanel["selected_items"].addItems(
+            logic.selected_ingredients
+        )
 
     # ---------------------- Trending build and update ---------------------- #
 
@@ -125,9 +146,9 @@ class Controller:
 
     def update_trending():
         """Generate the VBox widget with the list of trending recipes."""
-        # Controller.delete_recipe_cards()
         trending_list = logic.Logic.get_trending()
         Controller.generate_recipe_cards(trending_list)
+        # Controller.delete_recipe_cards()
         Controller.update_section_header("Trending Recipes")
         Controller.clear_tags()
 
@@ -135,45 +156,54 @@ class Controller:
 
     def build_favorites():
         """Build favorite recipe cards."""
-        Controller.delete_recipe_cards()
         Controller.update_section_header("Favorite Recipes")
         favorite_list = logic.Logic.get_favorites()
         Controller.generate_recipe_cards(favorite_list)
+        # Controller.delete_recipe_cards()
 
     def update_favorites():
         """Update title to favorites."""
-        win_text = globals.t_rpanel["win_text"]
+        win_text = globals.Globals.t_rpanel["win_text"]
         if win_text == "Favorite Recipes":
             Controller.build_favorites()
 
     def build_settings(self):
         """Build the settings feature."""
         if Controller.pos == "Settings":
-            rmwidget = globals.root_view.children()[2].findChild(
+            rmwidget = globals.Globals.root_view.children()[2].findChild(
                 qtw.QWidget, "settings"
             )
-            globals.root_view.children()[2].children()[
+            globals.Globals.root_view.children()[2].children()[
                 0
             ].layout().removeWidget(rmwidget)
         settings = Controller.settings_panel()
         for i in reversed(
-            range(globals.b_rpanel["scroll_area"].widget().layout().count())
+            range(
+                globals.Globals.b_rpanel["scroll_area"]
+                .widget()
+                .layout()
+                .count()
+            )
         ):
             remove_widget = (
-                globals.b_rpanel["scroll_area"]
+                globals.Globals.b_rpanel["scroll_area"]
                 .widget()
                 .layout()
                 .takeAt(i)
                 .widget()
             )
-            globals.b_rpanel["scroll_area"].widget().layout().removeWidget(
-                remove_widget
-            )
+            globals.Globals.b_rpanel[
+                "scroll_area"
+            ].widget().layout().removeWidget(remove_widget)
             remove_widget.deleteLater()
         Controller.update_section_header("Settings")
         settings.setObjectName("settings")
-        settings.setFixedHeight(globals.root_view.children()[2].height() * 0.8)
-        panel_box = globals.root_view.children()[2].children()[0].layout()
+        settings.setFixedHeight(
+            globals.Globals.root_view.children()[2].height() * 0.8
+        )
+        panel_box = (
+            globals.Globals.root_view.children()[2].children()[0].layout()
+        )
         panel_box.addWidget(settings, 10000)  # some ridiculous stretch margin
 
     def settings_panel():
@@ -199,8 +229,12 @@ class Controller:
             f"background: {background}; font-size: 14px; font-weight: bold;"
         )
 
-        import_btn.setFixedWidth(globals.root_view.children()[2].width() // 3)
-        export_btn.setFixedWidth(globals.root_view.children()[2].width() // 3)
+        import_btn.setFixedWidth(
+            globals.Globals.root_view.children()[2].width() // 3
+        )
+        export_btn.setFixedWidth(
+            globals.Globals.root_view.children()[2].width() // 3
+        )
         import_btn.setStyleSheet(styling)
 
         export_btn.setStyleSheet(styling)
@@ -237,88 +271,114 @@ class Controller:
 
     # ------------------- Generate and delte recipe cards ------------------- #
 
-    # @timeit.timeit
-    def generate_recipe_cards(recipe_list, build=False):
+    def generate_recipe_cards(recipe_list, build=False, force_update=None):
         """Generate a VBox with a list of recipe cards in it."""
-        print("ass")
-        widget_list = []
+        Controller.raw_list = recipe_list
+        temp_widget_list = []
         for i in recipe_list:
-            recipe_card = view_builder.ViewBuilder.recipe_card(
-                i[0].title(),  # NAME
-                i[2].replace(",", ", "),
-                str(i[1])[:-3],  # COOKTIME
-                i[3].replace(",", ", "),
-                str(i[4]),  # ID
-                i[5],  # URL
-            )
-            recipe_card.clicked.connect(
-                lambda: Controller.recipe_clicked(recipe_card.objectName())
-            )
-            widget_list.append(recipe_card)
-        Controller.build_recipe_cards(widget_list, build)
+            found_card = False
+            for card in Controller.widget_list:
+                try:
+                    if (
+                        str(i[4]) == card.objectName()
+                        and str(i[4]) != force_update
+                    ):
+                        recipe_card = card
+                        found_card = True
+                        break
+                except RuntimeError:
+                    found_card = False
+                    break
 
-    @timeit.timeit
-    def build_recipe_cards(widget_list, build=False):
+            if not found_card:
+                recipe_card = view_builder.ViewBuilder.recipe_card(
+                    i[0].title(),  # NAME
+                    i[2].replace(",", ", "),
+                    str(i[1])[:-3],  # COOKTIME
+                    i[3].replace(",", ", "),
+                    str(i[4]),  # ID
+                    i[5],  # URL
+                )
+
+            temp_widget_list.append(recipe_card)
+
+        Controller.delete_list = list(
+            set(Controller.widget_list) - set(temp_widget_list)
+        )
+        Controller.widget_list = temp_widget_list
+
+        Controller.build_recipe_cards(build)
+
+    def build_recipe_cards(build=False):
         """Add recipe cards from widget_list to scroll_area."""
         no_recipes = qtw.QLabel("No recipes found!")
         no_recipes.setStyleSheet("color: white; font-size: 25px")
         no_recipes.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
 
-        if len(widget_list) > 0:
-            for i in range(len(widget_list)):
-                globals.b_rpanel["scroll_area"].widget().layout().addWidget(
-                    widget_list[i]
-                )
+        Controller.delete_recipe_cards()
+
+        if len(Controller.widget_list) > 0:
+            for i in range(len(Controller.widget_list)):
+                globals.Globals.b_rpanel[
+                    "scroll_area"
+                ].widget().layout().addWidget(Controller.widget_list[i])
         else:
-            globals.b_rpanel["scroll_area"].widget().layout().addWidget(
-                no_recipes
-            )
+            globals.Globals.b_rpanel[
+                "scroll_area"
+            ].widget().layout().addWidget(no_recipes)
 
         if not build:
-            globals.stacked_widget.layout().addWidget(
-                globals.b_rpanel["scroll_area"]
-            )
-            globals.stacked_widget.layout().setCurrentWidget(
-                globals.b_rpanel["scroll_area"]
-            )
 
-        Controller.recipes_cards_showing = widget_list
+            globals.Globals.stacked_widget.layout().removeWidget(
+                globals.Globals.stacked_widget.findChild(
+                    qtw.QScrollArea, "scroll_area"
+                )
+            )
+            globals.Globals.stacked_widget.layout().addWidget(
+                globals.Globals.b_rpanel["scroll_area"]
+            )
+            globals.Globals.stacked_widget.layout().setCurrentWidget(
+                globals.Globals.b_rpanel["scroll_area"]
+            )
 
     def delete_recipe_cards():
         """Clear scroll_area and remove it from the right_panel."""
         if Controller.pos == "Settings":
-            rmwidget = globals.root_view.children()[2].findChild(
+            rmwidget = globals.Globals.root_view.children()[2].findChild(
                 qtw.QWidget, "settings"
             )
-            globals.root_view.children()[2].children()[
+            globals.Globals.root_view.children()[2].children()[
                 0
             ].layout().removeWidget(rmwidget)
 
         for i in reversed(
-            range(globals.b_rpanel["scroll_area"].widget().layout().count())
+            range(
+                globals.Globals.b_rpanel["scroll_area"]
+                .widget()
+                .layout()
+                .count()
+            )
         ):
             remove_widget = (
-                globals.b_rpanel["scroll_area"]
+                globals.Globals.b_rpanel["scroll_area"]
                 .widget()
                 .layout()
                 .takeAt(i)
                 .widget()
             )
-            globals.b_rpanel["scroll_area"].widget().layout().removeWidget(
-                remove_widget
-            )
-            remove_widget.deleteLater()
-
-        globals.stacked_widget.layout().removeWidget(
-            globals.b_rpanel["scroll_area"]
-        )
+            if remove_widget in Controller.delete_list:
+                globals.Globals.b_rpanel[
+                    "scroll_area"
+                ].widget().layout().removeWidget(remove_widget)
+                remove_widget.deleteLater()
 
     # -------------------------- Section management ------------------------- #
 
     def update_section_header(text):
         """Update section title."""
         Controller.pos = text
-        globals.t_rpanel["win_text"].setText(text)
+        globals.Globals.t_rpanel["win_text"].setText(text)
+        globals.Globals.b_rpanel["scroll_area"].verticalScrollBar().setValue(0)
 
     def show_all_recipes(force=False):
         """Show all recipes."""
@@ -326,14 +386,14 @@ class Controller:
             Controller.clear_tags()
             # Controller.delete_recipe_cards()
             recipes = logic.Logic.name_search(
-                None, globals.lpanel["time_slider"].value()
+                None, globals.Globals.lpanel["time_slider"].value()
             )
             Controller.generate_recipe_cards(recipes)
             Controller.update_section_header("All Recipes")
 
     def clear_tags():
         """Clear selected ingredient."""
-        globals.selected_ingredients = []
+        logic.selected_ingredients = []
         Controller.update_selected()
 
     # ----------------------- Different search methods ---------------------- #
@@ -341,11 +401,11 @@ class Controller:
     # Search by ingredients
     def update_ingredient_search_results():
         """Update ingredient_search results."""
-        # Controller.delete_recipe_cards()
         result_list = logic.Logic.get_ingredient_search(
-            globals.lpanel["time_slider"].value()
+            globals.Globals.lpanel["time_slider"].value()
         )
         Controller.generate_recipe_cards(result_list)
+        # Controller.delete_recipe_cards()
         Controller.update_section_header(
             str(len(result_list)) + " Search Results"
         )
@@ -354,10 +414,11 @@ class Controller:
     def update_name_search_results(search):
         """Search recipes by name and selected ingr."""
         return_list = logic.Logic.name_search(
-            search, globals.lpanel["time_slider"].value()
+            search, globals.Globals.lpanel["time_slider"].value()
         )
         if return_list is not None:
             Controller.generate_recipe_cards(return_list)
+            # Controller.delete_recipe_cards()
             Controller.update_section_header(
                 str(len(return_list)) + " Search Results"
             )
@@ -365,27 +426,29 @@ class Controller:
     # Search by time
     def update_slider():
         """Update search results when slider released."""
-        if globals.t_rpanel["win_text"].text() == "Trending Recipes":
-            pass
-        elif globals.t_rpanel["win_text"].text() == "All Recipes":
+        if globals.Globals.t_rpanel["win_text"].text() == "Trending Recipes":
+            Controller.update_name_search_results(None)
+        elif globals.Globals.t_rpanel["win_text"].text() == "All Recipes":
             Controller.update_name_search_results(None)
         else:
             Controller.update_name_search_results(
-                globals.lpanel["search_bar"].text()
+                globals.Globals.lpanel["search_bar"].text()
             )
 
     # Update time label
     def update_label():
         """Update slider label."""
-        globals.lpanel["time_label"].setText(
-            "Cook time: " + str(globals.lpanel["time_slider"].value()) + "min"
+        globals.Globals.lpanel["time_label"].setText(
+            "Cook time: "
+            + str(globals.Globals.lpanel["time_slider"].value())
+            + "min"
         )
 
     # Search by diets
     def update_diet_filter(diet_type_list):
         """Update the search result by dietary filter."""
-        final_list = Controller.recipes_cards_showing
-        Controller.hide_remaining_cards(Controller.recipes_cards_showing)
+        final_list = Controller.widget_list
+        Controller.hide_remaining_cards(Controller.widget_list)
         Not_selected = 0
         for diet_type in diet_type_list:
             if diet_type is not None and diet_type.isChecked():
@@ -403,7 +466,7 @@ class Controller:
                 Not_selected += 1
 
         if Not_selected == 4:
-            final_list = Controller.recipes_cards_showing
+            final_list = Controller.widget_list
 
         Controller.restore_cards(final_list)
 
@@ -431,33 +494,43 @@ class Controller:
     def set_recipe_view_vis(view: bool):
         """Set recipe view visibility."""
         if not view:
-            globals.b_rpanel["scroll_area"] = Controller.saved_scroll_area
-            globals.stacked_widget.layout().setCurrentWidget(
-                globals.b_rpanel["scroll_area"]
+            globals.Globals.b_rpanel[
+                "scroll_area"
+            ] = Controller.saved_scroll_area
+            globals.Globals.stacked_widget.layout().setCurrentWidget(
+                globals.Globals.b_rpanel["scroll_area"]
             )
         elif view:
             Controller.saved_scroll_area = (
-                globals.stacked_widget.layout().currentWidget()
+                globals.Globals.stacked_widget.layout().currentWidget()
             )
-            globals.stacked_widget.layout().setCurrentWidget(
-                globals.recipe_view
+            globals.Globals.stacked_widget.layout().setCurrentWidget(
+                globals.Globals.recipe_view
             )
 
     # Update data in recipe view
     def update_recipe_view(id):
         """Update data in recipe view."""
-        globals.stacked_widget.layout().removeWidget(globals.recipe_view)
+        globals.Globals.stacked_widget.layout().removeWidget(
+            globals.Globals.recipe_view
+        )
 
         result = logic.Logic.get_recipe_info(id)
 
-        globals.b_rpanel[
+        globals.Globals.b_rpanel[
             "recipe_view_img"
         ] = rbcomp.Components().thumbnail_img(result[1])
-        globals.b_rpanel["recipe_view_title"].setText(result[0])
-        globals.b_rpanel["recipe_view_ingredients"].setText(result[2])
-        globals.b_rpanel["recipe_view_steps"].setText(result[3])
-        globals.b_rpanel["recipe_view_cook_diet_label"].setText(result[4])
+        globals.Globals.b_rpanel["recipe_view_title"].setText(result[0])
+        globals.Globals.b_rpanel["recipe_view_ingredients"].setText(result[2])
+        globals.Globals.b_rpanel["recipe_view_steps"].setText(result[3])
+        globals.Globals.b_rpanel["recipe_view_cook_diet_label"].setText(
+            result[4]
+        )
 
-        globals.recipe_view = view_builder.ViewBuilder.build_recipe_view()
+        globals.Globals.recipe_view = (
+            view_builder.ViewBuilder.build_recipe_view()
+        )
 
-        globals.stacked_widget.layout().addWidget(globals.recipe_view)
+        globals.Globals.stacked_widget.layout().addWidget(
+            globals.Globals.recipe_view
+        )

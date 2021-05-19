@@ -105,6 +105,10 @@ class Components:
             url = request.urlopen(req).read()
             pixmap = qtg.QPixmap()
             pixmap.loadFromData(url)
+
+            if pixmap.isNull():
+                raise FileNotFoundError
+
             pixmap.scaled(120, 120)
             img = qtw.QLabel()
             img.setPixmap(pixmap)

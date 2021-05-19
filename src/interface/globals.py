@@ -8,12 +8,12 @@ import src.interface.panels.right_top_panel as rtcomp
 from src.interface.root import Root
 
 
-app = qtw.QApplication(os.sys.argv)
+class Globals:
+    app = qtw.QApplication(os.sys.argv)
 
-lpanel = lcomp().widgets
-t_rpanel = rtcomp.Components().widgets
-b_rpanel = rbcomp.Components().widgets
-stacked_widget = None
-recipe_view = None
-root_view = Root(app.primaryScreen().size())
-selected_ingredients = []
+    lpanel = lcomp().widgets
+    t_rpanel = rtcomp.Components().widgets
+    b_rpanel = rbcomp.Components().widgets
+    stacked_widget = None
+    recipe_view = None
+    root_view = Root(app.primaryScreen().size())

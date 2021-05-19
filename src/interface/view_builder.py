@@ -43,7 +43,7 @@ class ViewBuilder:
         buttons.setLayout(qtw.QVBoxLayout())
         buttons.setStyleSheet("background-color: transparent;")
         buttons.layout().addWidget(
-            view.View.save_build(recipe_card.objectName())
+            ViewBuilder.save_build(recipe_card.objectName())
         )
 
         buttons.layout().addWidget(
@@ -58,7 +58,7 @@ class ViewBuilder:
         recipe_card.layout().addWidget(buttons, 0)
 
         time.setLayout(qtw.QHBoxLayout())
-        time.layout().addWidget(globals.b_rpanel["total_time_icon"])
+        time.layout().addWidget(globals.Globals.b_rpanel["total_time_icon"])
         time.layout().addWidget(rbcomp.Components().total_time(total_time))
         time.layout().setContentsMargins(0, 0, 0, 0)
         time.layout().setSpacing(0)
@@ -68,6 +68,11 @@ class ViewBuilder:
         info.layout().setSpacing(0)
         # recipe_card.setCursor(qtg.QCursor(qtc.Qt.OpenHandCursor))
 
+        recipe_card.clicked.connect(
+            lambda: controller.Controller.recipe_clicked(
+                recipe_card.objectName()
+            )
+        )
         return recipe_card
 
     def build_recipe_view():
@@ -78,8 +83,12 @@ class ViewBuilder:
         top_widget = qtw.QWidget()
         top_widget.setLayout(qtw.QHBoxLayout())
 
-        top_widget.layout().addWidget(globals.b_rpanel["recipe_view_title"], 1)
-        top_widget.layout().addWidget(globals.b_rpanel["recipe_view_exit"], 0)
+        top_widget.layout().addWidget(
+            globals.Globals.b_rpanel["recipe_view_title"], 1
+        )
+        top_widget.layout().addWidget(
+            globals.Globals.b_rpanel["recipe_view_exit"], 0
+        )
 
         bottom_widget = qtw.QScrollArea()  # scrollarea
         bottom_widget.setStyleSheet(qss.scrollbar())
@@ -93,17 +102,17 @@ class ViewBuilder:
 
         bottom_widget_container.layout().addWidget(bottom_widget_left)  # hbox
         bottom_widget_container.layout().addWidget(
-            globals.b_rpanel["recipe_view_steps"]
+            globals.Globals.b_rpanel["recipe_view_steps"]
         )
 
         bottom_widget_left.layout().addWidget(
-            (globals.b_rpanel["recipe_view_img"])
+            (globals.Globals.b_rpanel["recipe_view_img"])
         )
         bottom_widget_left.layout().addWidget(
-            (globals.b_rpanel["recipe_view_cook_diet_label"])
+            (globals.Globals.b_rpanel["recipe_view_cook_diet_label"])
         )
         bottom_widget_left.layout().addWidget(
-            (globals.b_rpanel["recipe_view_ingredients"])
+            (globals.Globals.b_rpanel["recipe_view_ingredients"])
         )
 
         bottom_widget.setWidget(bottom_widget_container)
@@ -111,8 +120,21 @@ class ViewBuilder:
         recipe_view_widget_box.layout().addWidget(top_widget)
         recipe_view_widget_box.layout().addWidget(bottom_widget)
 
-        globals.b_rpanel["recipe_view_exit"].clicked.connect(
+        globals.Globals.b_rpanel["recipe_view_exit"].clicked.connect(
             lambda: controller.Controller.set_recipe_view_vis(False)
         )
 
         return recipe_view_widget_box
+
+    def save_build(id):
+        """Build save feature."""
+        save = qtw.QPushButton()
+        save.setLayout(qtw.QHBoxLayout())
+        save.layout().addWidget(rbcomp.Components().save_btn(id))
+        save.setFixedSize(50, 50)
+        save.clicked.connect(
+            lambda: controller.Controller.save(id),
+            # lambda: controller.Controller.update_favorites(),
+        )
+        # save.clicked.connect()
+        return save

@@ -3,14 +3,12 @@ import os
 import pickle
 import re
 from PyQt5.QtGui import QIcon
+from PyQt5 import QtWidgets as qtw
 from fpdf import FPDF
 
 from src.bin import query
-import src.interface.controller as controller
-from PyQt5 import QtWidgets as qtw
-import src.interface.globals as globals
 
-
+selected_ingredients = []
 search_object = query.Search()
 
 
@@ -31,18 +29,18 @@ class Logic:
         ingr_list = []
 
         for i in master_ingr:
-            if search.lower() in i and i not in globals.selected_ingredients:
+            if search.lower() in i and i not in selected_ingredients:
                 ingr_list.append(i)
 
         return ingr_list
 
     def add_ingr_selected(ingr):
         """For adding the selected ingredients."""
-        globals.selected_ingredients.append(ingr.text())
+        selected_ingredients.append(ingr.text())
 
     def remove_ingr_selected(ingr):
         """For removing the selected ingredient."""
-        globals.selected_ingredients.remove(ingr.text())
+        selected_ingredients.remove(ingr.text())
 
     def get_trending():
         """Return list of top 5 trending from query."""
@@ -60,9 +58,8 @@ class Logic:
     def get_ingredient_search(time_value):
         """Return list of recipes matching ingredients."""
         result_list = []
-        print(globals.selected_ingredients)
         return_list = search_object.ingredient_name_search(
-            globals.selected_ingredients
+            selected_ingredients
         )
 
         for i in return_list:
@@ -79,16 +76,13 @@ class Logic:
         return_list = []
         result_list = []
 
-        if len(globals.selected_ingredients) > 0:
-            controller.Controller.delete_recipe_cards()
+        if len(selected_ingredients) > 0:
             result_list = Logic.get_ingredient_search(time_value)
         elif search == "" or search == " ":
             return None
         elif search is None:
-            controller.Controller.delete_recipe_cards()
             result_list = query.Search().recipe_name_search("")
         else:
-            controller.Controller.delete_recipe_cards()
             result_list = query.Search().recipe_name_search("")
 
         for i in result_list:
