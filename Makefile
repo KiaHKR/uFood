@@ -50,7 +50,7 @@ pyreverse:
 	rmdir doc\uml
 	md doc\uml
 	xcopy index.html doc\uml
-	pyreverse src/
+	pyreverse src/ test/
 	dot -Tpng classes.dot -o doc/uml/class_diagram.png
 	dot -Tpng packages.dot -o doc/uml/packages_war.png
 	del classes.dot
