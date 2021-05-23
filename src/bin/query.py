@@ -221,7 +221,6 @@ class Search:
         for i in self.mycursor:
             temp_list.append(i)
         count = temp_list[0][0] + 1
-        print(count)
 
         stmt = "UPDATE ufood.recipes SET recipes.times_accessed = %s WHERE recipes.id = %s"
 
