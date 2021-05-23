@@ -41,16 +41,9 @@ pylint:
 flake8:
 	flake8
 
-pydoc:
-	install -d doc/pydoc
-	pydoc -w $(PWD)
-	mv *.html doc/pydoc
-	
 pdoc:
 	del doc\pdoc
 	pdoc --html -o doc/pdoc .
-
-doc: pdoc #pydoc sphinx
 
 pyreverse:
 	del doc\uml
