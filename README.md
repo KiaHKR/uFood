@@ -43,7 +43,7 @@ Windows:
 - Navigate to https://dev.mysql.com/downloads/workbench/ and install MySQL Workbench.
 - After installing, create a Database called "uFood"
 - Into this database, import the content from the "ufooddb.mysql" file
-- In MYSQL Workbench, create a user (username = "dbread", password = "6stooges") with SELECT rights.
+- In MYSQL Workbench, create a user (username = "dbread", password = "6stooges") with SELECT and UPDATE rights.
 
 -------------------------------------------------------
 
@@ -52,6 +52,28 @@ To run the software,
 - Navigate to the unzipped folder
 - Double-click "uFood.exe" to run the application
 
+-------------------------------------------------------
+
+Make commands:
+
+- venv:        create virtual environment
+- install:     install required python libraries
+- installed:   print currently installed python libraries
+- clean:       remove coverage reports and pycache files
+- clean-doc:   deletes generated doc files
+- clean-all:   deletes coverage reports, pycache files, and doc files
+- unittest:    prints unittest run
+- coverage:    runs unittests and prints coverage report
+- pylint:      runs pylint on all files
+- flake8:      runs flake8 on all files
+- pdoc:        generates doc files
+- pyreverse:   generates UML class diagrams
+- radon-cc:    prints radon cc metrics
+- radon-mi:    prints radon mi metrics
+- radon-raw:   prints raw radon metrics
+- radon-hal:   prints radon hal metrics
+- lint:        runs pylint and flake8 on all files
+- test:        runs pylint, flake8, and then generates coverage report
 
 =======================================================
 
