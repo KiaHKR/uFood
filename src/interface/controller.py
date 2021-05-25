@@ -68,6 +68,7 @@ class Controller:
             .value()
         )
         Controller.generate_recipe_cards(Controller.raw_list, force_update=id)
+
         globals.Globals.b_rpanel["scroll_area"].verticalScrollBar().setValue(
             scroll_pos
         )
@@ -156,7 +157,7 @@ class Controller:
 
     def build_favorites():
         """Build favorite recipe cards."""
-        Controller.update_section_header("Favorite Recipes")
+        # Controller.update_section_header("Favorite Recipes")
         favorite_list = logic.Logic.get_favorites()
         Controller.generate_recipe_cards(favorite_list)
         # Controller.delete_recipe_cards()
@@ -376,9 +377,16 @@ class Controller:
 
     def update_section_header(text):
         """Update section title."""
+        if Controller.pos != text:
+            globals.Globals.b_rpanel[
+                "scroll_area"
+            ].verticalScrollBar().setValue(0)
+
+        if text == "40 Search Results":
+            text = "All Recipes"
+
         Controller.pos = text
         globals.Globals.t_rpanel["win_text"].setText(text)
-        globals.Globals.b_rpanel["scroll_area"].verticalScrollBar().setValue(0)
 
     def show_all_recipes(force=False):
         """Show all recipes."""
@@ -416,6 +424,7 @@ class Controller:
         return_list = logic.Logic.name_search(
             search, globals.Globals.lpanel["time_slider"].value()
         )
+        print(return_list)
         if return_list is not None:
             Controller.generate_recipe_cards(return_list)
             # Controller.delete_recipe_cards()
@@ -431,9 +440,7 @@ class Controller:
         elif globals.Globals.t_rpanel["win_text"].text() == "All Recipes":
             Controller.update_name_search_results(None)
         else:
-            Controller.update_name_search_results(
-                globals.Globals.lpanel["search_bar"].text()
-            )
+            Controller.update_name_search_results(None)
 
     # Update time label
     def update_label():
