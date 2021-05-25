@@ -99,12 +99,9 @@ class Components:
     def thumbnail_img(self, path_thumbnail):
         """For label that hold the recipe thumbnail."""
         try:
-            req = request.Request(
-                path_thumbnail, headers={"User-Agent": "Mozilla/5.0"}
-            )
-            url = request.urlopen(req).read()
+            data = request.urlopen(path_thumbnail).read()
             pixmap = qtg.QPixmap()
-            pixmap.loadFromData(url)
+            pixmap.loadFromData(data)
 
             if pixmap.isNull():
                 raise FileNotFoundError
