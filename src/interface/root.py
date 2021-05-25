@@ -335,8 +335,7 @@ class View(qtw.QWidget):
         diet_type="[DIET TYPE]",
         total_time="[TOTAL TIME]",
         ingr="[INGREDIENT LIST]",
-        pk_id="Error",
-        thumbnail=None,
+        pk_id=None,
     ):
         """Widgets of recipe cards."""
         recipe_card = qtw.QPushButton()
@@ -367,7 +366,7 @@ class View(qtw.QWidget):
         )
         buttons.layout().setSpacing(0)
 
-        recipe_card.layout().addWidget(rbcomp().thumbnail_img(thumbnail), 1)
+        recipe_card.layout().addWidget(rbcomp().thumbnail_img(pk_id), 1)
         recipe_card.layout().addWidget(info, 20)
         recipe_card.layout().addWidget(buttons, 0)
 
@@ -613,7 +612,6 @@ class Controller:
                 str(i[1])[:-3],  # COOKTIME
                 i[3].replace(",", ", "),
                 str(i[4]),  # ID
-                i[5],  # URL
             )
             widget_list.append(recipe_card)
         Controller.build_recipe_cards(widget_list, build)
@@ -793,7 +791,7 @@ class Controller:
 
         result = logic.Logic.get_recipe_info(id)
 
-        b_rpanel["recipe_view_img"] = rbcomp().thumbnail_img(result[1])
+        b_rpanel["recipe_view_img"] = rbcomp().thumbnail_img(id)
         b_rpanel["recipe_view_title"].setText(result[0])
         b_rpanel["recipe_view_ingredients"].setText(result[2])
         b_rpanel["recipe_view_steps"].setText(result[3])

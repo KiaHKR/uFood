@@ -31,6 +31,7 @@ class Components:
         "recipe_view_cook_diet_label",  # 15
     )
     path = "src/interface/assets/"
+    img_file_path = path + "img/"
 
     def __init__(self):
         """Is constructor of the components class."""
@@ -96,12 +97,10 @@ class Components:
         )
         return count
 
-    def thumbnail_img(self, path_thumbnail):
+    def thumbnail_img(self, id):
         """For label that hold the recipe thumbnail."""
         try:
-            data = request.urlopen(path_thumbnail).read()
-            pixmap = qtg.QPixmap()
-            pixmap.loadFromData(data)
+            pixmap = qtg.QPixmap(self.img_file_path + id + ".png")
 
             if pixmap.isNull():
                 raise FileNotFoundError
