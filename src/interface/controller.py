@@ -298,7 +298,7 @@ class Controller:
                     str(i[1])[:-3],  # COOKTIME
                     i[3].replace(",", ", "),
                     str(i[4]),  # ID
-                    None,  # URL
+                    i[5],  # URL
                 )
 
             temp_widget_list.append(recipe_card)
