@@ -98,22 +98,26 @@ class Components:
 
     def thumbnail_img(self, path_thumbnail):
         """For label that hold the recipe thumbnail."""
-        if path_thumbnail is None:
-            img = qtw.QLabel(
-                pixmap=qtg.QPixmap(self.path + "img_placeholder.png").scaled(
-                    120, 120
-                )
-            )
-        else:
+        try:
             req = request.Request(
                 path_thumbnail, headers={"User-Agent": "Mozilla/5.0"}
             )
             url = request.urlopen(req).read()
             pixmap = qtg.QPixmap()
             pixmap.loadFromData(url)
+
+            if pixmap.isNull():
+                raise FileNotFoundError
+
             pixmap.scaled(120, 120)
             img = qtw.QLabel()
             img.setPixmap(pixmap)
+        except:
+            img = qtw.QLabel(
+                pixmap=qtg.QPixmap(self.path + "img_placeholder.png").scaled(
+                    120, 120
+                )
+            )
 
         # might need to change this
         img.setObjectName(self.__object_names[1])
